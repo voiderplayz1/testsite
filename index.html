@@ -377,7 +377,7 @@ body{font-family:Segoe UI,Tahoma,Arial,sans-serif;font-size:11px;overflow:hidden
         </div>
         <div class="wig-row">
           <span class="wig-lbl">Density</span>
-          <input class="wig-sl" type="range" id="densSlider" min="0.1" max="10" value="5" step="0.1" oninput="wDensity=+this.value;document.getElementById('densv').textContent=(+this.value).toFixed(1)">
+          <input class="wig-sl" type="range" id="densSlider" min="0.1" max="20" value="5" step="0.1" oninput="wDensity=+this.value;document.getElementById('densv').textContent=(+this.value).toFixed(1)">
           <span class="wig-val" id="densv">5.0</span>
         </div>
       </div>
@@ -387,6 +387,7 @@ body{font-family:Segoe UI,Tahoma,Arial,sans-serif;font-size:11px;overflow:hidden
       <div class="rg-body" style="flex-direction:column;gap:3px;align-items:flex-start;justify-content:center;">
         <div class="rb-sm on" id="wiggle-rb" onclick="toggleWiggle()">〰 Wiggle ON</div>
         <div class="rb-sm" id="snap-rb" onclick="toggleSnap()">⚡ Snap OFF</div>
+        <div class="rb-sm" id="linewiggle-rb" onclick="toggleLineWiggle()">〜 Line Wiggle OFF</div>
       </div>
       <div class="rg-label">Wiggle Mode</div>
     </div>
@@ -528,11 +529,22 @@ body{font-family:Segoe UI,Tahoma,Arial,sans-serif;font-size:11px;overflow:hidden
       </div>
 
       <!-- PATCH NOTES -->
-      <div class="rg" style="min-width:150px;">
+      <div class="rg" style="min-width:210px;">
         <div class="rg-body" style="flex-direction:column;justify-content:flex-start;gap:3px;padding-top:2px;overflow-y:auto;max-height:62px;">
-          <div style="font-size:10px;font-weight:700;color:#555;letter-spacing:.3px;margin-bottom:1px;">PATCH NOTES</div>
-          <div id="patch-notes-list" style="font-size:10px;color:#777;line-height:1.5;">
-            <span style="color:#aaa;font-style:italic;">Nothing new yet.</span>
+          <div style="font-size:10px;font-weight:700;color:#1a5ca8;letter-spacing:.3px;margin-bottom:2px;">📰 NEWS</div>
+          <div style="font-size:10px;color:#333;line-height:1.55;margin-bottom:4px;">
+            Hello!! I've recently added a new wiggle mode (Line Wiggle!), and a new Density slider in Pixels — lots of bugs are fixed, and this should make the actual experience 100% better. Don't forget you can save your drawings in the Files section! 🎨
+          </div>
+          <div style="font-size:10px;font-weight:700;color:#555;letter-spacing:.3px;margin-bottom:1px;border-top:1px solid #ddd;padding-top:3px;">🔧 PATCH NOTES</div>
+          <div id="patch-notes-list" style="font-size:10px;color:#666;line-height:1.55;">
+            <span style="color:#080;font-weight:600;">✔</span> Fixed drawing errors<br>
+            <span style="color:#080;font-weight:600;">✔</span> Room fixes<br>
+            <span style="color:#080;font-weight:600;">✔</span> Connection fixes<br>
+            <span style="color:#080;font-weight:600;">✔</span> Drawings not appearing<br>
+            <span style="color:#080;font-weight:600;">✔</span> Edits not appearing<br>
+            <span style="color:#080;font-weight:600;">✔</span> Host issues<br>
+            <span style="color:#1a6abf;font-weight:600;">★</span> New: Line Wiggle mode<br>
+            <span style="color:#1a6abf;font-weight:600;">★</span> New: Density slider (0.1–20)<br>
           </div>
         </div>
         <div class="rg-label">What's New</div>
@@ -719,8 +731,17 @@ function buildPhases(){
   phaseX=new Float32Array(W*H);phaseY=new Float32Array(W*H);phaseV=new Float32Array(W*H);snapDir=new Uint8Array(W*H);
   for(let i=0;i<W*H;i++){phaseX[i]=Math.random()*Math.PI*2;phaseY[i]=Math.random()*Math.PI*2;phaseV[i]=Math.random()*Math.PI*2;snapDir[i]=Math.floor(Math.random()*4);}
 }
-function renderLoop(){animT+=0.016*wSpeed;if(wigOn&&wAmt>0)renderWiggle(animT);else renderFlat();renderOverlayLayer();requestAnimationFrame(renderLoop);}
+function renderLoop(){animT+=0.016*wSpeed;if(wigOn&&wAmt>0)renderWiggle(animT);else renderFlat();if(lineWiggleOn)applyLineWiggleToScreen(animT);renderOverlayLayer();requestAnimationFrame(renderLoop);}
 function renderFlat(){const DW=W*SCALE,DH=H*SCALE;sCtx.clearRect(0,0,DW,DH);sCtx.imageSmoothingEnabled=false;sCtx.drawImage(dc,0,0,W,H,0,0,DW,DH);}
+// Post-pass: reads the already-rendered sCtx pixels and adds edge wiggle on top
+function applyLineWiggleToScreen(t){
+  const DW=W*SCALE,DH=H*SCALE;
+  const src=dCtx.getImageData(0,0,W,H).data;
+  const screenData=sCtx.getImageData(0,0,DW,DH);
+  const d=screenData.data;
+  applyLineWiggle(src,d,DW,DH,t);
+  sCtx.putImageData(screenData,0,0);
+}
 function renderWiggle(t){
   const DW=W*SCALE,DH=H*SCALE;
   const src=dCtx.getImageData(0,0,W,H).data;
@@ -754,6 +775,55 @@ function renderWiggle(t){
 }
 function toggleWiggle(){wigOn=!wigOn;const el=document.getElementById('wiggle-rb');el.textContent=wigOn?'〰 Wiggle ON':'〰 Wiggle OFF';el.classList.toggle('on',wigOn);flash(wigOn?'Wiggle on':'Wiggle off');}
 function toggleSnap(){snapMode=!snapMode;const el=document.getElementById('snap-rb');el.textContent=snapMode?'⚡ Snap ON':'⚡ Snap OFF';el.classList.toggle('on',snapMode);flash(snapMode?'Snap on':'Snap off');}
+
+let lineWiggleOn=false;
+function toggleLineWiggle(){lineWiggleOn=!lineWiggleOn;const el=document.getElementById('linewiggle-rb');el.textContent=lineWiggleOn?'〜 Line Wiggle ON':'〜 Line Wiggle OFF';el.classList.toggle('on',lineWiggleOn);flash(lineWiggleOn?'Line Wiggle on':'Line Wiggle off');}
+
+// ──────────────────────────────────────────────────────────
+// LINE WIGGLE — animates the outer edges of drawn strokes by
+// expanding/contracting the boundary pixels using a sine wave.
+// Only edge pixels (those with at least one white neighbor) are
+// affected; interior pixels stay in place.
+// ──────────────────────────────────────────────────────────
+function applyLineWiggle(src, d, DW, DH, t){
+  // Identify edge pixels in the source draw buffer
+  // An edge pixel is non-white with at least one white 4-neighbor
+  const isWhiteSrc=(x,y)=>{
+    if(x<0||x>=W||y<0||y>=H) return true;
+    const i=(y*W+x)*4;
+    return src[i]>245&&src[i+1]>245&&src[i+2]>245;
+  };
+  // Amount of expansion oscillates per pixel via its phase
+  // Max spread in screen pixels = ~SCALE * 0.7
+  const maxSpread=Math.max(1, SCALE * 0.75);
+  for(let py=0;py<H;py++){for(let px=0;px<W;px++){
+    const si=(py*W+px)*4;
+    const r=src[si],g=src[si+1],b=src[si+2],a=src[si+3];
+    if(a<10||(r>245&&g>245&&b>245)) continue;
+    // Only process edge pixels
+    const isEdge=isWhiteSrc(px-1,py)||isWhiteSrc(px+1,py)||isWhiteSrc(px,py-1)||isWhiteSrc(px,py+1);
+    if(!isEdge) continue;
+    const pi=py*W+px;
+    // Oscillate between -maxSpread and +maxSpread, unique phase per pixel
+    const spread=Math.sin(t*1.3+phaseX[pi])*maxSpread;
+    if(spread<=0) continue; // shrink phase: pixel already drawn at normal size, skip extra
+    const iSpread=Math.round(spread);
+    // Stamp extra pixels outward from this edge pixel's normal position
+    const bpx=px*SCALE, bpy=py*SCALE;
+    for(let sy=-iSpread;sy<SCALE+iSpread;sy++){
+      for(let sx=-iSpread;sx<SCALE+iSpread;sx++){
+        // Only paint the border ring, not the interior (interior already painted)
+        if(sx>=0&&sx<SCALE&&sy>=0&&sy<SCALE) continue;
+        const dx2=bpx+sx, dy2=bpy+sy;
+        if(dx2<0||dx2>=DW||dy2<0||dy2>=DH) continue;
+        const di=(dy2*DW+dx2)*4;
+        // Only overwrite white pixels (don't trample existing drawn pixels)
+        if(d[di]<245||d[di+1]<245||d[di+2]<245) continue;
+        d[di]=r;d[di+1]=g;d[di+2]=b;d[di+3]=255;
+      }
+    }
+  }}
+}
 
 
 // ══════════════════════════════════════════════════════════
@@ -1538,7 +1608,9 @@ const GUIDE_SLIDES=[
   {title:'Welcome to Wiggly Paint',text:`Wiggly Paint — your drawings come alive with animated wiggle!<br><br>Use tools on the left sidebar or ribbon up top. Click <b>Next</b> for a tour.`},
   {title:'String / Node Tool 🔴',text:`The <b>String tool</b> is the new shape maker:<br><br>&bull; <b>Click empty space</b> to place a node (blue dot)<br>&bull; <b>Click another node</b> to draw a string edge between them<br>&bull; <b>Drag a node</b> to reposition it — strings follow along<br>&bull; Nodes persist when you switch tools!<br>&bull; When loop is <b>sealed (closed)</b>, use the <b>Fill tool</b> to paint inside<br>&bull; Fill respects existing drawn content around it`},
   {title:'Grab Tool & Resize',text:`The <b>Grab tool</b> selects a rectangle of pixels:<br><br>&bull; <b>Drag</b> to draw selection — preview shows blue dashed outline while dragging<br>&bull; After release: <b>8 resize handles</b> appear at corners and edges<br>&bull; Drag handles to stretch/shrink the selection<br>&bull; <b>Drag inside</b> to move it<br>&bull; <b>Esc</b> stamps it back, <b>Delete</b> removes it`},
-  {title:'Wiggle & Export',text:`Everything wiggles in real time!<br><br>&bull; <b>View tab</b> → Px Move, Speed, Snap controls<br>&bull; <b>Save GIF</b> exports an animated wiggly GIF<br>&bull; <b>Obliterate</b> explodes your art dramatically<br><br>Go make something wiggly! 🎉`}
+  {title:'Wiggle Modes ✨',text:`Three wiggle modes to mix and match:<br><br>&bull; <b>〰 Wiggle</b> — pixels jitter around their drawn position in real time<br>&bull; <b>⚡ Snap</b> — pixels snap to discrete offsets instead of smooth waves<br>&bull; <b>〜 Line Wiggle</b> — the outer <i>edges</i> of your strokes expand and contract, making lines feel alive and breathing<br><br>You can combine Wiggle + Line Wiggle for a double-whammy effect! 🎉`},
+  {title:'Density & Pixels 🎛',text:`The <b>Density</b> slider controls how filled your drawings look in real time:<br><br>&bull; <b>0.1</b> — almost completely invisible, just a few flickering pixels<br>&bull; <b>5.0</b> — roughly half the pixels visible at any moment<br>&bull; <b>20.0</b> — nearly fully solid<br><br>Because each pixel has its own random phase, they shimmer in and out independently — not all at once. Affects every pixel on the canvas live!`},
+  {title:'Wiggle & Export',text:`Everything wiggles in real time!<br><br>&bull; <b>View tab</b> → Px Move, Speed, Density, Snap controls<br>&bull; <b>Save GIF</b> exports an animated wiggly GIF<br>&bull; <b>Obliterate</b> explodes your art dramatically<br><br>Go make something wiggly! 🎉`}
 ];
 let guideSlide=0;
 async function fetchGrugGif(){const grugImg=document.getElementById('grug-gif');const grugLoad=document.getElementById('grug-loading');try{const res=await fetch(`https://api.tenor.com/v1/search?q=grug+caveman&key=LIVDSRZULELA&limit=20&media_filter=minimal`);const data=await res.json();if(data.results&&data.results.length>0){const pick=data.results[Math.floor(Math.random()*data.results.length)];const url=pick.media[0].gif.url||pick.media[0].tinygif.url;grugImg.src=url;grugImg.onload=()=>{grugLoad.style.display='none';grugImg.style.display='block';};grugImg.onerror=()=>{grugLoad.textContent='grug not found';};}else grugLoad.textContent='grug\nnot found';}catch(e){grugLoad.textContent='grug\nnot found';}}
