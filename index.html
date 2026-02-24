@@ -316,6 +316,72 @@ body{font-family:Segoe UI,Tahoma,Arial,sans-serif;font-size:11px;overflow:hidden
 @keyframes spSpin{to{transform:rotate(360deg)}}
 
 
+
+/* AVATAR */
+.acct-avatar{overflow:hidden;}
+.acct-avatar img{width:100%;height:100%;object-fit:cover;border-radius:50%;}
+#acct-pfp-upload{display:none;}
+.acct-pfp-btn{font-size:10px;cursor:pointer;color:#1a5ca8;text-decoration:underline;text-align:center;}
+.chat-avatar{width:20px;height:20px;border-radius:50%;background:linear-gradient(135deg,#4b9fdb,#7b1fa2);display:flex;align-items:center;justify-content:center;color:#fff;font-size:10px;font-weight:700;flex-shrink:0;border:1px solid rgba(0,0,0,.2);overflow:hidden;}
+.chat-avatar img{width:100%;height:100%;object-fit:cover;border-radius:50%;}
+.sp-chat-msg{display:flex;align-items:flex-start;gap:5px;}
+.sp-chat-msg-body{flex:1;min-width:0;font-size:11px;line-height:1.4;}
+.sp-chat-msg-body .sp-chat-who{font-weight:700;color:#1a5ca8;}
+.sp-chat-msg-body .sp-chat-who.me{color:#155;}
+.sp-chat-msg-body .sp-chat-who.sys{color:#888;font-style:italic;}
+
+/* GALLERY PANEL */
+#gallery-panel{position:fixed;top:0;right:-520px;width:500px;height:100vh;background:#f0f0f0;border-left:2px solid #999;box-shadow:-4px 0 16px rgba(0,0,0,.3);z-index:400;transition:right .25s cubic-bezier(.4,0,.2,1);display:flex;flex-direction:column;font-size:12px;}
+#gallery-panel.open{right:0;}
+#gallery-panel-title{background:linear-gradient(to bottom,#4b9fdb,#1a5ca8);color:white;font-size:12px;font-weight:600;padding:6px 10px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;}
+#gallery-body{flex:1;overflow-y:auto;padding:10px;display:flex;flex-direction:column;gap:10px;}
+.gal-post{background:#fff;border:1px solid #ccc;box-shadow:1px 1px 4px rgba(0,0,0,.1);}
+.gal-post-header{display:flex;align-items:center;gap:8px;padding:8px 10px;border-bottom:1px solid #eee;}
+.gal-post-avatar{width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,#4b9fdb,#7b1fa2);display:flex;align-items:center;justify-content:center;color:#fff;font-size:13px;font-weight:700;flex-shrink:0;overflow:hidden;border:1px solid #bbb;}
+.gal-post-avatar img{width:100%;height:100%;object-fit:cover;border-radius:50%;}
+.gal-post-meta{flex:1;min-width:0;}
+.gal-post-name{font-weight:700;font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.gal-post-author{font-size:10px;color:#888;margin-top:1px;}
+.gal-post-img{width:100%;display:block;image-rendering:pixelated;}
+.gal-post-footer{padding:6px 10px;display:flex;align-items:center;gap:8px;}
+.gal-comment-toggle{font-size:10px;color:#1a5ca8;cursor:pointer;text-decoration:underline;flex:1;}
+.gal-post-del{font-size:10px;color:#c00;cursor:pointer;opacity:.6;}
+.gal-post-del:hover{opacity:1;}
+.gal-comments{display:none;border-top:1px solid #eee;padding:8px 10px;background:#fafafa;}
+.gal-comments.open{display:block;}
+.gal-comment-list{display:flex;flex-direction:column;gap:5px;margin-bottom:8px;max-height:120px;overflow-y:auto;}
+.gal-comment{display:flex;align-items:flex-start;gap:6px;font-size:11px;}
+.gal-comment-av{width:20px;height:20px;border-radius:50%;background:linear-gradient(135deg,#4b9fdb,#7b1fa2);display:flex;align-items:center;justify-content:center;color:#fff;font-size:9px;font-weight:700;flex-shrink:0;overflow:hidden;border:1px solid #bbb;}
+.gal-comment-av img{width:100%;height:100%;object-fit:cover;border-radius:50%;}
+.gal-comment-body{flex:1;}
+.gal-comment-who{font-weight:700;color:#1a5ca8;}
+.gal-comment-row{display:flex;gap:4px;}
+.gal-comment-inp{flex:1;border:1px solid #bbb;padding:3px 6px;font-size:11px;font-family:inherit;outline:none;}
+.gal-comment-btn{padding:3px 8px;background:#1a5ca8;color:#fff;border:none;font-size:11px;cursor:pointer;}
+.gal-comment-btn:hover{background:#2b7fd4;}
+.gal-empty{text-align:center;color:#888;padding:30px;font-size:12px;}
+
+/* PUBLISH MODAL */
+#publish-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:1300;align-items:center;justify-content:center;}
+#publish-overlay.show{display:flex;}
+#publish-box{width:360px;background:#f0f0f0;border:2px solid;border-color:#fff #808080 #808080 #fff;box-shadow:4px 4px 0 #000;font-size:12px;}
+#publish-titlebar{background:linear-gradient(to bottom,#4b9fdb 0%,#1e6abf 50%,#1a5ca8 51%,#2b7fd4 100%);color:white;font-size:12px;font-weight:700;padding:4px 6px;display:flex;align-items:center;justify-content:space-between;}
+#publish-body{padding:14px;display:flex;flex-direction:column;gap:10px;}
+#publish-preview{width:100%;max-height:160px;object-fit:contain;image-rendering:pixelated;border:1px solid #ccc;background:#fff;}
+.pub-label{font-size:11px;font-weight:600;color:#333;margin-bottom:2px;}
+#publish-name-inp{width:100%;box-sizing:border-box;border:2px solid;border-color:#808080 #fff #fff #808080;padding:4px 6px;font-size:12px;font-family:inherit;outline:none;}
+#publish-name-inp:focus{border-color:#0054e3 #d0d8e8 #d0d8e8 #0054e3;}
+.pub-char-count{font-size:10px;color:#888;text-align:right;}
+.pub-footer{display:flex;justify-content:flex-end;gap:8px;padding-top:4px;}
+.pub-btn{font-size:11px;padding:4px 16px;border:2px solid;border-color:#fff #808080 #808080 #fff;background:#c0c0c0;cursor:pointer;font-family:inherit;}
+.pub-btn:hover{background:#d0d8e8;}
+.pub-btn.primary{background:#1a5ca8;color:#fff;border-color:#0c3f7a;}
+.pub-btn.primary:hover{background:#2b7fd4;}
+#publish-err{color:#c00;font-size:10px;min-height:14px;}
+
+/* GALLERY BTN */
+#gallery-btn{display:flex;align-items:center;gap:3px;padding:2px 7px;height:22px;background:rgba(255,180,50,.25);border:1px solid rgba(255,180,50,.5);border-radius:2px;cursor:pointer;color:white;font-size:11px;font-weight:600;white-space:nowrap;user-select:none;}
+#gallery-btn:hover{background:rgba(255,180,50,.4);}
 </style>
 </head>
 <body>
@@ -335,6 +401,7 @@ body{font-family:Segoe UI,Tahoma,Arial,sans-serif;font-size:11px;overflow:hidden
   </div>
 
   <div id="social-btn" onclick="openSocialPanel()" title="Social Drawing">🎨 Social</div>
+  <div id="gallery-btn" onclick="openGallery()" title="Community Gallery">🖼 Gallery</div>
   <div id="acct-btn" onclick="openAccountModal()" title="Account" style="display:flex;align-items:center;gap:3px;padding:2px 7px;height:22px;background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.35);border-radius:2px;cursor:pointer;color:white;font-size:11px;font-weight:600;white-space:nowrap;user-select:none;">👤 Account</div>
   <div id="qa">
     <div class="qa-btn" title="Save GIF (Ctrl+S)" onclick="exportGIF()">💾</div>
@@ -1872,6 +1939,7 @@ function renderFilesDropdown(){
 
   html+='<div class="fd-section">';
   html+='<div class="fd-action" onclick="fsNewDrawing()">✚ New Drawing</div>';
+  html+='<div class="fd-action" onclick="openPublish()">🌐 Publish to Gallery</div>';
   html+='<div class="fd-action" onclick="fsSaveAs()">💾 Save as new copy</div>';
   html+='</div>';
 
@@ -1979,10 +2047,12 @@ hc.addEventListener('touchend',()=>{ setTimeout(()=>scheduleAutoSave(),100); });
     <!-- Logged-in view -->
     <div id="acct-logged-in">
       <div class="acct-user-row">
-        <div class="acct-avatar" id="acct-avatar-letter">?</div>
+        <div class="acct-avatar" id="acct-avatar-letter" onclick="document.getElementById('acct-pfp-upload').click()" style="cursor:pointer;" title="Click to change profile picture">?</div>
         <div>
           <div class="acct-username-display" id="acct-display-name">—</div>
           <div class="acct-joined-date" id="acct-display-joined">Joined —</div>
+          <div class="acct-pfp-btn" onclick="document.getElementById('acct-pfp-upload').click()">📷 Change Picture</div>
+          <input type="file" id="acct-pfp-upload" accept="image/*" onchange="acctUploadPfp(this)">
         </div>
       </div>
       <div style="font-size:11px;color:#555;background:#fff;border:1px solid #ccc;padding:8px;">
@@ -2197,9 +2267,15 @@ function refreshAccountModal() {
   if(loggedIn) {
     const accts = getAccounts();
     const u = acctSession.username;
+    const rec = accts[u.toLowerCase()] || {};
     document.getElementById('acct-display-name').textContent = u;
-    document.getElementById('acct-avatar-letter').textContent = u[0].toUpperCase();
-    const joined = accts[u.toLowerCase()] ? new Date(accts[u.toLowerCase()].created).toLocaleDateString() : '?';
+    const avEl = document.getElementById('acct-avatar-letter');
+    if(rec.pfp) {
+      avEl.innerHTML = `<img src="${rec.pfp}" alt="${escHtml(u)}">`;
+    } else {
+      avEl.textContent = u[0].toUpperCase();
+    }
+    const joined = rec.created ? new Date(rec.created).toLocaleDateString() : '?';
     document.getElementById('acct-display-joined').textContent = 'Joined '+joined;
     updateAcctButton();
   }
@@ -2208,7 +2284,14 @@ function refreshAccountModal() {
 function updateAcctButton() {
   const btn = document.getElementById('acct-btn');
   if(isLoggedIn()) {
-    btn.textContent = '👤 '+getUsername();
+    const accts = getAccounts();
+    const u = getUsername();
+    const rec = accts[u.toLowerCase()] || {};
+    if(rec.pfp) {
+      btn.innerHTML = `<img src="${rec.pfp}" style="width:16px;height:16px;border-radius:50%;object-fit:cover;vertical-align:middle;margin-right:3px;"> ${escHtml(u)}`;
+    } else {
+      btn.textContent = '👤 '+u;
+    }
     btn.style.background = 'rgba(80,200,120,.35)';
     btn.style.borderColor = 'rgba(80,200,120,.6)';
   } else {
@@ -2216,6 +2299,40 @@ function updateAcctButton() {
     btn.style.background = '';
     btn.style.borderColor = '';
   }
+}
+
+function acctUploadPfp(input) {
+  const file = input.files[0];
+  if(!file) return;
+  if(!file.type.startsWith('image/')) { alert('Please choose an image file.'); return; }
+  const reader = new FileReader();
+  reader.onload = e => {
+    // Resize to max 128x128 for storage efficiency
+    const img = new Image();
+    img.onload = () => {
+      const canvas = document.createElement('canvas');
+      const size = 128;
+      canvas.width = size; canvas.height = size;
+      const ctx = canvas.getContext('2d');
+      const s = Math.min(size/img.width, size/img.height);
+      const dw = img.width*s, dh = img.height*s;
+      ctx.fillStyle = '#fff';
+      ctx.fillRect(0,0,size,size);
+      ctx.drawImage(img, (size-dw)/2, (size-dh)/2, dw, dh);
+      const pfp = canvas.toDataURL('image/jpeg', 0.8);
+      const accts = getAccounts();
+      const u = getUsername();
+      if(accts[u.toLowerCase()]) {
+        accts[u.toLowerCase()].pfp = pfp;
+        saveAccounts(accts);
+        refreshAccountModal();
+        flash('Profile picture updated!');
+      }
+    };
+    img.src = e.target.result;
+  };
+  reader.readAsDataURL(file);
+  input.value = ''; // reset so same file can be re-uploaded
 }
 
 function acctSwitchTab(tab) {
@@ -2437,7 +2554,7 @@ function joinRoom(){
     conn.on('open',()=>{
       statusEl.innerHTML='<span class="sp-spinner"></span> Waiting for host...';
       // Send our name to host
-      conn.send({type:'hello', name:spMyName});
+      conn.send({type:'hello', name:spMyName, pfp:getMyPfp()});
     });
     conn.on('data', data=>{
       if(data.type==='welcome'){
@@ -2530,7 +2647,7 @@ function broadcastToPeers(msg, exclude){
 function handlePeerData(data, fromConn){
   if(data.type==='hello'){
     // Peer sent us their username
-    if(fromConn && data.name) { fromConn._spName = data.name; updatePeerList(); }
+    if(fromConn && data.name) { fromConn._spName = data.name; fromConn._spPfp = data.pfp||null; updatePeerList(); }
     return;
   }
   if(data.type==='strokes'){
@@ -2538,7 +2655,7 @@ function handlePeerData(data, fromConn){
     if(spIsHost) broadcastToPeers(data, fromConn);
     replayStrokes(data.data, fromConn._spName||'Peer');
   } else if(data.type==='chat'){
-    spAddChatMsg(data.name||'Peer', data.msg, 'peer');
+    spAddChatMsg(data.name||'Peer', data.msg, 'peer', data.pfp||null);
     if(spIsHost) broadcastToPeers(data, fromConn);
   } else if(data.type==='peer-join'){
     spAddChatMsg('System', (data.name||'Someone')+' joined!','sys');
@@ -2664,11 +2781,29 @@ function copyRoomCode(){
   navigator.clipboard.writeText(code).then(()=>flash('Room code copied!')).catch(()=>{});
 }
 
-function spAddChatMsg(who, msg, type){
+function getMyPfp(){
+  if(!isLoggedIn()) return null;
+  const accts = getAccounts();
+  const rec = accts[getUsername().toLowerCase()];
+  return rec ? rec.pfp || null : null;
+}
+
+function makeAvatarHtml(who, pfp, type){
+  if(type==='sys') return '';
+  if(pfp) return `<div class="chat-avatar"><img src="${pfp}" alt="${escHtml(who)}"></div>`;
+  return `<div class="chat-avatar">${escHtml(who[0]||'?').toUpperCase()}</div>`;
+}
+
+function spAddChatMsg(who, msg, type, pfp){
   const log = document.getElementById('sp-chat-log');
   const el = document.createElement('div');
   el.className = 'sp-chat-msg';
-  el.innerHTML = `<span class="sp-chat-who ${type}">${escHtml(who)}:</span> ${escHtml(msg)}`;
+  if(type === 'sys'){
+    el.innerHTML = `<div class="sp-chat-msg-body"><span class="sp-chat-who sys">${escHtml(who)}:</span> ${escHtml(msg)}</div>`;
+  } else {
+    const avHtml = makeAvatarHtml(who, pfp, type);
+    el.innerHTML = `${avHtml}<div class="sp-chat-msg-body"><span class="sp-chat-who ${type}">${escHtml(who)}:</span> ${escHtml(msg)}</div>`;
+  }
   log.appendChild(el);
   log.scrollTop=log.scrollHeight;
 }
@@ -2678,8 +2813,9 @@ function spSendChat(){
   const msg = inp.value.trim();
   if(!msg) return;
   inp.value='';
-  spAddChatMsg(spMyName, msg, 'me');
-  broadcastToPeers({type:'chat', name:spMyName, msg});
+  const pfp = getMyPfp();
+  spAddChatMsg(spMyName, msg, 'me', pfp);
+  broadcastToPeers({type:'chat', name:spMyName, msg, pfp});
 }
 
 function leaveRoom(){
@@ -2702,6 +2838,293 @@ function leaveRoom(){
 }
 
 
+
+// ══════════════════════════════════════════════════════════
+// GALLERY & PUBLISH
+// ══════════════════════════════════════════════════════════
+const GALLERY_KEY = 'wiggly_gallery_v1';
+
+function getGalleryPosts(){
+  try{ return JSON.parse(localStorage.getItem(GALLERY_KEY)) || []; } catch(e){ return []; }
+}
+function saveGalleryPosts(posts){
+  try{ localStorage.setItem(GALLERY_KEY, JSON.stringify(posts)); }
+  catch(e){ flash('Storage full — delete some posts first.'); }
+}
+
+function openGallery(){
+  document.getElementById('gallery-panel').classList.add('open');
+  renderGallery();
+}
+function closeGallery(){
+  document.getElementById('gallery-panel').classList.remove('open');
+}
+
+function renderGallery(){
+  const body = document.getElementById('gallery-body');
+  const posts = getGalleryPosts();
+  if(!posts.length){
+    body.innerHTML='<div class="gal-empty">No posts yet.<br>Publish a drawing from Files → Publish to Gallery!</div>';
+    return;
+  }
+  body.innerHTML='';
+  const myUser = isLoggedIn() ? getUsername().toLowerCase() : null;
+  [...posts].reverse().forEach(post=>{
+    const isMe = myUser && post.author && post.author.toLowerCase()===myUser;
+    const comments = post.comments||[];
+    const avHtml = post.authorPfp
+      ? `<img src="${post.authorPfp}" alt="${escHtml(post.author||'?')}">`
+      : escHtml((post.author||'?')[0].toUpperCase());
+    const div = document.createElement('div');
+    div.className='gal-post';
+    div.dataset.pid = post.id;
+    div.innerHTML=`
+      <div class="gal-post-header">
+        <div class="gal-post-avatar">${avHtml}</div>
+        <div class="gal-post-meta">
+          <div class="gal-post-name">${escHtml(post.name||'Untitled')}</div>
+          <div class="gal-post-author">by ${escHtml(post.author||'Unknown')} · ${new Date(post.ts).toLocaleDateString()}</div>
+        </div>
+        ${isMe?`<div class="gal-post-del" onclick="galDeletePost('${post.id}')">✕ Delete</div>`:''}
+      </div>
+      <img class="gal-post-img" src="${post.dataUrl}" alt="${escHtml(post.name||'')}">
+      <div class="gal-post-footer">
+        <span class="gal-comment-toggle" onclick="galToggleComments('${post.id}')">💬 ${comments.length} comment${comments.length!==1?'s':''} — click to ${comments.length?'view':'add'}</span>
+      </div>
+      <div class="gal-comments" id="gal-comments-${post.id}">
+        <div class="gal-comment-list" id="gal-clist-${post.id}">${galRenderComments(comments)}</div>
+        ${isLoggedIn()
+          ?`<div class="gal-comment-row">
+              <input class="gal-comment-inp" id="gal-cinp-${post.id}" type="text" maxlength="200" placeholder="Write a comment…" onkeydown="if(event.key==='Enter')galSubmitComment('${post.id}')">
+              <button class="gal-comment-btn" onclick="galSubmitComment('${post.id}')">Send</button>
+            </div>`
+          :'<div style="font-size:10px;color:#888;padding:2px 0;">Log in to comment.</div>'}
+      </div>`;
+    body.appendChild(div);
+  });
+}
+
+function galRenderComments(comments){
+  if(!comments.length) return '<div style="font-size:10px;color:#888;font-style:italic;margin-bottom:4px;">No comments yet.</div>';
+  return comments.map(c=>{
+    const avHtml = c.authorPfp
+      ? `<img src="${c.authorPfp}" alt="${escHtml(c.author||'?')}">`
+      : escHtml((c.author||'?')[0].toUpperCase());
+    return `<div class="gal-comment"><div class="gal-comment-av">${avHtml}</div><div class="gal-comment-body"><span class="gal-comment-who">${escHtml(c.author||'?')}:</span> ${escHtml(c.text)}</div></div>`;
+  }).join('');
+}
+
+function galToggleComments(pid){
+  const el=document.getElementById('gal-comments-'+pid);
+  if(!el) return;
+  el.classList.toggle('open');
+  const toggle=el.previousElementSibling&&el.previousElementSibling.querySelector('.gal-comment-toggle');
+  if(toggle){
+    const posts=getGalleryPosts();
+    const post=posts.find(p=>p.id===pid);
+    const n=(post&&post.comments||[]).length;
+    const open=el.classList.contains('open');
+    toggle.textContent=`💬 ${n} comment${n!==1?'s':''} — click to ${open?'hide':'view/add'}`;
+  }
+}
+
+function galDeletePost(pid){
+  if(!confirm('Delete this post?')) return;
+  saveGalleryPosts(getGalleryPosts().filter(p=>p.id!==pid));
+  renderGallery();
+  flash('Post deleted.');
+}
+
+function galSubmitComment(pid){
+  if(!isLoggedIn()){ alert('Log in to comment.'); return; }
+  const inp=document.getElementById('gal-cinp-'+pid);
+  if(!inp) return;
+  const text=inp.value.trim();
+  if(!text) return;
+  inp.value='';
+  const posts=getGalleryPosts();
+  const post=posts.find(p=>p.id===pid);
+  if(!post) return;
+  const accts=getAccounts();
+  const u=getUsername();
+  const rec=accts[u.toLowerCase()]||{};
+  if(!post.comments) post.comments=[];
+  post.comments.push({author:u, authorPfp:rec.pfp||null, text, ts:Date.now()});
+  saveGalleryPosts(posts);
+  // Re-render comment list in place
+  const cList=document.getElementById('gal-clist-'+pid);
+  if(cList){ cList.innerHTML=galRenderComments(post.comments); cList.scrollTop=cList.scrollHeight; }
+  // Update toggle text
+  const footer=document.getElementById('gal-comments-'+pid);
+  const toggle=footer&&footer.previousElementSibling&&footer.previousElementSibling.querySelector('.gal-comment-toggle');
+  if(toggle){
+    const n=post.comments.length;
+    toggle.textContent=`💬 ${n} comment${n!==1?'s':''} — click to hide`;
+  }
+}
+
+// ── Publish flow ──────────────────────────────────────────
+let _publishDataUrl = null;
+
+function openPublish(){
+  closeFilesDropdown();
+  if(!isLoggedIn()){ showNoAcctError(); return; }
+  _publishDataUrl = dc.toDataURL('image/png');
+  // Show static preview first, then overwrite with GIF after render
+  const prev=document.getElementById('publish-preview');
+  const img=new Image();
+  img.onload=()=>{
+    prev.width=Math.min(img.width,460); prev.height=Math.round(img.height*(prev.width/img.width));
+    prev.getContext('2d').drawImage(img,0,0,prev.width,prev.height);
+  };
+  img.src=_publishDataUrl;
+  document.getElementById('publish-name-inp').value='';
+  document.getElementById('publish-err').textContent='';
+  document.getElementById('pub-char-count').textContent='0';
+  document.getElementById('publish-overlay').classList.add('show');
+  setTimeout(()=>document.getElementById('publish-name-inp').focus(),100);
+}
+
+function closePublish(){
+  document.getElementById('publish-overlay').classList.remove('show');
+  _publishDataUrl=null;
+}
+
+function pubUpdateCount(){
+  const v=document.getElementById('publish-name-inp').value;
+  const cc=document.getElementById('pub-char-count');
+  cc.textContent=v.length;
+  cc.style.color=v.length>50?'#c00':'#888';
+}
+
+async function submitPublish(){
+  if(!isLoggedIn()){alert('Log in to publish.');return;}
+  const name=document.getElementById('publish-name-inp').value.trim();
+  const errEl=document.getElementById('publish-err');
+  errEl.textContent='';
+  if(!name){errEl.textContent='Please enter a post name.';return;}
+  if(name.length>56){errEl.textContent='Post name must be 56 characters or less.';return;}
+
+  const btn=document.querySelector('#publish-box .pub-btn.primary');
+  btn.textContent='⏳ Generating GIF…';
+  btn.disabled=true;
+
+  let gifDataUrl=null;
+  try{
+    // Build animated GIF (inline, same logic as exportGIF)
+    const src=dCtx.getImageData(0,0,W,H).data;
+    const colorMap=new Map(); colorMap.set(0xFFFFFF,0);
+    for(let i=0;i<W*H;i++){const r=src[i*4],g=src[i*4+1],b=src[i*4+2],a=src[i*4+3];if(a<10||(r>245&&g>245&&b>245))continue;const rq=(r>>2)<<2,gq=(g>>2)<<2,bq=(b>>2)<<2;const key=(rq<<16)|(gq<<8)|bq;if(!colorMap.has(key)&&colorMap.size<255)colorMap.set(key,colorMap.size);}
+    const palette=new Array(colorMap.size);for(const[key,idx]of colorMap)palette[idx]=[(key>>16)&255,(key>>8)&255,key&255];
+    function ni(r,g,b){const rq=(r>>2)<<2,gq=(g>>2)<<2,bq=(b>>2)<<2;const key=(rq<<16)|(gq<<8)|bq;if(colorMap.has(key))return colorMap.get(key);let best=0,bestD=1e9;for(const[k,idx]of colorMap){const dr=((k>>16)&255)-r,dg=((k>>8)&255)-g,db=(k&255)-b,d=dr*dr+dg*dg+db*db;if(d<bestD){bestD=d;best=idx;}}return best;}
+    if(!phaseX)buildPhases();
+    const NF=24,AMP=Math.max(0.01,wAmt),GW=W*SCALE,GH=H*SCALE,frames=[];
+    for(let f=0;f<NF;f++){
+      await new Promise(r=>setTimeout(r,0));
+      const ft=(f/NF)*Math.PI*2,indices=new Uint8Array(GW*GH);
+      for(let py=0;py<H;py++)for(let px=0;px<W;px++){
+        const si=(py*W+px)*4,r=src[si],g=src[si+1],b=src[si+2],a=src[si+3];
+        if(a<10||(r>245&&g>245&&b>245))continue;
+        const pi=py*W+px;let ddx,ddy;
+        if(snapMode){const sn=Math.floor(ft/Math.PI+phaseX[pi])%2===0;if(!sn){ddx=0;ddy=0;}else{const dir=snapDir[pi];ddx=dir===0?1:dir===1?-1:0;ddy=dir===2?1:dir===3?-1:0;}}
+        else{ddx=Math.round(Math.sin(ft+phaseX[pi])*AMP);ddy=Math.round(Math.sin(ft*0.82+phaseY[pi])*AMP);}
+        const dpx=Math.max(0,Math.min(W-1,px+ddx)),dpy=Math.max(0,Math.min(H-1,py+ddy));
+        const cidx=ni(r,g,b);
+        for(let sy=0;sy<SCALE;sy++)for(let sx=0;sx<SCALE;sx++){const gx=dpx*SCALE+sx,gy=dpy*SCALE+sy;if(gx<GW&&gy<GH)indices[gy*GW+gx]=cidx;}
+      }
+      frames.push(indices);
+    }
+    const gifData=buildGIF(frames,GW,GH,palette,4);
+    const blob=new Blob([gifData],{type:'image/gif'});
+    gifDataUrl=await new Promise(res=>{const fr=new FileReader();fr.onload=e=>res(e.target.result);fr.readAsDataURL(blob);});
+  } catch(err){
+    errEl.textContent='GIF generation failed: '+err.message;
+    btn.textContent='🌐 Publish'; btn.disabled=false;
+    return;
+  }
+
+  const accts=getAccounts(), u=getUsername(), rec=accts[u.toLowerCase()]||{};
+  const post={
+    id:'p_'+Date.now()+'_'+Math.random().toString(36).slice(2,7),
+    name, author:u, authorPfp:rec.pfp||null,
+    dataUrl:gifDataUrl, ts:Date.now(), comments:[]
+  };
+  const posts=getGalleryPosts();
+  posts.push(post);
+  saveGalleryPosts(posts);
+  btn.textContent='🌐 Publish'; btn.disabled=false;
+  closePublish();
+  flash('Published to Gallery! 🎉');
+}
+
+// ══════════════════════════════════════════════════════════
+// COPY / PASTE SELECTION (Grab tool)
+// ══════════════════════════════════════════════════════════
+let _selClipboard = null; // {img: ImageData, w, h}
+
+document.addEventListener('keydown', e=>{
+  if(e.target&&(e.target.tagName==='INPUT'||e.target.tagName==='TEXTAREA'||e.target.isContentEditable)) return;
+  if(tool!=='grab') return;
+  // Ctrl+C — copy selection
+  if((e.ctrlKey||e.metaKey)&&e.key==='c'&&sel.active){
+    e.preventDefault();
+    _selClipboard={img:sel.floatImg, w:sel.rect.w, h:sel.rect.h, angle:selRotAngle};
+    flash('Selection copied');
+  }
+  // Ctrl+V — paste clipboard as new floating selection
+  if((e.ctrlKey||e.metaKey)&&e.key==='v'&&_selClipboard){
+    e.preventDefault();
+    // Commit whatever is currently selected first
+    commitSelection();
+    saveHistory();
+    // Place pasted image offset slightly from original
+    const px=Math.min(W-_selClipboard.w-2, 10);
+    const py=Math.min(H-_selClipboard.h-2, 10);
+    sel.floatImg=new ImageData(new Uint8ClampedArray(_selClipboard.img.data), _selClipboard.w, _selClipboard.h);
+    sel.rect={x:px,y:py,w:_selClipboard.w,h:_selClipboard.h};
+    sel.floatX=px; sel.floatY=py; sel.active=true;
+    selRotAngle=_selClipboard.angle||0;
+    resizeOrigRect={...sel.rect}; resizeOrigImg=sel.floatImg;
+    flash('Pasted — drag to position, Esc to stamp');
+  }
+});
+
 </script>
+
+<!-- GALLERY PANEL -->
+<div id="gallery-panel">
+  <div id="gallery-panel-title">
+    <span>🖼 Community Gallery</span>
+    <span style="cursor:pointer;opacity:.8;font-size:14px;" onclick="closeGallery()">✕</span>
+  </div>
+  <div style="padding:8px 10px;background:#e8e8e8;border-bottom:1px solid #bbb;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;">
+    <span style="font-size:11px;color:#555;">Drawings published by your room</span>
+    <button onclick="renderGallery()" style="font-size:10px;padding:2px 8px;cursor:pointer;border:1px solid #aaa;background:#f0f0f0;">↺ Refresh</button>
+  </div>
+  <div id="gallery-body"><div class="gal-empty">No posts yet.<br>Publish a drawing from the Files menu!</div></div>
+</div>
+
+<!-- PUBLISH MODAL -->
+<div id="publish-overlay">
+  <div id="publish-box">
+    <div id="publish-titlebar">
+      <span>🌐 Publish to Gallery</span>
+      <span style="cursor:pointer;opacity:.8;" onclick="closePublish()">✕</span>
+    </div>
+    <div id="publish-body">
+      <canvas id="publish-preview" width="200" height="150"></canvas>
+      <div>
+        <div class="pub-label">Post Name</div>
+        <input id="publish-name-inp" type="text" maxlength="56" placeholder="Give your drawing a name..." oninput="pubUpdateCount()">
+        <div class="pub-char-count"><span id="pub-char-count">0</span>/56</div>
+      </div>
+      <div id="publish-err"></div>
+      <div class="pub-footer">
+        <button class="pub-btn" onclick="closePublish()">Cancel</button>
+        <button class="pub-btn primary" onclick="submitPublish()">🌐 Publish</button>
+      </div>
+    </div>
+  </div>
+</div>
 </body>
 </html>
