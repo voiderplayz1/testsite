@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <title>Wiggly Paint</title>
 <script src="https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/gun/gun.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0;image-rendering:pixelated;}
 body{font-family:Segoe UI,Tahoma,Arial,sans-serif;font-size:11px;overflow:hidden;height:100vh;display:flex;flex-direction:column;user-select:none;background:#6b6b6b;}
@@ -2351,26 +2351,13 @@ document.addEventListener('DOMContentLoaded',()=>{ if(typeof spMyName!=='undefin
 
 <script>
 // ══════════════════════════════════════════════════════════
-// SOCIAL DRAWING — PeerJS + Gun.js powered multiplayer
+// SOCIAL DRAWING — PeerJS + Supabase powered multiplayer
 // ══════════════════════════════════════════════════════════
 
-const GUN_PEERS = [
-  'https://gun-manhattan.herokuapp.com/gun',
-  'https://gun-us.herokuapp.com/gun',
-  'https://gun-eu.herokuapp.com/gun',
-  'https://gundb-relay-mlmtype.onrender.com/gun'
-];
-let gun = null;
-let spGun = null; // gun node for rooms
-
-// Try to init Gun for lobby
-function initGun(){
-  try{
-    gun = Gun(GUN_PEERS);
-    spGun = gun.get('wiggly-social-rooms-v1');
-  }catch(e){ gun=null; spGun=null; }
-}
-setTimeout(initGun, 500);
+const SUPABASE_URL = 'https://bgyntnlmtylblqrkybiz.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_kQbWU_tkMEX-q6MSBFKXYA_xjQ_U5IB';
+let sbClient = null;
+try { sbClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY); } catch(e) { sbClient = null; }
 
 // PeerJS state
 let spPeer = null;       // our Peer instance
@@ -2383,7 +2370,7 @@ let spRoomPassword = '';
 let spRoomListed = true;
 let spMyName = '';
 let spInRoom = false;
-let spGunRoomKey = null; // gun key for our hosted room
+let spLobbyCode = null; // code of our hosted room in supabase
 let spRemoteDrawing = false; // are we currently replaying a remote stroke?
 
 // Username from account session
@@ -2418,23 +2405,14 @@ function spTogglePrivacy(){
 }
 
 // ── ROOM LIST ──────────────────────────────────────────────
-function refreshRoomList(){
+async function refreshRoomList(){
   const list = document.getElementById('social-room-list');
   list.innerHTML = '<div class="sp-empty"><span class="sp-spinner"></span> Loading rooms...</div>';
-  if(!gun){ list.innerHTML='<div class="sp-empty">⚠ Could not connect to lobby server. Use room code to join directly.</div>'; return; }
-  const rooms = [];
-  const timeout = setTimeout(()=>{
-    if(rooms.length===0) list.innerHTML='<div class="sp-empty">No public rooms found. Host one!</div>';
-    else renderRooms(rooms, list);
-  }, 3000);
-  spGun.map().once((data, key)=>{
-    if(!data || !data.name) return;
-    // Remove stale rooms (older than 5 min)
-    if(Date.now() - (data.ts||0) > 5*60*1000) return;
-    rooms.push({...data, key});
-    clearTimeout(timeout);
-    renderRooms(rooms, list);
-  });
+  if(!sbClient){ list.innerHTML='<div class="sp-empty">⚠ Could not connect to lobby server. Use room code to join directly.</div>'; return; }
+  const staleTs = Date.now() - 5*60*1000;
+  const {data, error} = await sbClient.from('rooms').select('*').gt('ts', staleTs).eq('priv', false);
+  if(error){ list.innerHTML='<div class="sp-empty">⚠ Could not load rooms. Use room code to join directly.</div>'; return; }
+  renderRooms(data || [], list);
 }
 
 function renderRooms(rooms, list){
@@ -2499,13 +2477,15 @@ function startHosting(){
     statusEl.className='sp-status-box ok';
     document.getElementById('sp-host-btn').disabled=false;
 
-    // Advertise to Gun lobby
-    if(gun && listed){
-      const roomData = {name, host:spMyName, code:id, priv, ts:Date.now()};
-      spGunRoomKey = id;
-      spGun.get(id).put(roomData);
-      // Keepalive
-      spGunInterval = setInterval(()=>{ spGun.get(id).get('ts').put(Date.now()); }, 60*1000);
+    // Advertise to Supabase lobby
+    if(sbClient && listed){
+      const roomData = {code:id, name, host:spMyName, priv, ts:Date.now()};
+      spLobbyCode = id;
+      sbClient.from('rooms').upsert(roomData).then(()=>{});
+      // Keepalive: refresh ts every 60s so room stays visible
+      spGunInterval = setInterval(async ()=>{
+        await sbClient.from('rooms').update({ts:Date.now()}).eq('code', id);
+      }, 60*1000);
     }
 
     enterRoomUI(true);
@@ -2852,10 +2832,11 @@ function spSendChat(){
 
 function leaveRoom(){
   spInRoom=false;
-  // Remove from Gun lobby
-  if(gun && spIsHost && spGunRoomKey){
-    spGun.get(spGunRoomKey).put(null);
+  // Remove from Supabase lobby
+  if(sbClient && spIsHost && spLobbyCode){
+    sbClient.from('rooms').delete().eq('code', spLobbyCode).then(()=>{});
     clearInterval(spGunInterval);
+    spLobbyCode = null;
   }
   // Close connections
   spConnections.forEach(c=>{ try{c.close();}catch(e){} });
