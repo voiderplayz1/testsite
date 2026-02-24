@@ -3,6 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <title>Wiggly Paint</title>
+<script src="https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gun/gun.js"></script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0;image-rendering:pixelated;}
 body{font-family:Segoe UI,Tahoma,Arial,sans-serif;font-size:11px;overflow:hidden;height:100vh;display:flex;flex-direction:column;user-select:none;background:#6b6b6b;}
@@ -221,104 +223,116 @@ body{font-family:Segoe UI,Tahoma,Arial,sans-serif;font-size:11px;overflow:hidden
 /* PANEL BUTTON */
 #panel-btn{display:flex;align-items:center;gap:3px;padding:2px 7px;height:22px;background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.35);border-radius:2px;cursor:pointer;color:white;font-size:11px;font-weight:600;white-space:nowrap;user-select:none;}
 #panel-btn:hover{background:rgba(255,255,255,.3);}
-#social-btn,#gallery-btn{display:flex;align-items:center;gap:3px;padding:2px 7px;height:22px;background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.35);border-radius:2px;cursor:pointer;color:white;font-size:11px;font-weight:600;white-space:nowrap;user-select:none;}
-#social-btn:hover,#gallery-btn:hover{background:rgba(255,255,255,.3);}
+#social-btn{display:flex;align-items:center;gap:3px;padding:2px 7px;height:22px;background:rgba(100,220,150,.3);border:1px solid rgba(100,220,150,.5);border-radius:2px;cursor:pointer;color:white;font-size:11px;font-weight:600;white-space:nowrap;user-select:none;}
+#social-btn:hover{background:rgba(100,220,150,.45);}
+#social-btn.connected{background:rgba(50,200,100,.5);border-color:rgba(50,200,100,.8);animation:socialPulse 2s infinite;}
+@keyframes socialPulse{0%,100%{box-shadow:0 0 0 0 rgba(50,200,100,.4)}50%{box-shadow:0 0 0 4px rgba(50,200,100,0)}}
 
-/* ── SHARED WIN98 DIALOG BASE ── */
-.wp-dialog{display:none;position:fixed;z-index:850;background:#c0c0c0;border:2px solid;border-color:#fff #808080 #808080 #fff;box-shadow:2px 2px 0 #000;font-size:11px;font-family:Segoe UI,Tahoma,Arial,sans-serif;opacity:0;transition:opacity .18s,transform .22s cubic-bezier(.4,0,.2,1);}
-.wp-dialog.open{display:block;opacity:1;}
-.wp-titlebar{background:linear-gradient(to bottom,#4b9fdb 0%,#1e6abf 50%,#1a5ca8 51%,#2b7fd4 100%);color:#fff;font-size:11px;font-weight:700;padding:2px 4px 3px 6px;display:flex;align-items:center;justify-content:space-between;user-select:none;cursor:default;}
-.wp-title-left{display:flex;align-items:center;gap:4px;}
-.wp-dlg-icon{width:13px;height:13px;background:radial-gradient(circle at 40% 35%,#ff69b4,#d4006a);border-radius:50%;border:1px solid #7a0035;flex-shrink:0;}
-.wp-close{width:16px;height:14px;background:linear-gradient(to bottom,#f0f0f0,#d0d0d0);border:1px solid;border-color:#fff #808080 #808080 #fff;display:flex;align-items:center;justify-content:center;font-size:8px;cursor:pointer;color:#000;font-weight:700;}
-.wp-close:hover{background:linear-gradient(to bottom,#ffd0d0,#e08080);}
-.wp-close:active{border-color:#808080 #fff #fff #808080;}
-.wp-body{background:#c0c0c0;padding:8px 10px;}
-.wp-sunken{background:#fff;border:2px solid;border-color:#808080 #fff #fff #808080;padding:4px 6px;}
-.wp-raised{background:#c0c0c0;border:2px solid;border-color:#fff #808080 #808080 #fff;padding:4px 6px;}
-.wp-btn{font-family:Segoe UI,Tahoma,Arial,sans-serif;font-size:11px;padding:3px 12px;background:#c0c0c0;border:2px solid;border-color:#fff #808080 #808080 #fff;cursor:pointer;color:#000;white-space:nowrap;text-align:center;}
-.wp-btn:hover{background:#d0d8e8;}
-.wp-btn:active{border-color:#808080 #fff #fff #808080;padding:4px 11px 2px 13px;}
-.wp-inp{border:2px solid;border-color:#808080 #fff #fff #808080;background:#fff;padding:2px 4px;font-size:11px;font-family:Segoe UI,Tahoma,Arial,sans-serif;outline:none;}
-.wp-inp:focus{border-color:#0054e3 #d0d8e8 #d0d8e8 #0054e3;}
-.wp-label{font-size:11px;color:#000;margin-bottom:2px;}
-.wp-sep{height:1px;background:#808080;margin:6px 0;}
-.wp-tag{font-size:9px;color:#666;text-transform:uppercase;letter-spacing:.4px;margin-bottom:3px;}
+/* ACCOUNT MODAL */
+#acct-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:1200;align-items:center;justify-content:center;}
+#acct-overlay.show{display:flex;}
+#acct-box{width:340px;background:#f0f0f0;border:2px solid;border-color:#fff #808080 #808080 #fff;box-shadow:4px 4px 0 #000;font-size:12px;font-family:Segoe UI,Tahoma,Arial,sans-serif;}
+#acct-titlebar{background:linear-gradient(to bottom,#4b9fdb 0%,#1e6abf 50%,#1a5ca8 51%,#2b7fd4 100%);color:white;font-size:12px;font-weight:700;padding:4px 6px;display:flex;align-items:center;justify-content:space-between;}
+#acct-tabs{display:flex;background:#e0e0e0;border-bottom:1px solid #bbb;}
+.acct-tab{flex:1;padding:7px 4px;text-align:center;cursor:pointer;font-size:11px;font-weight:700;color:#555;border-bottom:3px solid transparent;}
+.acct-tab:hover{background:#e8e8e8;color:#333;}
+.acct-tab.active{background:#f0f0f0;color:#1a5ca8;border-bottom-color:#1a5ca8;}
+#acct-body{padding:16px;}
+.acct-field{margin-bottom:12px;}
+.acct-field label{display:block;font-size:11px;font-weight:600;color:#333;margin-bottom:4px;}
+.acct-inp{width:100%;border:2px solid;border-color:#808080 #fff #fff #808080;background:#fff;padding:4px 6px;font-size:12px;font-family:Segoe UI,Tahoma,Arial,sans-serif;outline:none;}
+.acct-inp:focus{border-color:#0054e3 #d0d8e8 #d0d8e8 #0054e3;}
+.acct-inp.err-inp{background:#fff0f0;border-color:#c00 #faa #faa #c00;}
+.acct-hint{font-size:10px;color:#777;margin-top:3px;}
+.acct-err{font-size:11px;color:#c00;min-height:16px;margin-bottom:8px;font-weight:600;}
+.acct-ok{font-size:11px;color:#080;min-height:16px;margin-bottom:8px;font-weight:600;}
+.acct-footer{display:flex;justify-content:flex-end;gap:8px;padding-top:10px;border-top:1px solid #ccc;}
+.acct-btn{font-family:Segoe UI,Tahoma,Arial,sans-serif;font-size:12px;padding:5px 20px;border:2px solid;border-color:#fff #808080 #808080 #fff;background:#c0c0c0;cursor:pointer;font-weight:600;}
+.acct-btn:hover{background:#d0d8e8;}
+.acct-btn:active{border-color:#808080 #fff #fff #808080;}
+.acct-btn.primary{background:linear-gradient(to bottom,#5bb8f5,#1a6abf);color:#fff;border-color:#0d4a8a;}
+.acct-btn.primary:hover{filter:brightness(1.1);}
+#acct-logged-in{padding:16px;display:none;flex-direction:column;gap:10px;}
+#acct-logged-in.show{display:flex;}
+.acct-avatar{width:48px;height:48px;border-radius:50%;background:linear-gradient(135deg,#4b9fdb,#7b1fa2);display:flex;align-items:center;justify-content:center;color:#fff;font-size:22px;font-weight:700;border:2px solid #888;flex-shrink:0;}
+.acct-user-row{display:flex;align-items:center;gap:12px;}
+.acct-username-display{font-size:16px;font-weight:700;color:#1a5ca8;}
+.acct-joined-date{font-size:10px;color:#888;}
 
-/* ── SOCIAL DRAWING DIALOG ── */
-#social-dialog{width:480px;top:50%;left:50%;transform:translate(-50%,-50%) scale(.96);}
-#social-dialog.open{transform:translate(-50%,-50%) scale(1);}
-#sd-tabs{display:flex;border-bottom:2px solid #808080;padding:0 8px;}
-.sd-tab{padding:3px 12px;font-size:11px;cursor:pointer;border:2px solid transparent;border-bottom:none;margin-bottom:-2px;color:#555;background:#b0b0b0;}
-.sd-tab.active{background:#c0c0c0;border-color:#808080 #808080 #c0c0c0 #808080;color:#000;font-weight:700;z-index:1;}
-.sd-tab:not(.active):hover{background:#c8c8c8;}
-#sd-body{padding:8px 10px;display:flex;flex-direction:column;gap:7px;}
-.sd-page{display:none;flex-direction:column;gap:7px;}
-.sd-page.active{display:flex;}
-/* Room list */
-#sd-room-list{max-height:160px;overflow-y:auto;background:#fff;border:2px solid;border-color:#808080 #fff #fff #808080;}
-.sd-room-row{display:flex;align-items:center;gap:6px;padding:4px 6px;border-bottom:1px solid #e0e0e0;cursor:pointer;}
-.sd-room-row:hover{background:#ddeeff;}
-.sd-room-row.selected{background:#c8dafc;}
-.sd-room-name{flex:1;font-weight:600;font-size:11px;}
-.sd-room-info{font-size:10px;color:#666;}
-.sd-room-lock{font-size:11px;}
-.sd-room-count{font-size:10px;color:#1a6abf;font-weight:600;}
-.sd-empty{padding:12px;text-align:center;color:#888;font-size:11px;font-style:italic;}
-/* Host form */
-#sd-name-inp,#sd-pass-inp{width:100%;}
-#sd-private-row{display:flex;align-items:center;gap:6px;}
-/* In-room UI */
-#sd-room-panel{display:none;flex-direction:column;gap:5px;}
-#sd-room-panel.show{display:flex;}
-#sd-chat{height:100px;overflow-y:auto;background:#fff;border:2px solid;border-color:#808080 #fff #fff #808080;padding:4px 5px;font-size:10px;line-height:1.6;}
-.sd-chat-msg{word-break:break-word;}
-.sd-chat-name{font-weight:700;color:#1a5ca8;}
-.sd-chat-sys{color:#888;font-style:italic;}
-#sd-chat-row{display:flex;gap:4px;}
-#sd-chat-inp{flex:1;}
-#sd-users-bar{display:flex;gap:4px;flex-wrap:wrap;align-items:center;font-size:10px;color:#555;}
-.sd-user-chip{background:#1a5ca8;color:#fff;padding:1px 6px;border-radius:10px;font-size:10px;}
-/* Firebase status */
-#fb-status{font-size:10px;padding:3px 6px;margin-bottom:4px;}
-.fb-ok{color:#006600;background:#f0fff0;border:1px solid #99cc99;}
-.fb-err{color:#cc0000;background:#fff0f0;border:1px solid #ffaaaa;}
-.fb-setup{color:#555;background:#f8f8f0;border:1px solid #cccc88;}
+/* NO ACCOUNT ERROR OVERLAY */
+#noacct-error{display:none;position:fixed;inset:0;z-index:1100;align-items:center;justify-content:center;pointer-events:none;}
+#noacct-error.show{display:flex;}
+#noacct-error-box{background:#c0c0c0;border:2px solid;border-color:#fff #808080 #808080 #fff;box-shadow:4px 4px 0 #000;min-width:280px;max-width:340px;font-family:Segoe UI,Tahoma,Arial,sans-serif;font-size:12px;pointer-events:all;animation:errPopIn .15s cubic-bezier(.4,0,.2,1);}
+@keyframes errPopIn{from{transform:scale(.85);opacity:0}to{transform:scale(1);opacity:1}}
+#noacct-error-title{background:linear-gradient(to bottom,#cc0000,#880000);color:#fff;font-weight:700;padding:4px 6px;display:flex;align-items:center;justify-content:space-between;font-size:12px;}
+#noacct-error-body{padding:14px;display:flex;flex-direction:column;gap:10px;}
+.noacct-icon{font-size:32px;text-align:center;}
+.noacct-msg{text-align:center;font-size:12px;color:#000;line-height:1.5;}
+.noacct-btns{display:flex;gap:8px;justify-content:center;}
+.noacct-btn{font-family:Segoe UI,Tahoma,Arial,sans-serif;font-size:11px;padding:5px 16px;border:2px solid;border-color:#fff #808080 #808080 #fff;background:#c0c0c0;cursor:pointer;font-weight:600;}
+.noacct-btn:hover{background:#d0d8e8;}
+.noacct-btn:active{border-color:#808080 #fff #fff #808080;}
+.noacct-btn.primary{background:linear-gradient(to bottom,#5bb8f5,#1a6abf);color:#fff;border-color:#0d4a8a;}
+.noacct-btn.primary:hover{filter:brightness(1.1);}
 
-/* ── GALLERY DIALOG ── */
-#gallery-dialog{width:520px;height:480px;top:50%;left:50%;transform:translate(-50%,-50%) scale(.96);display:none;flex-direction:column;}
-#gallery-dialog.open{display:flex;opacity:1;transform:translate(-50%,-50%) scale(1);}
-#gal-toolbar{display:flex;gap:6px;align-items:center;padding:6px 10px;border-bottom:2px solid #808080;background:#c0c0c0;flex-shrink:0;}
-#gal-scroll{flex:1;overflow-y:auto;background:#808080;padding:8px;}
-#gal-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;}
-.gal-card{background:#c0c0c0;border:2px solid;border-color:#fff #808080 #808080 #fff;cursor:pointer;display:flex;flex-direction:column;}
-.gal-card:hover .gal-thumb{filter:brightness(1.05);}
-.gal-thumb{width:100%;aspect-ratio:4/3;object-fit:cover;display:block;background:#888;image-rendering:pixelated;}
-.gal-thumb-placeholder{width:100%;aspect-ratio:4/3;background:linear-gradient(135deg,#aaa,#888);display:flex;align-items:center;justify-content:center;font-size:20px;}
-.gal-info{padding:4px 5px;}
-.gal-poster{font-weight:700;font-size:10px;color:#000;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-.gal-date{font-size:9px;color:#555;}
-.gal-comments-count{font-size:9px;color:#1a5ca8;}
-/* Post modal */
-#gal-post-modal{display:none;position:absolute;inset:0;background:rgba(0,0,0,.4);z-index:10;align-items:center;justify-content:center;}
-#gal-post-modal.show{display:flex;}
-#gal-post-box{background:#c0c0c0;border:2px solid;border-color:#fff #808080 #808080 #fff;box-shadow:2px 2px 0 #000;width:340px;font-size:11px;}
-/* View post modal */
-#gal-view-modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:900;align-items:flex-start;justify-content:center;padding-top:40px;}
-#gal-view-modal.show{display:flex;}
-#gal-view-box{background:#c0c0c0;border:2px solid;border-color:#fff #808080 #808080 #fff;box-shadow:2px 2px 0 #000;width:480px;max-height:80vh;display:flex;flex-direction:column;font-size:11px;}
-#gal-view-img{width:100%;max-height:280px;object-fit:contain;background:#333;display:block;}
-#gal-view-comments{flex:1;overflow-y:auto;background:#fff;border:2px solid;border-color:#808080 #fff #fff #808080;padding:5px 6px;max-height:160px;font-size:11px;}
-.gal-comment{padding:3px 0;border-bottom:1px solid #eee;line-height:1.4;}
-.gal-comment-name{font-weight:700;color:#1a5ca8;}
-#gal-comment-row{display:flex;gap:4px;padding:6px 10px;border-top:2px solid #808080;}
-#gal-comment-inp{flex:1;}
-#gal-loading{padding:20px;text-align:center;color:#ccc;font-size:12px;grid-column:1/-1;}
-</style>
+/* SOCIAL DRAWING PANEL */
+#social-panel{position:fixed;top:0;right:-380px;width:360px;height:100vh;background:#f0f0f0;border-left:2px solid #999;box-shadow:-4px 0 16px rgba(0,0,0,.3);z-index:400;transition:right .25s cubic-bezier(.4,0,.2,1);display:flex;flex-direction:column;font-size:12px;}
+#social-panel.open{right:0;}
+#social-panel-title{background:linear-gradient(to bottom,#4b9fdb,#1a5ca8);color:white;font-size:12px;font-weight:600;padding:6px 10px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;}
+#social-panel-body{flex:1;overflow-y:auto;padding:0;display:flex;flex-direction:column;}
+.sp-tab-bar{display:flex;border-bottom:2px solid #bbb;background:#e8e8e8;flex-shrink:0;}
+.sp-tab{flex:1;padding:6px 4px;text-align:center;cursor:pointer;font-size:11px;font-weight:600;color:#555;border-bottom:2px solid transparent;margin-bottom:-2px;}
+.sp-tab:hover{background:#f0f0f0;color:#333;}
+.sp-tab.active{background:#f0f0f0;color:#1a5ca8;border-bottom-color:#1a5ca8;}
+.sp-page{display:none;padding:12px;flex:1;flex-direction:column;gap:10px;}
+.sp-page.active{display:flex;}
+.sp-section-label{font-weight:700;font-size:11px;color:#333;text-transform:uppercase;letter-spacing:.4px;margin-bottom:4px;}
+.sp-input{width:100%;border:1px solid #aaa;padding:4px 6px;font-size:11px;font-family:Segode UI,Tahoma,sans-serif;box-shadow:inset 1px 1px 2px rgba(0,0,0,.1);}
+.sp-input:focus{border-color:#0054e3;outline:none;}
+.sp-btn{padding:5px 12px;border:1px solid #aaa;background:linear-gradient(to bottom,#f8f8f8,#e0e0e0);cursor:pointer;font-size:11px;font-family:Segode UI,Tahoma,sans-serif;white-space:nowrap;}
+.sp-btn:hover{background:linear-gradient(to bottom,#e8f4ff,#c8e4f8);border-color:#3399cc;}
+.sp-btn.primary{background:linear-gradient(to bottom,#5bb8f5,#1a6abf);color:white;border-color:#0d4a8a;font-weight:600;}
+.sp-btn.primary:hover{filter:brightness(1.1);}
+.sp-btn.danger{background:linear-gradient(to bottom,#f88,#d44);color:white;border-color:#a00;}
+.sp-btn.danger:hover{filter:brightness(1.1);}
+.sp-btn.green{background:linear-gradient(to bottom,#5d5,#292);color:white;border-color:#050;}
+.sp-btn.green:hover{filter:brightness(1.1);}
+.sp-row{display:flex;gap:6px;align-items:center;}
+.sp-label{font-size:11px;color:#444;min-width:70px;flex-shrink:0;}
+.sp-status-box{background:#fff;border:1px solid #bbb;padding:6px 8px;font-size:11px;color:#333;border-left:3px solid #aaa;min-height:28px;word-break:break-all;}
+.sp-status-box.ok{border-left-color:#2a2;}
+.sp-status-box.err{border-left-color:#c00;color:#c00;}
+.sp-status-box.info{border-left-color:#18f;}
+#social-room-list{display:flex;flex-direction:column;gap:6px;min-height:60px;}
+.sp-room-card{background:#fff;border:1px solid #ccc;padding:8px 10px;cursor:pointer;display:flex;align-items:center;gap:8px;}
+.sp-room-card:hover{background:linear-gradient(to bottom,#e8f4ff,#d8ecfc);border-color:#3399cc;}
+.sp-room-card-info{flex:1;min-width:0;}
+.sp-room-name{font-weight:700;font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.sp-room-meta{font-size:10px;color:#666;margin-top:2px;}
+.sp-room-badge{font-size:9px;padding:2px 5px;border-radius:2px;font-weight:600;flex-shrink:0;}
+.sp-room-badge.pub{background:#d4f0d4;color:#155;border:1px solid #8c8;}
+.sp-room-badge.priv{background:#fde8d8;color:#631;border:1px solid #c85;}
+.sp-peers{display:flex;flex-wrap:wrap;gap:4px;margin-top:4px;}
+.sp-peer-chip{background:#e8f4ff;border:1px solid #9cc;padding:2px 6px;font-size:10px;border-radius:10px;color:#1a5ca8;}
+.sp-peer-chip.me{background:#d4f0d4;border-color:#8a8;color:#155;}
+#sp-chat-log{flex:1;overflow-y:auto;background:#fff;border:1px solid #bbb;padding:6px;display:flex;flex-direction:column;gap:3px;min-height:80px;max-height:150px;}
+.sp-chat-msg{font-size:11px;line-height:1.4;}
+.sp-chat-msg .sp-chat-who{font-weight:700;color:#1a5ca8;}
+.sp-chat-msg .sp-chat-who.me{color:#155;}
+.sp-chat-msg .sp-chat-who.sys{color:#888;font-style:italic;}
+.sp-chat-row{display:flex;gap:4px;}
+.sp-toggle-row{display:flex;align-items:center;gap:6px;margin:2px 0;}
+.sp-checkbox{width:13px;height:13px;cursor:pointer;}
+.sp-divider{border:none;border-top:1px solid #ccc;margin:4px 0;}
+.sp-code-box{background:#fff;border:2px solid #1a5ca8;padding:8px;font-size:15px;font-weight:700;letter-spacing:2px;text-align:center;color:#1a5ca8;cursor:pointer;user-select:all;}
+.sp-code-box:hover{background:#e8f4ff;}
+.sp-empty{color:#999;text-align:center;font-style:italic;padding:12px;}
+.sp-spinner{display:inline-block;width:12px;height:12px;border:2px solid #bbb;border-top-color:#1a5ca8;border-radius:50%;animation:spSpin .6s linear infinite;vertical-align:middle;margin-right:4px;}
+@keyframes spSpin{to{transform:rotate(360deg)}}
 
 /* PANEL DIALOG — MS Paint floating dialog box */
-#panel-dialog{display:none;position:fixed;top:50%;left:50%;transform:translate(-50%,-50%) scale(.96);width:370px;background:#c0c0c0;border:2px solid;border-color:#fff #808080 #808080 #fff;box-shadow:2px 2px 0 #000;z-index:850;font-size:11px;font-family:Segoe UI,Tahoma,Arial,sans-serif;opacity:0;transition:opacity .18s ease,transform .18s cubic-bezier(.4,0,.2,1);}
-#panel-dialog.open{opacity:1;transform:translate(-50%,-50%) scale(1);}
+#panel-dialog{display:none;position:fixed;bottom:50px;left:50%;transform:translateX(-50%) translateY(20px);width:370px;background:#c0c0c0;border:2px solid;border-color:#fff #808080 #808080 #fff;box-shadow:2px 2px 0 #000,inset 0 0 0 1px #c0c0c0;z-index:800;font-size:11px;font-family:Segoe UI,Tahoma,Arial,sans-serif;opacity:0;transition:opacity .18s ease,transform .22s cubic-bezier(.4,0,.2,1);pointer-events:none;}
+#panel-dialog.open{display:block;opacity:1;transform:translateX(-50%) translateY(0);pointer-events:all;}
 #pd-titlebar{background:linear-gradient(to bottom,#4b9fdb 0%,#1e6abf 50%,#1a5ca8 51%,#2b7fd4 100%);color:white;font-size:11px;font-weight:700;padding:2px 4px 3px 5px;display:flex;align-items:center;justify-content:space-between;user-select:none;}
 #pd-title-left{display:flex;align-items:center;gap:4px;}
 #pd-icon{width:13px;height:13px;background:radial-gradient(circle at 40% 35%,#ff69b4,#d4006a);border-radius:50%;border:1px solid #7a0035;flex-shrink:0;}
@@ -383,8 +397,8 @@ body{font-family:Segoe UI,Tahoma,Arial,sans-serif;font-size:11px;overflow:hidden
     </div>
   </div>
   <div id="panel-btn" onclick="openPanel()" title="Open Panel">⚡ Panel</div>
-  <div id="social-btn" onclick="openSocial()" title="Social Drawing">🎨 Social</div>
-  <div id="gallery-btn" onclick="openGallery()" title="Posted Drawings">🖼 Gallery</div>
+  <div id="social-btn" onclick="openSocialPanel()" title="Social Drawing">🎨 Social</div>
+  <div id="acct-btn" onclick="openAccountModal()" title="Account" style="display:flex;align-items:center;gap:3px;padding:2px 7px;height:22px;background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.35);border-radius:2px;cursor:pointer;color:white;font-size:11px;font-weight:600;white-space:nowrap;user-select:none;">👤 Account</div>
   <div id="qa">
     <div class="qa-btn" title="Save GIF (Ctrl+S)" onclick="exportGIF()">💾</div>
     <div class="qa-btn" title="Undo (Ctrl+Z)" onclick="undo()">↩</div>
@@ -2018,131 +2032,6 @@ hc.addEventListener('touchend',()=>{ setTimeout(()=>scheduleAutoSave(),100); });
 })();
 </script>
 
-<!-- SOCIAL DRAWING DIALOG -->
-<div id="social-dialog" class="wp-dialog">
-  <div class="wp-titlebar">
-    <div class="wp-title-left"><div class="wp-dlg-icon"></div><span>Social Drawing</span></div>
-    <div class="wp-close" onclick="closeSocial()">✕</div>
-  </div>
-  <div id="sd-tabs">
-    <div class="sd-tab active" onclick="sdSwitchTab('browse',this)">Browse Rooms</div>
-    <div class="sd-tab" onclick="sdSwitchTab('host',this)">Host Room</div>
-  </div>
-  <div id="sd-body">
-    <div id="fb-status" class="net-status fb-setup">⚙ Connecting to Wiggly Network…</div>
-
-    <!-- BROWSE TAB -->
-    <div class="sd-page active" id="sd-browse">
-      <div class="wp-tag">Live Drawing Rooms</div>
-      <div id="sd-room-list"><div class="sd-empty">Loading rooms…</div></div>
-      <div style="display:flex;gap:4px;justify-content:flex-end;">
-        <button class="wp-btn" onclick="sdRefreshRooms()">↺ Refresh</button>
-        <button class="wp-btn" id="sd-join-btn" onclick="sdJoinSelected()" disabled>Join Selected →</button>
-      </div>
-    </div>
-
-    <!-- HOST TAB -->
-    <div class="sd-page" id="sd-host">
-      <div class="wp-tag">Create a Room</div>
-      <div style="display:flex;flex-direction:column;gap:5px;">
-        <div class="wp-label">Room name:</div>
-        <input class="wp-inp" id="sd-name-inp" placeholder="My Drawing Room" maxlength="40">
-        <div id="sd-private-row">
-          <input type="checkbox" id="sd-private-cb" onchange="document.getElementById('sd-pass-row').style.display=this.checked?'flex':'none'">
-          <label for="sd-private-cb" style="cursor:pointer;">Private (password protected)</label>
-        </div>
-        <div id="sd-pass-row" style="display:none;flex-direction:column;gap:3px;">
-          <div class="wp-tag">Room password:</div>
-          <input class="wp-inp" id="sd-pass-inp" type="password" placeholder="Set a password…" maxlength="30">
-        </div>
-        <div style="display:flex;gap:4px;justify-content:flex-end;margin-top:4px;">
-          <button class="wp-btn" onclick="sdHostRoom()" style="font-weight:700;">🚀 Create &amp; Host</button>
-        </div>
-      </div>
-    </div>
-
-    <!-- IN-ROOM PANEL (shown when connected) -->
-    <div id="sd-room-panel">
-      <div class="wp-sep"></div>
-      <div style="display:flex;align-items:center;justify-content:space-between;">
-        <div style="font-weight:700;font-size:11px;">🔴 <span id="sd-room-name-display">Room</span></div>
-        <button class="wp-btn" onclick="sdLeaveRoom()" style="font-size:10px;padding:2px 8px;">Leave</button>
-      </div>
-      <div id="sd-users-bar"></div>
-      <div class="wp-tag">Chat</div>
-      <div id="sd-chat"></div>
-      <div id="sd-chat-row">
-        <input class="wp-inp" id="sd-chat-inp" placeholder="Say something…" maxlength="120" style="flex:1;">
-        <button class="wp-btn" onclick="sdSendChat()">Send</button>
-      </div>
-      <div style="display:flex;gap:4px;margin-top:2px;">
-        <button class="wp-btn" onclick="sdPushCanvas()" style="font-weight:700;">📤 Push My Canvas</button>
-        <button class="wp-btn" onclick="sdPullCanvas()">📥 Pull Canvas</button>
-      </div>
-      <div id="sd-sync-status" style="font-size:10px;color:#555;min-height:13px;"></div>
-    </div>
-  </div>
-</div>
-
-<!-- GALLERY DIALOG -->
-<div id="gallery-dialog" class="wp-dialog" style="position:fixed;">
-  <div class="wp-titlebar">
-    <div class="wp-title-left"><div class="wp-dlg-icon"></div><span>Posted Drawings</span></div>
-    <div class="wp-close" onclick="closeGallery()">✕</div>
-  </div>
-  <div id="gal-toolbar">
-    <button class="wp-btn" style="font-weight:700;" onclick="openPostModal()">📤 Post My Drawing</button>
-    <div style="flex:1;"></div>
-    <button class="wp-btn" onclick="galLoadMore()">↺ Refresh</button>
-  </div>
-  <div id="gal-scroll">
-    <div id="gal-grid">
-      <div id="gal-loading">Loading posts…</div>
-    </div>
-  </div>
-  <!-- POST MODAL -->
-  <div id="gal-post-modal">
-    <div id="gal-post-box">
-      <div class="wp-titlebar"><div class="wp-title-left"><div class="wp-dlg-icon"></div><span>Post Your Drawing</span></div><div class="wp-close" onclick="closePostModal()">✕</div></div>
-      <div style="padding:10px;display:flex;flex-direction:column;gap:7px;">
-        <div class="wp-tag">Your name / handle:</div>
-        <input class="wp-inp" id="gal-poster-inp" placeholder="Anonymous" maxlength="30" style="width:100%;">
-        <div class="wp-tag">Caption (optional):</div>
-        <input class="wp-inp" id="gal-caption-inp" placeholder="What is this?" maxlength="100" style="width:100%;">
-        <div class="wp-tag">Preview:</div>
-        <canvas id="gal-preview-canvas" style="width:100%;max-height:120px;border:2px solid;border-color:#808080 #fff #fff #808080;background:#fff;object-fit:contain;"></canvas>
-        <div style="display:flex;gap:4px;justify-content:flex-end;">
-          <button class="wp-btn" onclick="closePostModal()">Cancel</button>
-          <button class="wp-btn" style="font-weight:700;" onclick="galSubmitPost()" id="gal-submit-btn">📤 Post</button>
-        </div>
-        <div id="gal-post-status" style="font-size:10px;color:#555;min-height:13px;"></div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- VIEW POST MODAL -->
-<div id="gal-view-modal">
-  <div id="gal-view-box">
-    <div class="wp-titlebar">
-      <div class="wp-title-left"><div class="wp-dlg-icon"></div><span id="gal-view-title">Post</span></div>
-      <div class="wp-close" onclick="closeViewModal()">✕</div>
-    </div>
-    <img id="gal-view-img" src="" alt="drawing">
-    <div style="padding:6px 10px;background:#c0c0c0;border-top:2px solid #808080;">
-      <div style="font-weight:700;font-size:11px;" id="gal-view-poster"></div>
-      <div style="font-size:10px;color:#555;" id="gal-view-caption"></div>
-    </div>
-    <div class="wp-tag" style="padding:4px 10px 0;">Comments</div>
-    <div id="gal-view-comments"></div>
-    <div id="gal-comment-row">
-      <input class="wp-inp" id="gal-comment-name" placeholder="Your name" maxlength="25" style="width:90px;">
-      <input class="wp-inp" id="gal-comment-inp" placeholder="Add a comment…" maxlength="150" style="flex:1;">
-      <button class="wp-btn" onclick="galSubmitComment()">Post</button>
-    </div>
-  </div>
-</div>
-
 <!-- PANEL DIALOG — MS Paint style floating window -->
 <div id="panel-dialog">
   <div id="pd-titlebar">
@@ -2182,57 +2071,225 @@ hc.addEventListener('touchend',()=>{ setTimeout(()=>scheduleAutoSave(),100); });
   </div>
 </div>
 
+<!-- ACCOUNT MODAL -->
+<div id="acct-overlay">
+  <div id="acct-box">
+    <div id="acct-titlebar">
+      <span>👤 Wiggly Account</span>
+      <span style="cursor:pointer;opacity:.8;font-size:13px;" onclick="closeAccountModal()">✕</span>
+    </div>
+    <!-- Logged-in view -->
+    <div id="acct-logged-in">
+      <div class="acct-user-row">
+        <div class="acct-avatar" id="acct-avatar-letter">?</div>
+        <div>
+          <div class="acct-username-display" id="acct-display-name">—</div>
+          <div class="acct-joined-date" id="acct-display-joined">Joined —</div>
+        </div>
+      </div>
+      <div style="font-size:11px;color:#555;background:#fff;border:1px solid #ccc;padding:8px;">
+        You're signed in and ready to join Social Drawing rooms!
+      </div>
+      <div style="display:flex;justify-content:space-between;gap:8px;">
+        <button class="acct-btn" onclick="acctLogout()" style="color:#c00;">🚪 Log Out</button>
+        <button class="acct-btn primary" onclick="closeAccountModal()">Close</button>
+      </div>
+    </div>
+    <!-- Auth tabs (create / login) -->
+    <div id="acct-auth-ui">
+      <div id="acct-tabs">
+        <div class="acct-tab active" id="acct-tab-create" onclick="acctSwitchTab('create')">Create Account</div>
+        <div class="acct-tab" id="acct-tab-login" onclick="acctSwitchTab('login')">Log In</div>
+      </div>
+      <!-- CREATE -->
+      <div id="acct-page-create">
+        <div id="acct-body">
+          <div class="acct-field">
+            <label for="acct-create-user">Username</label>
+            <input class="acct-inp" id="acct-create-user" type="text" maxlength="14" placeholder="3–14 characters" autocomplete="off" oninput="acctValidateUsername(this)">
+            <div class="acct-hint">3–14 characters, letters/numbers/underscores only. No profanity.</div>
+          </div>
+          <div class="acct-field">
+            <label for="acct-create-pw">Password</label>
+            <input class="acct-inp" id="acct-create-pw" type="password" maxlength="16" placeholder="8–16 characters" autocomplete="new-password" oninput="acctValidatePw(this)">
+            <div class="acct-hint">8–16 characters.</div>
+          </div>
+          <div class="acct-field">
+            <label for="acct-create-pw2">Confirm Password</label>
+            <input class="acct-inp" id="acct-create-pw2" type="password" maxlength="16" placeholder="Repeat password" autocomplete="new-password">
+          </div>
+          <div class="acct-err" id="acct-create-err"></div>
+          <div class="acct-footer">
+            <button class="acct-btn" onclick="closeAccountModal()">Cancel</button>
+            <button class="acct-btn primary" onclick="acctCreate()">Create Account</button>
+          </div>
+        </div>
+      </div>
+      <!-- LOGIN -->
+      <div id="acct-page-login" style="display:none;">
+        <div id="acct-body-login" style="padding:16px;">
+          <div class="acct-field">
+            <label for="acct-login-user">Username</label>
+            <input class="acct-inp" id="acct-login-user" type="text" maxlength="14" placeholder="Your username" autocomplete="username">
+          </div>
+          <div class="acct-field">
+            <label for="acct-login-pw">Password</label>
+            <input class="acct-inp" id="acct-login-pw" type="password" maxlength="16" placeholder="Your password" autocomplete="current-password" onkeydown="if(event.key==='Enter')acctLogin()">
+          </div>
+          <div class="acct-err" id="acct-login-err"></div>
+          <div class="acct-footer">
+            <button class="acct-btn" onclick="closeAccountModal()">Cancel</button>
+            <button class="acct-btn primary" onclick="acctLogin()">Log In</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- NO ACCOUNT ERROR OVERLAY -->
+<div id="noacct-error">
+  <div id="noacct-error-box">
+    <div id="noacct-error-title">
+      <span>⚠ Not Signed In</span>
+      <span style="cursor:pointer;opacity:.8;" onclick="hideNoAcctError()">✕</span>
+    </div>
+    <div id="noacct-error-body">
+      <div class="noacct-icon">🔒</div>
+      <div class="noacct-msg">You need a <strong>Wiggly Account</strong> to join or host Social Drawing rooms.<br><br>Create a free account to start drawing with others!</div>
+      <div class="noacct-btns">
+        <button class="noacct-btn" onclick="hideNoAcctError()">Cancel</button>
+        <button class="noacct-btn primary" onclick="hideNoAcctError();openAccountModal()">Create Account / Log In</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SOCIAL DRAWING PANEL -->
+<div id="social-panel">
+  <div id="social-panel-title">
+    <span>🎨 Social Drawing</span>
+    <span style="cursor:pointer;opacity:.8;font-size:14px;" onclick="closeSocialPanel()">✕</span>
+  </div>
+  <div id="social-panel-body">
+    <div class="sp-tab-bar">
+      <div class="sp-tab active" id="sp-tab-browse" onclick="spSwitchTab('browse')">🌐 Browse</div>
+      <div class="sp-tab" id="sp-tab-host" onclick="spSwitchTab('host')">📡 Host</div>
+      <div class="sp-tab" id="sp-tab-join" onclick="spSwitchTab('join')">🔗 Join</div>
+      <div class="sp-tab" id="sp-tab-room" onclick="spSwitchTab('room')" style="display:none;">🖌 Room</div>
+    </div>
+
+    <!-- BROWSE TAB -->
+    <div class="sp-page active" id="sp-page-browse">
+      <div>
+        <div class="sp-section-label">Public Rooms</div>
+        <div id="social-room-list"><div class="sp-empty"><span class="sp-spinner"></span> Loading rooms...</div></div>
+      </div>
+      <button class="sp-btn" onclick="refreshRoomList()" style="align-self:flex-start;">↺ Refresh</button>
+      <hr class="sp-divider">
+      <div style="font-size:10px;color:#888;">Rooms hosted publicly appear here. Join instantly or enter a password for private rooms.</div>
+    </div>
+
+    <!-- HOST TAB -->
+    <div class="sp-page" id="sp-page-host">
+      <div style="background:#e8f4ff;border:1px solid #9cc;padding:8px;font-size:11px;color:#1a5ca8;" id="sp-host-acct-info">
+        Hosting as: <strong id="sp-host-as-name">—</strong>
+      </div>
+      <div>
+        <div class="sp-section-label">Room Name</div>
+        <input class="sp-input" id="sp-host-name" type="text" maxlength="30" placeholder="My Drawing Room" value="My Drawing Room">
+      </div>
+      <div class="sp-toggle-row">
+        <input type="checkbox" class="sp-checkbox" id="sp-host-private" onchange="spTogglePrivacy()">
+        <label for="sp-host-private" style="font-size:11px;color:#333;cursor:pointer;">Private room (password required)</label>
+      </div>
+      <div id="sp-host-pw-row" style="display:none;">
+        <div class="sp-section-label">Password</div>
+        <input class="sp-input" id="sp-host-pw" type="password" maxlength="30" placeholder="Set a password...">
+      </div>
+      <div class="sp-toggle-row">
+        <input type="checkbox" class="sp-checkbox" id="sp-host-listed" checked>
+        <label for="sp-host-listed" style="font-size:11px;color:#333;cursor:pointer;">Show in public room list</label>
+      </div>
+      <button class="sp-btn primary" id="sp-host-btn" onclick="startHosting()">📡 Start Hosting</button>
+      <div id="sp-host-status" class="sp-status-box info" style="display:none;"></div>
+    </div>
+
+    <!-- JOIN TAB -->
+    <div class="sp-page" id="sp-page-join">
+      <div style="background:#e8f4ff;border:1px solid #9cc;padding:8px;font-size:11px;color:#1a5ca8;" id="sp-join-acct-info">
+        Joining as: <strong id="sp-join-as-name">—</strong>
+      </div>
+      <div>
+        <div class="sp-section-label">Room Code</div>
+        <div class="sp-row">
+          <input class="sp-input" id="sp-join-code" type="text" maxlength="20" placeholder="Enter room code..." style="flex:1;">
+        </div>
+        <div style="font-size:10px;color:#888;margin-top:3px;">Paste the code shared by the host</div>
+      </div>
+      <div>
+        <div class="sp-section-label">Password <span style="color:#999;font-weight:400;">(if required)</span></div>
+        <input class="sp-input" id="sp-join-pw" type="password" maxlength="30" placeholder="Leave blank if public">
+      </div>
+      <button class="sp-btn primary" id="sp-join-btn" onclick="joinRoom()">🔗 Join Room</button>
+      <div id="sp-join-status" class="sp-status-box info" style="display:none;"></div>
+    </div>
+
+    <!-- ROOM TAB (active session) -->
+    <div class="sp-page" id="sp-page-room">
+      <div>
+        <div class="sp-section-label" id="sp-room-title-label">Room: —</div>
+        <div id="sp-room-code-wrap" style="display:none;">
+          <div style="font-size:10px;color:#555;margin-bottom:3px;">Share this code with others:</div>
+          <div class="sp-code-box" id="sp-room-code-display" onclick="copyRoomCode()" title="Click to copy">—</div>
+          <div style="font-size:10px;color:#888;margin-top:2px;">Click to copy</div>
+        </div>
+      </div>
+      <div>
+        <div class="sp-section-label">Connected (<span id="sp-peer-count">0</span>)</div>
+        <div class="sp-peers" id="sp-peer-list"></div>
+      </div>
+      <hr class="sp-divider">
+      <div style="display:flex;flex-direction:column;gap:4px;flex:1;">
+        <div class="sp-section-label">Chat</div>
+        <div id="sp-chat-log"></div>
+        <div class="sp-chat-row">
+          <input class="sp-input" id="sp-chat-inp" type="text" maxlength="200" placeholder="Type message..." style="flex:1;" onkeydown="if(event.key==='Enter')spSendChat()">
+          <button class="sp-btn" onclick="spSendChat()">Send</button>
+        </div>
+      </div>
+      <hr class="sp-divider">
+      <div class="sp-row" style="justify-content:flex-end;gap:6px;">
+        <button class="sp-btn danger" onclick="leaveRoom()">✕ Leave Room</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <!-- BROADCAST TOAST CONTAINER -->
 <div id="broadcast-toast-container"></div>
 
 <script>
 // ══════════════════════════════════════════════════════════
-// GUN.JS — zero-config decentralized real-time database
-// No account, no API key, works instantly across the world
+// PANEL — MS Paint style dialog + shout broadcast
 // ══════════════════════════════════════════════════════════
-let gun=null, gunReady=false;
-let myUserId='u'+Math.random().toString(36).slice(2,9);
-let myUsername='Painter'+Math.floor(Math.random()*9000+1000);
-
-(function loadGun(){
-  const s=document.createElement('script');
-  s.src='https://cdn.jsdelivr.net/npm/gun/gun.js';
-  s.onload=()=>{
-    try{
-      gun=Gun(['https://gun-manhattan.herokuapp.com/gun','https://gun-us.herokuapp.com/gun']);
-      gunReady=true;
-      setStatus('ok','✓ Connected to Wiggly Network');
-      startBroadcastListener();
-      sdRefreshRooms();
-      galLoadPosts();
-    }catch(e){setStatus('err','✗ Network error: '+e.message);}
-  };
-  s.onerror=()=>setStatus('err','✗ Could not load network library');
-  document.head.appendChild(s);
-})();
-
-function setStatus(type,msg){
-  document.querySelectorAll('.net-status').forEach(el=>{
-    el.className='net-status '+(type==='ok'?'fb-ok':type==='err'?'fb-err':'fb-setup');
-    el.textContent=msg;
-  });
-}
-// Keep backward compat with fb-status id
-function setFbStatus(t,m){setStatus(t,m);}
-
-// ── PANEL ──────────────────────────────────────────────────
-const PANEL_CODE='Grug4Life';
-let panelUnlocked=false;
+const PANEL_CODE = 'Grug4Life';
+let panelUnlocked = false;
+const BC_KEY = 'wiggly_broadcast';
+let lastBcSeen = localStorage.getItem(BC_KEY+'_ts') || '0';
 
 function openPanel(){
-  const d=document.getElementById('panel-dialog');d.style.display='block';
+  const d=document.getElementById('panel-dialog');
+  d.style.display='block';
   requestAnimationFrame(()=>requestAnimationFrame(()=>d.classList.add('open')));
-  if(panelUnlocked)showInterior();else showLock();
+  if(panelUnlocked) showInterior(); else showLock();
 }
 function closePanel(){
-  const d=document.getElementById('panel-dialog');d.classList.remove('open');
-  setTimeout(()=>{if(!d.classList.contains('open'))d.style.display='none';},220);
+  const d=document.getElementById('panel-dialog');
+  d.classList.remove('open');
+  setTimeout(()=>{ if(!d.classList.contains('open')) d.style.display='none'; },220);
 }
+function showLock(){
   document.getElementById('pd-lock').style.display='flex';
   document.getElementById('pd-interior').classList.remove('show');
   document.getElementById('pd-code-inp').value='';
@@ -2244,275 +2301,770 @@ function showInterior(){
 }
 function tryUnlock(){
   const inp=document.getElementById('pd-code-inp');
-  if(inp.value===PANEL_CODE){panelUnlocked=true;showInterior();}
-  else{inp.classList.remove('wrong');void inp.offsetWidth;inp.classList.add('wrong');
-    document.getElementById('pd-code-err').textContent='Incorrect code.';inp.value='';playBeep(200,.12);}
+  if(inp.value===PANEL_CODE){
+    panelUnlocked=true;
+    showInterior();
+  } else {
+    inp.classList.remove('wrong');
+    void inp.offsetWidth;
+    inp.classList.add('wrong');
+    document.getElementById('pd-code-err').textContent='Incorrect code. Try again.';
+    inp.value='';
+    playBeep(200,0.12);
+  }
 }
-function lockOut(){panelUnlocked=false;showLock();}
+function lockOut(){
+  panelUnlocked=false;
+  showLock();
+}
 document.getElementById('pd-code-inp').addEventListener('keydown',e=>{if(e.key==='Enter')tryUnlock();});
 
 function sendShout(){
-  const inp=document.getElementById('pd-shout-inp'),msg=inp.value.trim();
-  if(!msg){document.getElementById('pd-shout-status').textContent='Type a message first.';return;}
+  const inp=document.getElementById('pd-shout-inp');
+  const msg=inp.value.trim();
+  if(!msg){document.getElementById('pd-shout-status').textContent='Please type a message first.';return;}
+  const ts=Date.now();
+  localStorage.setItem(BC_KEY,JSON.stringify({msg,ts}));
+  localStorage.setItem(BC_KEY+'_ts',String(ts));
+  lastBcSeen=String(ts);
   inp.value='';
-  const status=document.getElementById('pd-shout-status');
-  if(gunReady){
-    gun.get('wiggly_broadcasts').set({msg,ts:Date.now(),from:'Admin'});
-    status.textContent='📡 Broadcast sent worldwide!';
-  }else{
-    status.textContent='⚠ Not connected yet.';
-    showBroadcastToast(msg,'Admin');
+  document.getElementById('pd-shout-status').textContent='Sent!';
+  setTimeout(()=>document.getElementById('pd-shout-status').textContent='',2000);
+  showBroadcastToast(msg);
+  playBeep(800,0.1);
+  // Also broadcast to room peers if connected
+  if(typeof spInRoom!=='undefined' && spInRoom){
+    broadcastToPeers({type:'chat',name:'📢 Shout',msg});
   }
-  setTimeout(()=>status.textContent='',3000);
-  playBeep(800,.1);
 }
 document.getElementById('pd-shout-inp').addEventListener('keydown',e=>{if(e.key==='Enter')sendShout();});
 
-let _bcLastSeen=null;
-function startBroadcastListener(){
-  if(!gunReady)return;
-  gun.get('wiggly_broadcasts').map().on((d,k)=>{
-    if(!d||!d.msg||!d.ts)return;
-    if(k===_bcLastSeen)return;
-    if(Date.now()-d.ts>10000)return; // ignore old msgs
-    _bcLastSeen=k;
-    showBroadcastToast(d.msg,d.from);
-    playBeep(600,.08);
-  });
-}
-
-// ── BROADCAST TOAST ────────────────────────────────────────
-function showBroadcastToast(msg,from){
-  const c=document.getElementById('broadcast-toast-container');
-  const t=document.createElement('div');t.className='bc-toast';
-  const f=from?` <span style="font-size:9px;opacity:.8;">(${escHtml(from)})</span>`:'';
-  t.innerHTML=`<div class="bc-toast-head"><div class="bc-toast-title">📢 Alert!${f}</div><div class="bc-toast-x" onclick="dismissToast(this)">✕</div></div><div class="bc-toast-body"><div class="bc-toast-label">Broadcast</div><div class="bc-toast-msg">${escHtml(msg)}</div></div>`;
-  c.appendChild(t);setTimeout(()=>dismissToast(t.querySelector('.bc-toast-x')),7000);
+function showBroadcastToast(msg){
+  const container=document.getElementById('broadcast-toast-container');
+  const toast=document.createElement('div');
+  toast.className='bc-toast';
+  toast.innerHTML=`
+    <div class="bc-toast-head">
+      <div class="bc-toast-title">📢 Alert!</div>
+      <div class="bc-toast-x" onclick="dismissToast(this)">✕</div>
+    </div>
+    <div class="bc-toast-body">
+      <div class="bc-toast-label">Broadcast</div>
+      <div class="bc-toast-msg">${escHtml(msg)}</div>
+    </div>`;
+  container.appendChild(toast);
+  setTimeout(()=>dismissToast(toast.querySelector('.bc-toast-x')),7000);
 }
 function dismissToast(el){
-  const t=el.closest('.bc-toast');if(!t||t.classList.contains('out'))return;
-  t.classList.add('out');setTimeout(()=>t.remove(),200);
+  const toast=el.closest('.bc-toast');
+  if(!toast||toast.classList.contains('out'))return;
+  toast.classList.add('out');
+  setTimeout(()=>toast.remove(),200);
 }
-function escHtml(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+function escHtml(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
 
-// ── SOCIAL DRAWING ─────────────────────────────────────────
-let sdCurrentRoom=null,sdSelected=null,sdRoomGun=null;
+// Poll for broadcasts from other tabs
+setInterval(()=>{
+  try{
+    const stored=localStorage.getItem(BC_KEY);
+    if(!stored)return;
+    const {msg,ts}=JSON.parse(stored);
+    if(String(ts)!==lastBcSeen){lastBcSeen=String(ts);showBroadcastToast(msg);playBeep(600,0.08);}
+  }catch(e){}
+},1000);
 
-function openSocial(){
-  const d=document.getElementById('social-dialog');d.style.display='block';
-  requestAnimationFrame(()=>requestAnimationFrame(()=>d.classList.add('open')));
-  if(gunReady)sdRefreshRooms();
+function playBeep(freq,vol){
+  try{
+    const ctx=new(window.AudioContext||window.webkitAudioContext)();
+    const o=ctx.createOscillator(),g=ctx.createGain();
+    o.connect(g);g.connect(ctx.destination);
+    o.frequency.value=freq;o.type='sine';
+    g.gain.setValueAtTime(vol,ctx.currentTime);
+    g.gain.exponentialRampToValueAtTime(0.001,ctx.currentTime+0.2);
+    o.start();o.stop(ctx.currentTime+0.2);
+  }catch(e){}
 }
-function closeSocial(){
-  const d=document.getElementById('social-dialog');d.classList.remove('open');
-  setTimeout(()=>{if(!d.classList.contains('open'))d.style.display='none';},220);
-}
-function sdSwitchTab(tab,el){
-  document.querySelectorAll('.sd-tab').forEach(t=>t.classList.remove('active'));
-  document.querySelectorAll('.sd-page').forEach(p=>p.classList.remove('active'));
-  el.classList.add('active');document.getElementById('sd-'+tab).classList.add('active');
+</script>
+
+<script>
+// ══════════════════════════════════════════════════════════
+// ACCOUNT SYSTEM
+// ══════════════════════════════════════════════════════════
+
+const ACCT_STORE_KEY = 'wiggly_accounts_v1';
+const ACCT_SESSION_KEY = 'wiggly_session_v1';
+
+// Profanity/slur blocklist (common terms - case-insensitive substring match)
+const BANNED_WORDS = [
+  'fuck','shit','ass','bitch','cunt','dick','cock','pussy','nigger','nigga',
+  'fag','faggot','retard','kike','spic','chink','gook','tranny','whore',
+  'slut','bastard','piss','damn','crap','twat','wank','spunk','jizz',
+  'pedo','nazi','rape','kkk','nonce'
+];
+
+function containsBannedWord(str) {
+  const lower = str.toLowerCase().replace(/[^a-z0-9]/g,'');
+  return BANNED_WORDS.some(w => lower.includes(w));
 }
 
-function sdRefreshRooms(){
-  if(!gunReady){document.getElementById('sd-room-list').innerHTML='<div class="sd-empty">Connecting…</div>';return;}
-  const list=document.getElementById('sd-room-list');
-  list.innerHTML='<div class="sd-empty">Loading…</div>';
-  const rooms={};
-  gun.get('wiggly_rooms').map().once((data,key)=>{
-    if(!data||!data.name||(Date.now()-(data.created||0))>7200000)return;
-    rooms[key]=data;
-    list.innerHTML='';
-    Object.entries(rooms).forEach(([k,r])=>{
-      const existing=document.getElementById('sdroom_'+k);
-      if(existing)return;
-      const row=document.createElement('div');row.className='sd-room-row';row.id='sdroom_'+k;
-      row.innerHTML=`<span class="sd-room-lock">${r.isPrivate?'🔒':'🌐'}</span><span class="sd-room-name">${escHtml(r.name)}</span><span class="sd-room-info">by ${escHtml(r.host||'?')}</span>`;
-      row.onclick=()=>{document.querySelectorAll('.sd-room-row').forEach(x=>x.classList.remove('selected'));row.classList.add('selected');sdSelected=k;document.getElementById('sd-join-btn').disabled=false;};
-      list.appendChild(row);
+function getAccounts() {
+  try { return JSON.parse(localStorage.getItem(ACCT_STORE_KEY)) || {}; }
+  catch(e) { return {}; }
+}
+function saveAccounts(accounts) {
+  localStorage.setItem(ACCT_STORE_KEY, JSON.stringify(accounts));
+}
+
+// Simple hash (not cryptographic, but fine for local storage demo)
+function hashPw(pw) {
+  let h = 0;
+  for(let i=0;i<pw.length;i++) h = (Math.imul(31,h)+pw.charCodeAt(i))|0;
+  return 'h'+Math.abs(h)+'_'+pw.length+'_'+pw.split('').reverse().join('').slice(0,4);
+}
+
+// Session
+let acctSession = null;
+try { acctSession = JSON.parse(localStorage.getItem(ACCT_SESSION_KEY)); } catch(e) {}
+
+function isLoggedIn() { return !!acctSession; }
+function getUsername() { return acctSession ? acctSession.username : ''; }
+
+function openAccountModal() {
+  const overlay = document.getElementById('acct-overlay');
+  overlay.classList.add('show');
+  refreshAccountModal();
+}
+function closeAccountModal() {
+  document.getElementById('acct-overlay').classList.remove('show');
+}
+function refreshAccountModal() {
+  const loggedIn = isLoggedIn();
+  document.getElementById('acct-logged-in').style.display = loggedIn ? 'flex' : 'none';
+  document.getElementById('acct-auth-ui').style.display = loggedIn ? 'none' : 'block';
+  if(loggedIn) {
+    const accts = getAccounts();
+    const u = acctSession.username;
+    document.getElementById('acct-display-name').textContent = u;
+    document.getElementById('acct-avatar-letter').textContent = u[0].toUpperCase();
+    const joined = accts[u.toLowerCase()] ? new Date(accts[u.toLowerCase()].created).toLocaleDateString() : '?';
+    document.getElementById('acct-display-joined').textContent = 'Joined '+joined;
+    updateAcctButton();
+  }
+}
+
+function updateAcctButton() {
+  const btn = document.getElementById('acct-btn');
+  if(isLoggedIn()) {
+    btn.textContent = '👤 '+getUsername();
+    btn.style.background = 'rgba(80,200,120,.35)';
+    btn.style.borderColor = 'rgba(80,200,120,.6)';
+  } else {
+    btn.textContent = '👤 Account';
+    btn.style.background = '';
+    btn.style.borderColor = '';
+  }
+}
+
+function acctSwitchTab(tab) {
+  document.querySelectorAll('.acct-tab').forEach(t=>t.classList.remove('active'));
+  document.getElementById('acct-tab-'+tab).classList.add('active');
+  document.getElementById('acct-page-create').style.display = tab==='create'?'block':'none';
+  document.getElementById('acct-page-login').style.display = tab==='login'?'block':'none';
+  document.getElementById('acct-create-err').textContent='';
+  document.getElementById('acct-login-err').textContent='';
+}
+
+function acctValidateUsername(inp) {
+  const v = inp.value;
+  const ok = /^[a-zA-Z0-9_]{3,14}$/.test(v) && !containsBannedWord(v);
+  inp.classList.toggle('err-inp', v.length>0 && !ok);
+}
+function acctValidatePw(inp) {
+  const ok = inp.value.length>=8 && inp.value.length<=16;
+  inp.classList.toggle('err-inp', inp.value.length>0 && !ok);
+}
+
+function acctCreate() {
+  const user = document.getElementById('acct-create-user').value.trim();
+  const pw = document.getElementById('acct-create-pw').value;
+  const pw2 = document.getElementById('acct-create-pw2').value;
+  const errEl = document.getElementById('acct-create-err');
+  errEl.textContent='';
+
+  if(!user) { errEl.textContent='Please enter a username.'; return; }
+  if(!/^[a-zA-Z0-9_]+$/.test(user)) { errEl.textContent='Username can only contain letters, numbers, and underscores.'; return; }
+  if(user.length<3||user.length>14) { errEl.textContent='Username must be 3–14 characters.'; return; }
+  if(containsBannedWord(user)) { errEl.textContent='That username contains a prohibited word. Please choose another.'; return; }
+  if(pw.length<8||pw.length>16) { errEl.textContent='Password must be 8–16 characters.'; return; }
+  if(pw!==pw2) { errEl.textContent='Passwords do not match.'; return; }
+
+  const accounts = getAccounts();
+  if(accounts[user.toLowerCase()]) { errEl.textContent='That username is already taken. Try another or log in.'; return; }
+
+  accounts[user.toLowerCase()] = { username:user, pw:hashPw(pw), created:Date.now() };
+  saveAccounts(accounts);
+  acctSession = { username:user };
+  localStorage.setItem(ACCT_SESSION_KEY, JSON.stringify(acctSession));
+  // Update spMyName
+  if(typeof spMyName!=='undefined') spMyName=user;
+  updateAcctButton();
+  refreshAccountModal();
+}
+
+function acctLogin() {
+  const user = document.getElementById('acct-login-user').value.trim();
+  const pw = document.getElementById('acct-login-pw').value;
+  const errEl = document.getElementById('acct-login-err');
+  errEl.textContent='';
+  if(!user||!pw) { errEl.textContent='Please enter username and password.'; return; }
+  const accounts = getAccounts();
+  const rec = accounts[user.toLowerCase()];
+  if(!rec) { errEl.textContent='No account found with that username.'; return; }
+  if(rec.pw !== hashPw(pw)) { errEl.textContent='Incorrect password.'; return; }
+  acctSession = { username:rec.username };
+  localStorage.setItem(ACCT_SESSION_KEY, JSON.stringify(acctSession));
+  if(typeof spMyName!=='undefined') spMyName=rec.username;
+  updateAcctButton();
+  refreshAccountModal();
+}
+
+function acctLogout() {
+  acctSession=null;
+  localStorage.removeItem(ACCT_SESSION_KEY);
+  if(typeof spInRoom!=='undefined'&&spInRoom) leaveRoom();
+  if(typeof spMyName!=='undefined') spMyName='';
+  updateAcctButton();
+  refreshAccountModal();
+}
+
+function showNoAcctError() {
+  const el = document.getElementById('noacct-error');
+  el.classList.add('show');
+  // Auto-dismiss after 8s
+  clearTimeout(el._dismissTimer);
+  el._dismissTimer = setTimeout(()=>hideNoAcctError(),8000);
+}
+function hideNoAcctError() {
+  const el = document.getElementById('noacct-error');
+  el.classList.remove('show');
+  clearTimeout(el._dismissTimer);
+}
+
+// Initialize account state on load
+updateAcctButton();
+// If already logged in, set spMyName when social JS loads
+document.addEventListener('DOMContentLoaded',()=>{ if(typeof spMyName!=='undefined'&&isLoggedIn()) spMyName=getUsername(); });
+</script>
+
+<script>
+// ══════════════════════════════════════════════════════════
+// SOCIAL DRAWING — PeerJS + Gun.js powered multiplayer
+// ══════════════════════════════════════════════════════════
+
+const GUN_PEERS = ['https://gun-manhattan.herokuapp.com/gun','https://gun-us.herokuapp.com/gun'];
+let gun = null;
+let spGun = null; // gun node for rooms
+
+// Try to init Gun for lobby
+function initGun(){
+  try{
+    gun = Gun(GUN_PEERS);
+    spGun = gun.get('wiggly-social-rooms-v1');
+  }catch(e){ gun=null; spGun=null; }
+}
+setTimeout(initGun, 500);
+
+// PeerJS state
+let spPeer = null;       // our Peer instance
+let spConnections = [];  // DataConnection[] (host: list of clients; client: [host conn])
+let spIsHost = false;
+let spRoomName = '';
+let spRoomCode = '';     // peerjs peer id
+let spRoomPrivate = false;
+let spRoomPassword = '';
+let spRoomListed = true;
+let spMyName = '';
+let spInRoom = false;
+let spGunRoomKey = null; // gun key for our hosted room
+let spRemoteDrawing = false; // are we currently replaying a remote stroke?
+
+// Username from account session
+spMyName = (typeof acctSession!=='undefined'&&acctSession) ? acctSession.username : '';
+
+function openSocialPanel(){
+  // Sync name from account
+  if(typeof acctSession!=='undefined'&&acctSession) spMyName=acctSession.username;
+  document.getElementById('social-panel').classList.add('open');
+  // Update "joining/hosting as" labels
+  const nameDisplay = isLoggedIn() ? getUsername() : '— (not signed in)';
+  const asEl1 = document.getElementById('sp-join-as-name');
+  const asEl2 = document.getElementById('sp-host-as-name');
+  if(asEl1) asEl1.textContent = nameDisplay;
+  if(asEl2) asEl2.textContent = nameDisplay;
+  refreshRoomList();
+}
+function closeSocialPanel(){
+  document.getElementById('social-panel').classList.remove('open');
+}
+
+function spSwitchTab(tab){
+  document.querySelectorAll('.sp-tab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.sp-page').forEach(p=>p.classList.remove('active'));
+  document.getElementById('sp-tab-'+tab).classList.add('active');
+  document.getElementById('sp-page-'+tab).classList.add('active');
+}
+
+function spTogglePrivacy(){
+  const priv = document.getElementById('sp-host-private').checked;
+  document.getElementById('sp-host-pw-row').style.display = priv ? 'block' : 'none';
+}
+
+// ── ROOM LIST ──────────────────────────────────────────────
+function refreshRoomList(){
+  const list = document.getElementById('social-room-list');
+  list.innerHTML = '<div class="sp-empty"><span class="sp-spinner"></span> Loading rooms...</div>';
+  if(!gun){ list.innerHTML='<div class="sp-empty">⚠ Could not connect to lobby server. Use room code to join directly.</div>'; return; }
+  const rooms = [];
+  const timeout = setTimeout(()=>{
+    if(rooms.length===0) list.innerHTML='<div class="sp-empty">No public rooms found. Host one!</div>';
+    else renderRooms(rooms, list);
+  }, 3000);
+  spGun.map().once((data, key)=>{
+    if(!data || !data.name) return;
+    // Remove stale rooms (older than 5 min)
+    if(Date.now() - (data.ts||0) > 5*60*1000) return;
+    rooms.push({...data, key});
+    clearTimeout(timeout);
+    renderRooms(rooms, list);
+  });
+}
+
+function renderRooms(rooms, list){
+  if(rooms.length===0){ list.innerHTML='<div class="sp-empty">No public rooms found. Host one!</div>'; return; }
+  list.innerHTML = '';
+  rooms.sort((a,b)=>(b.ts||0)-(a.ts||0));
+  rooms.forEach(r=>{
+    const card = document.createElement('div');
+    card.className = 'sp-room-card';
+    card.innerHTML = `
+      <div class="sp-room-card-info">
+        <div class="sp-room-name">${escHtml(r.name||'Unnamed')}</div>
+        <div class="sp-room-meta">👤 ${escHtml(r.host||'Unknown')} · ${r.priv?'🔒 Private':'🌐 Public'}</div>
+      </div>
+      <span class="sp-room-badge ${r.priv?'priv':'pub'}">${r.priv?'🔒 Private':'Public'}</span>`;
+    card.onclick = ()=>{
+      if(!isLoggedIn()){ closeSocialPanel(); showNoAcctError(); return; }
+      spSwitchTab('join');
+      document.getElementById('sp-join-code').value = r.code||'';
+      if(r.priv) document.getElementById('sp-join-pw').focus();
+      else document.getElementById('sp-join-btn').click();
+    };
+    list.appendChild(card);
+  });
+}
+
+// ── HOSTING ───────────────────────────────────────────────
+function startHosting(){
+  if(!isLoggedIn()){ closeSocialPanel(); showNoAcctError(); return; }
+  if(typeof acctSession!=='undefined'&&acctSession) spMyName=acctSession.username;
+  const name = document.getElementById('sp-host-name').value.trim() || 'My Drawing Room';
+  const priv = document.getElementById('sp-host-private').checked;
+  const pw = document.getElementById('sp-host-pw').value;
+  const listed = document.getElementById('sp-host-listed').checked;
+  if(priv && !pw){ alert('Please set a password for private rooms.'); return; }
+
+  spRoomName = name;
+  spRoomPrivate = priv;
+  spRoomPassword = pw;
+  spRoomListed = listed;
+  spIsHost = true;
+  // spMyName is already set from account session
+
+  const statusEl = document.getElementById('sp-host-status');
+  statusEl.style.display='block';
+  statusEl.className='sp-status-box info';
+  statusEl.innerHTML='<span class="sp-spinner"></span> Creating room...';
+  document.getElementById('sp-host-btn').disabled=true;
+
+  spPeer = new Peer(undefined, {debug:0});
+
+  spPeer.on('open', id=>{
+    spRoomCode = id;
+    spInRoom = true;
+    statusEl.className='sp-status-box ok';
+    statusEl.innerHTML='✓ Room created! Code: <b>'+id+'</b>';
+    document.getElementById('sp-host-btn').disabled=false;
+
+    // Advertise to Gun lobby
+    if(gun && listed){
+      const roomData = {name, host:spMyName, code:id, priv, ts:Date.now()};
+      spGunRoomKey = id;
+      spGun.get(id).put(roomData);
+      // Keepalive
+      spGunInterval = setInterval(()=>{ spGun.get(id).get('ts').put(Date.now()); }, 60*1000);
+    }
+
+    enterRoomUI(true);
+    spAddChatMsg('System','Room created! Share the code above with friends.','sys');
+  });
+
+  spPeer.on('connection', conn=>{
+    conn.on('open',()=>{
+      // Auth if private
+      if(spRoomPrivate){
+        conn._spAuthed = false;
+        conn.send({type:'auth-req', name:spRoomName});
+      } else {
+        conn._spAuthed = true;
+        conn._spName = conn.peer.slice(-6);
+        spConnections.push(conn);
+        spAddChatMsg('System', conn._spName+' joined!', 'sys');
+        updatePeerList();
+        // Send current canvas to new peer
+        sendCanvasSnapshot(conn);
+      }
     });
-    if(!list.children.length)list.innerHTML='<div class="sd-empty">No rooms open. Host one!</div>';
+    conn.on('data', data=>{
+      if(!conn._spAuthed){
+        if(data.type==='auth' && data.pw===spRoomPassword){
+          conn._spAuthed=true;
+          conn._spName = data.name || conn.peer.slice(-6);
+          spConnections.push(conn);
+          conn.send({type:'auth-ok', canvasW:W, canvasH:H});
+          spAddChatMsg('System', conn._spName+' joined!','sys');
+          updatePeerList();
+          sendCanvasSnapshot(conn);
+          broadcastToPeers({type:'peer-join', name:conn._spName}, conn);
+        } else if(data.type==='auth'){
+          conn.send({type:'auth-fail'});
+          conn.close();
+        }
+        return;
+      }
+      handlePeerData(data, conn);
+    });
+    conn.on('close',()=>{
+      spConnections = spConnections.filter(c=>c!==conn);
+      if(conn._spName) spAddChatMsg('System', conn._spName+' left.','sys');
+      updatePeerList();
+    });
+    conn.on('error',()=>{
+      spConnections = spConnections.filter(c=>c!==conn);
+      updatePeerList();
+    });
   });
-  setTimeout(()=>{if(list.innerHTML.includes('Loading'))list.innerHTML='<div class="sd-empty">No rooms found. Host one!</div>';},3000);
+
+  spPeer.on('error', err=>{
+    statusEl.className='sp-status-box err';
+    statusEl.textContent='Error: '+err.type;
+    document.getElementById('sp-host-btn').disabled=false;
+    spPeer=null;
+  });
 }
 
-function sdJoinSelected(){
-  if(!sdSelected)return;
-  gun.get('wiggly_rooms').get(sdSelected).once(r=>{
-    if(!r){alert('Room not found.');return;}
-    if(r.isPrivate){const pw=prompt('Password:');if(pw===null)return;if(pw!==r.password){alert('Wrong password!');return;}}
-    sdEnterRoom(sdSelected,r);
+// ── JOINING ───────────────────────────────────────────────
+function joinRoom(){
+  if(!isLoggedIn()){ closeSocialPanel(); showNoAcctError(); return; }
+  if(typeof acctSession!=='undefined'&&acctSession) spMyName=acctSession.username;
+  const code = document.getElementById('sp-join-code').value.trim();
+  const pw = document.getElementById('sp-join-pw').value;
+  const name = spMyName; // Always use account username
+  if(!code){ alert('Please enter a room code.'); return; }
+
+  const statusEl = document.getElementById('sp-join-status');
+  statusEl.style.display='block';
+  statusEl.className='sp-status-box info';
+  statusEl.innerHTML='<span class="sp-spinner"></span> Connecting...';
+  document.getElementById('sp-join-btn').disabled=true;
+
+  spPeer = new Peer(undefined, {debug:0});
+  spPeer.on('open', ()=>{
+    const conn = spPeer.connect(code, {reliable:true});
+    spConnections = [conn];
+    spIsHost = false;
+    spRoomCode = code;
+
+    conn.on('open',()=>{
+      statusEl.innerHTML='<span class="sp-spinner"></span> Authenticating...';
+      // Send auth either way
+      conn.send({type:'auth', pw:pw||'', name});
+    });
+    conn.on('data', data=>{
+      if(data.type==='auth-req'){
+        // Host wants auth
+        conn.send({type:'auth', pw:pw||'', name});
+      } else if(data.type==='auth-ok'){
+        spInRoom=true;
+        spRoomName = data.roomName || code;
+        statusEl.className='sp-status-box ok';
+        statusEl.textContent='✓ Connected!';
+        document.getElementById('sp-join-btn').disabled=false;
+        enterRoomUI(false);
+        spAddChatMsg('System','Joined the room!','sys');
+        // Apply canvas if sent
+        if(data.canvas) applyRemoteCanvas(data.canvas);
+      } else if(data.type==='auth-fail'){
+        statusEl.className='sp-status-box err';
+        statusEl.textContent='Wrong password!';
+        document.getElementById('sp-join-btn').disabled=false;
+        spPeer.destroy(); spPeer=null; spConnections=[];
+      } else if(data.type==='canvas-snap'){
+        applyRemoteCanvas(data.canvas);
+      } else {
+        handlePeerData(data, conn);
+      }
+    });
+    conn.on('close',()=>{
+      if(!spInRoom){
+        statusEl.className='sp-status-box err';
+        statusEl.textContent='Connection closed. Room may not exist.';
+        document.getElementById('sp-join-btn').disabled=false;
+        spPeer=null; spConnections=[];
+        return;
+      }
+      spAddChatMsg('System','Disconnected from room.','sys');
+      leaveRoom();
+    });
+    conn.on('error', err=>{
+      statusEl.className='sp-status-box err';
+      statusEl.textContent='Connection error: '+err.type;
+      document.getElementById('sp-join-btn').disabled=false;
+      spPeer=null; spConnections=[];
+    });
+  });
+  spPeer.on('error', err=>{
+    statusEl.className='sp-status-box err';
+    statusEl.textContent='Peer error: '+err.type;
+    document.getElementById('sp-join-btn').disabled=false;
+    spPeer=null;
   });
 }
 
-function sdHostRoom(){
-  if(!gunReady){alert('Not connected yet.');return;}
-  const name=document.getElementById('sd-name-inp').value.trim()||('Room by '+myUsername);
-  const isPrivate=document.getElementById('sd-private-cb').checked;
-  const password=isPrivate?document.getElementById('sd-pass-inp').value.trim():'';
-  if(isPrivate&&!password){alert('Set a password.');return;}
-  const roomId='room_'+Date.now()+'_'+Math.random().toString(36).slice(2,6);
-  const data={name,host:myUsername,isPrivate,password,created:Date.now()};
-  gun.get('wiggly_rooms').get(roomId).put(data);
-  sdEnterRoom(roomId,data);
+// ── CANVAS SYNC ───────────────────────────────────────────
+function sendCanvasSnapshot(conn){
+  try{
+    const dataURL = dc.toDataURL('image/png');
+    conn.send({type:'canvas-snap', canvas:dataURL});
+  }catch(e){}
 }
 
-function sdEnterRoom(id,roomData){
-  sdCurrentRoom=id;
-  sdRoomGun=gun.get('wiggly_rooms').get(id);
-  // Announce presence
-  sdRoomGun.get('members').get(myUserId).put({name:myUsername,ts:Date.now()});
-  // Watch members
-  sdRoomGun.get('members').map().on((d,k)=>{
-    if(!d)return;
-    const bar=document.getElementById('sd-users-bar');
-    let chip=document.getElementById('sdchip_'+k);
-    if(!chip){chip=document.createElement('span');chip.className='sd-user-chip';chip.id='sdchip_'+k;bar.appendChild(chip);}
-    chip.textContent=d.name||k;
-  });
-  // Watch chat
-  sdRoomGun.get('chat').map().on((d,k)=>{
-    if(!d||!d.text||document.getElementById('sdmsg_'+k))return;
-    const chat=document.getElementById('sd-chat'),div=document.createElement('div');
-    div.className='sd-chat-msg';div.id='sdmsg_'+k;
-    div.innerHTML=d.sys?`<span class="sd-chat-sys">${escHtml(d.text)}</span>`:`<span class="sd-chat-name">${escHtml(d.name||'?')}:</span> ${escHtml(d.text)}`;
-    chat.appendChild(div);chat.scrollTop=chat.scrollHeight;
-  });
-  // Watch canvas pushes
-  sdRoomGun.get('canvas').on(d=>{
-    if(d&&d.pushedBy!==myUserId&&d.data)sdSyncStatus('📥 Canvas shared by '+escHtml(d.pushedByName||'?')+' — click Pull');
-  });
-  document.getElementById('sd-room-name-display').textContent=roomData.name;
-  document.getElementById('sd-room-panel').classList.add('show');
-  sdRoomGun.get('chat').set({sys:true,text:myUsername+' joined.',ts:Date.now()});
+function applyRemoteCanvas(dataURL){
+  const img = new Image();
+  img.onload = ()=>{
+    saveHistory();
+    dCtx.clearRect(0,0,W,H);
+    dCtx.drawImage(img,0,0,W,H);
+  };
+  img.src = dataURL;
 }
 
-function sdLeaveRoom(){
-  if(!sdCurrentRoom)return;
-  sdRoomGun.get('chat').set({sys:true,text:myUsername+' left.',ts:Date.now()});
-  sdRoomGun.get('members').get(myUserId).put(null);
-  sdCurrentRoom=null;sdRoomGun=null;
-  document.getElementById('sd-room-panel').classList.remove('show');
-  document.getElementById('sd-users-bar').innerHTML='👥 ';
-  document.getElementById('sd-chat').innerHTML='';
-  sdRefreshRooms();
-}
-function sdSendChat(){
-  const inp=document.getElementById('sd-chat-inp'),text=inp.value.trim();
-  if(!text||!sdCurrentRoom)return;
-  sdRoomGun.get('chat').set({name:myUsername,text,ts:Date.now()});inp.value='';
-}
-document.getElementById('sd-chat-inp').addEventListener('keydown',e=>{if(e.key==='Enter')sdSendChat();});
-function sdPushCanvas(){
-  if(!sdCurrentRoom){alert('Join a room first.');return;}
-  sdRoomGun.get('canvas').put({data:dc.toDataURL('image/png'),pushedBy:myUserId,pushedByName:myUsername,ts:Date.now()});
-  sdSyncStatus('✓ Canvas pushed!');setTimeout(()=>sdSyncStatus(''),2500);
-}
-function sdPullCanvas(){
-  if(!sdCurrentRoom){alert('Join a room first.');return;}
-  sdRoomGun.get('canvas').once(d=>{
-    if(!d||!d.data){sdSyncStatus('Nothing shared yet.');return;}
-    const img=new Image();img.onload=()=>{
-      saveHistory();dCtx.clearRect(0,0,W,H);dCtx.fillStyle='#fff';dCtx.fillRect(0,0,W,H);
-      const sc_=Math.min(W/img.width,H/img.height,1),dw=Math.round(img.width*sc_),dh=Math.round(img.height*sc_);
-      dCtx.drawImage(img,Math.round((W-dw)/2),Math.round((H-dh)/2),dw,dh);
-      sdSyncStatus('✓ Canvas loaded!');setTimeout(()=>sdSyncStatus(''),2500);
-    };img.src=d.data;
-  });
-}
-function sdSyncStatus(msg){document.getElementById('sd-sync-status').textContent=msg;}
+// Intercept drawing to broadcast strokes
+let spStrokeBuffer = [];
+let spStrokeTimer = null;
 
-// ── GALLERY ────────────────────────────────────────────────
-let galPosts={},galLoading=false,galCurrentPostId=null;
+function spBroadcastStroke(data){
+  if(!spInRoom || spRemoteDrawing) return;
+  spStrokeBuffer.push(data);
+  if(!spStrokeTimer){
+    spStrokeTimer = setTimeout(()=>{
+      if(spStrokeBuffer.length>0){
+        broadcastToPeers({type:'strokes', data:spStrokeBuffer});
+        spStrokeBuffer=[];
+      }
+      spStrokeTimer=null;
+    }, 16);
+  }
+}
 
-function openGallery(){
-  const d=document.getElementById('gallery-dialog');d.style.display='flex';
-  requestAnimationFrame(()=>requestAnimationFrame(()=>d.classList.add('open')));
-  galLoadPosts();
+function broadcastToPeers(msg, exclude){
+  const targets = spIsHost
+    ? spConnections.filter(c=>c!==exclude && c._spAuthed && c.open)
+    : spConnections.filter(c=>c.open);
+  targets.forEach(c=>{ try{c.send(msg);}catch(e){} });
+  // As client, forward strokes to host who rebroadcasts
+  if(!spIsHost && msg.type==='strokes' && spConnections[0]){
+    try{ spConnections[0].send(msg); }catch(e){}
+  }
 }
-function closeGallery(){
-  const d=document.getElementById('gallery-dialog');d.classList.remove('open');
-  setTimeout(()=>{if(!d.classList.contains('open'))d.style.display='none';},220);
-}
-function galLoadPosts(){
-  if(galLoading)return;galLoading=true;
-  document.getElementById('gal-grid').innerHTML='<div id="gal-loading">Loading posts…</div>';
-  if(!gunReady){document.getElementById('gal-grid').innerHTML='<div id="gal-loading" style="color:#ccc">Connecting… please wait.</div>';galLoading=false;return;}
-  gun.get('wiggly_posts').map().once((data,key)=>{
-    if(!data||!data.data)return;
-    galPosts[key]=data;
-    galRenderPosts();
-  });
-  setTimeout(()=>{galLoading=false;galRenderPosts();},2500);
-}
-function galRenderPosts(){
-  const keys=Object.keys(galPosts).sort((a,b)=>(galPosts[b].ts||0)-(galPosts[a].ts||0));
-  const grid=document.getElementById('gal-grid');grid.innerHTML='';
-  if(!keys.length){grid.innerHTML='<div id="gal-loading" style="color:#ccc">No posts yet! Be the first.</div>';return;}
-  keys.forEach(k=>{
-    const p=galPosts[k];
-    const card=document.createElement('div');card.className='gal-card';
-    card.innerHTML=`<img class="gal-thumb" src="${p.data}" loading="lazy" alt=""><div class="gal-info"><div class="gal-poster">${escHtml(p.poster||'Anon')}</div>${p.caption?`<div style="font-size:9px;color:#444;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${escHtml(p.caption)}</div>`:''}<div style="display:flex;justify-content:space-between;"><span class="gal-date">${new Date(p.ts||0).toLocaleDateString()}</span><span class="gal-comments-count">💬</span></div></div>`;
-    card.onclick=()=>galOpenPost(k,p);grid.appendChild(card);
-  });
-}
-document.getElementById('gal-scroll').addEventListener('scroll',e=>{
-  const el=e.target;if(el.scrollHeight-el.scrollTop<el.clientHeight+120)galLoadPosts();
-});
 
-function openPostModal(){
-  const pv=document.getElementById('gal-preview-canvas');pv.width=dc.width;pv.height=dc.height;pv.getContext('2d').drawImage(dc,0,0);
-  document.getElementById('gal-post-modal').classList.add('show');
-  document.getElementById('gal-post-status').textContent='';document.getElementById('gal-submit-btn').disabled=false;
+function handlePeerData(data, fromConn){
+  if(data.type==='strokes'){
+    // Rebroadcast if host
+    if(spIsHost) broadcastToPeers(data, fromConn);
+    replayStrokes(data.data, fromConn._spName||'Peer');
+  } else if(data.type==='chat'){
+    spAddChatMsg(data.name||'Peer', data.msg, 'peer');
+    if(spIsHost) broadcastToPeers(data, fromConn);
+  } else if(data.type==='peer-join'){
+    spAddChatMsg('System', (data.name||'Someone')+' joined!','sys');
+    updatePeerList();
+  }
 }
-function closePostModal(){document.getElementById('gal-post-modal').classList.remove('show');}
-function galSubmitPost(){
-  if(!gunReady){document.getElementById('gal-post-status').textContent='Not connected yet.';return;}
-  const poster=document.getElementById('gal-poster-inp').value.trim()||'Anonymous';
-  const caption=document.getElementById('gal-caption-inp').value.trim();
-  const data=dc.toDataURL('image/png');
-  document.getElementById('gal-submit-btn').disabled=true;
-  document.getElementById('gal-post-status').textContent='Posting…';
-  const postId='post_'+Date.now()+'_'+Math.random().toString(36).slice(2,5);
-  gun.get('wiggly_posts').get(postId).put({poster,caption,data,ts:Date.now()},ack=>{
-    if(ack.err){document.getElementById('gal-post-status').textContent='Error: '+ack.err;document.getElementById('gal-submit-btn').disabled=false;}
-    else{document.getElementById('gal-post-status').textContent='✓ Posted!';galPosts[postId]={poster,caption,data,ts:Date.now()};galRenderPosts();setTimeout(closePostModal,1000);}
-  });
-}
-function galOpenPost(id,post){
-  galCurrentPostId=id;
-  document.getElementById('gal-view-title').textContent=post.poster||'Anonymous';
-  document.getElementById('gal-view-poster').textContent='By: '+(post.poster||'Anonymous');
-  document.getElementById('gal-view-caption').textContent=post.caption||'';
-  document.getElementById('gal-view-img').src=post.data;
-  const commentsEl=document.getElementById('gal-view-comments');
-  commentsEl.innerHTML='<div style="color:#888;font-style:italic;padding:4px 6px;">Loading comments…</div>';
-  document.getElementById('gal-view-modal').classList.add('show');
-  // Live comments via Gun
-  const seenComments={};
-  gun.get('wiggly_posts').get(id).get('comments').map().on((d,k)=>{
-    if(!d||!d.text||seenComments[k])return;
-    seenComments[k]=true;
-    if(commentsEl.querySelector('[style*="italic"]'))commentsEl.innerHTML='';
-    const div=document.createElement('div');div.className='gal-comment';
-    div.innerHTML=`<span class="gal-comment-name">${escHtml(d.name||'Anon')}:</span> ${escHtml(d.text)}`;
-    commentsEl.appendChild(div);commentsEl.scrollTop=commentsEl.scrollHeight;
-  });
-  setTimeout(()=>{if(commentsEl.querySelector('[style*="italic"]'))commentsEl.innerHTML='<div style="color:#888;font-style:italic;padding:4px 6px;">No comments yet.</div>';},2000);
-}
-function closeViewModal(){
-  document.getElementById('gal-view-modal').classList.remove('show');
-  galCurrentPostId=null;document.getElementById('gal-view-img').src='';
-}
-function galSubmitComment(){
-  const name=document.getElementById('gal-comment-name').value.trim()||'Anon';
-  const text=document.getElementById('gal-comment-inp').value.trim();
-  if(!text||!galCurrentPostId||!gunReady)return;
-  gun.get('wiggly_posts').get(galCurrentPostId).get('comments').set({name,text,ts:Date.now()});
-  document.getElementById('gal-comment-inp').value='';
-}
-document.getElementById('gal-comment-inp').addEventListener('keydown',e=>{if(e.key==='Enter')galSubmitComment();});
 
-function playBeep(freq,vol){try{const c=new(window.AudioContext||window.webkitAudioContext)(),o=c.createOscillator(),g=c.createGain();o.connect(g);g.connect(c.destination);o.frequency.value=freq;o.type='sine';g.gain.setValueAtTime(vol,c.currentTime);g.gain.exponentialRampToValueAtTime(.001,c.currentTime+.2);o.start();o.stop(c.currentTime+.2);}catch(e){}}
+function replayStrokes(strokes, who){
+  spRemoteDrawing = true;
+  strokes.forEach(s=>{
+    if(s.t==='down'){
+      dCtx.globalAlpha = s.op||1;
+      dCtx.strokeStyle = dCtx.fillStyle = s.er?'#fff':s.clr;
+      dCtx.lineWidth = s.sz||1;
+      dCtx.lineJoin = dCtx.lineCap = 'round';
+      dCtx.beginPath();
+      dCtx.arc(s.x,s.y,(s.sz||1)/2,0,Math.PI*2);
+      dCtx.fill();
+      dCtx.beginPath();
+      dCtx.moveTo(s.x,s.y);
+    } else if(s.t==='move'){
+      dCtx.globalAlpha = s.op||1;
+      dCtx.strokeStyle = dCtx.fillStyle = s.er?'#fff':s.clr;
+      dCtx.lineWidth = s.sz||1;
+      dCtx.lineJoin = dCtx.lineCap = 'round';
+      const mx=(s.px+s.x)/2,my=(s.py+s.y)/2;
+      dCtx.quadraticCurveTo(s.px,s.py,mx,my);
+      dCtx.stroke();
+      dCtx.beginPath();
+      dCtx.moveTo(mx,my);
+    } else if(s.t==='up'){
+      dCtx.globalAlpha=1;
+    } else if(s.t==='fill'){
+      // Replay fill - temporarily override color
+      const savedColor = color;
+      color = s.clr;
+      floodFill(s.x,s.y,null);
+      color = savedColor;
+    }
+  });
+  spRemoteDrawing = false;
+}
+
+// Patch drawing events to capture strokes for broadcast
+const _origOnDown = onDown;
+const _origOnMove = onMove;
+const _origOnUp = onUp;
+hc.removeEventListener('mousedown', onDown);
+hc.removeEventListener('mousemove', onMove);
+hc.removeEventListener('mouseup', onUp);
+hc.removeEventListener('touchstart', onDown);
+hc.removeEventListener('touchmove', onMove);
+hc.removeEventListener('touchend', onUp);
+
+function spOnDown(e){
+  _origOnDown(e);
+  if(!spInRoom || spRemoteDrawing) return;
+  const p=gpos(e);
+  if(['pen','marker','brush','eraser'].includes(tool)){
+    spBroadcastStroke({t:'down',x:p.x,y:p.y,clr:color,sz:sw(),op:bOp,er:tool==='eraser'});
+  } else if(tool==='fill'){
+    // Broadcast fill after a tiny delay so local fill completes
+    setTimeout(()=>spBroadcastStroke({t:'fill',x:p.x,y:p.y,clr:color}),50);
+  }
+}
+function spOnMove(e){
+  const p=gpos(e);
+  const prevX=lastX, prevY=lastY;
+  _origOnMove(e);
+  if(!spInRoom || spRemoteDrawing || !painting) return;
+  if(['pen','marker','brush','eraser'].includes(tool)){
+    spBroadcastStroke({t:'move',x:p.x,y:p.y,px:prevX,py:prevY,clr:color,sz:sw(),op:bOp,er:tool==='eraser'});
+  }
+}
+function spOnUp(e){
+  _origOnUp(e);
+  if(!spInRoom || spRemoteDrawing) return;
+  if(['pen','marker','brush','eraser'].includes(tool)){
+    spBroadcastStroke({t:'up'});
+  }
+}
+
+hc.addEventListener('mousedown', spOnDown);
+hc.addEventListener('mousemove', spOnMove);
+hc.addEventListener('mouseup', spOnUp);
+hc.addEventListener('mouseleave', e=>{if(tool==='string'){stringHoverNodeId=null;stringHoverPos=null;}else spOnUp(e);});
+hc.addEventListener('touchstart', spOnDown, {passive:false});
+hc.addEventListener('touchmove', spOnMove, {passive:false});
+hc.addEventListener('touchend', spOnUp);
+
+// Also broadcast fill tool
+// (fill broadcast is handled in spOnDown below)
+
+// ── ROOM UI ───────────────────────────────────────────────
+let spGunInterval = null;
+
+function enterRoomUI(isHost){
+  spSwitchTab('room');
+  document.getElementById('sp-tab-room').style.display='flex';
+  document.getElementById('social-btn').classList.add('connected');
+  document.getElementById('social-btn').textContent = '🎨 Live';
+  document.getElementById('sp-room-title-label').textContent = 'Room: '+spRoomName;
+  if(isHost){
+    document.getElementById('sp-room-code-wrap').style.display='block';
+    document.getElementById('sp-room-code-display').textContent = spRoomCode;
+  } else {
+    document.getElementById('sp-room-code-wrap').style.display='none';
+  }
+  updatePeerList();
+  openSocialPanel();
+}
+
+function updatePeerList(){
+  const peers = spIsHost
+    ? [{name:spMyName,me:true},...spConnections.filter(c=>c._spAuthed).map(c=>({name:c._spName||'Peer',me:false}))]
+    : [{name:spMyName,me:true}];
+  document.getElementById('sp-peer-count').textContent = peers.length;
+  document.getElementById('sp-peer-list').innerHTML = peers.map(p=>
+    `<span class="sp-peer-chip${p.me?' me':''}">${escHtml(p.name)}</span>`
+  ).join('');
+}
+
+function copyRoomCode(){
+  const code = document.getElementById('sp-room-code-display').textContent;
+  navigator.clipboard.writeText(code).then(()=>flash('Room code copied!')).catch(()=>{});
+}
+
+function spAddChatMsg(who, msg, type){
+  const log = document.getElementById('sp-chat-log');
+  const el = document.createElement('div');
+  el.className = 'sp-chat-msg';
+  el.innerHTML = `<span class="sp-chat-who ${type}">${escHtml(who)}:</span> ${escHtml(msg)}`;
+  log.appendChild(el);
+  log.scrollTop=log.scrollHeight;
+}
+
+function spSendChat(){
+  const inp = document.getElementById('sp-chat-inp');
+  const msg = inp.value.trim();
+  if(!msg) return;
+  inp.value='';
+  spAddChatMsg(spMyName, msg, 'me');
+  broadcastToPeers({type:'chat', name:spMyName, msg});
+}
+
+function leaveRoom(){
+  spInRoom=false;
+  // Remove from Gun lobby
+  if(gun && spIsHost && spGunRoomKey){
+    spGun.get(spGunRoomKey).put(null);
+    clearInterval(spGunInterval);
+  }
+  // Close connections
+  spConnections.forEach(c=>{ try{c.close();}catch(e){} });
+  spConnections=[];
+  if(spPeer){ try{spPeer.destroy();}catch(e){} spPeer=null; }
+  spIsHost=false;
+  // Reset UI
+  document.getElementById('social-btn').classList.remove('connected');
+  document.getElementById('social-btn').textContent = '🎨 Social';
+  document.getElementById('sp-tab-room').style.display='none';
+  document.getElementById('sp-chat-log').innerHTML='';
+  spSwitchTab('browse');
+  document.getElementById('sp-host-btn').disabled=false;
+  document.getElementById('sp-host-status').style.display='none';
+  document.getElementById('sp-join-status').style.display='none';
+  flash('Left room.');
+}
+
+// Shout is already integrated into sendShout above
+
 </script>
 </body>
 </html>
