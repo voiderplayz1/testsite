@@ -52,9 +52,7 @@ body{font-family:Segoe UI,Tahoma,Arial,sans-serif;font-size:11px;overflow:hidden
 .sw.on{outline:2px solid #fff;box-shadow:0 0 0 3px #0054e3;z-index:3;position:relative;}
 .sw.rb-swatch{width:16px;height:16px;background:conic-gradient(red,yellow,lime,cyan,blue,magenta,red);position:relative;}
 .sw.rb-swatch input{opacity:0;position:absolute;inset:0;cursor:pointer;width:100%;height:100%;}
-/* Gradient creator button */
-#grad-btn{display:flex;align-items:center;gap:3px;cursor:pointer;padding:2px 5px;border:1px solid #aaa;border-radius:2px;font-size:10px;background:linear-gradient(90deg,#f55,#fa0,#ff0,#0d0,#08f,#a0f);color:#fff;text-shadow:0 1px 2px rgba(0,0,0,.7);font-weight:600;white-space:nowrap;}
-#grad-btn:hover{filter:brightness(1.1);}
+
 #clr-preview-row{display:flex;align-items:center;gap:4px;margin-right:4px;}
 .clr-box{width:22px;height:22px;border:2px solid #888;cursor:pointer;}
 #clr1{background:#111;}
@@ -163,35 +161,6 @@ body{font-family:Segoe UI,Tahoma,Arial,sans-serif;font-size:11px;overflow:hidden
 #img-drop-overlay.show{display:flex;}
 #img-drop-overlay span{color:#0054e3;font-size:22px;font-weight:700;background:rgba(255,255,255,0.9);padding:14px 28px;border:2px solid #0054e3;}
 
-/* GRADIENT PANEL */
-#grad-panel{position:fixed;top:0;right:-340px;width:320px;height:100vh;background:#f0f0f0;border-left:2px solid #999;box-shadow:-4px 0 16px rgba(0,0,0,.3);z-index:400;transition:right .25s cubic-bezier(.4,0,.2,1);display:flex;flex-direction:column;font-size:12px;}
-#grad-panel.open{right:0;}
-#grad-panel-title{background:linear-gradient(to bottom,#4b9fdb,#1a5ca8);color:white;font-size:12px;font-weight:600;padding:6px 10px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;}
-#grad-panel-body{flex:1;overflow-y:auto;padding:12px;}
-.gp-section{margin-bottom:14px;}
-.gp-label{font-weight:600;color:#333;margin-bottom:6px;font-size:11px;text-transform:uppercase;letter-spacing:.4px;}
-.gp-type-row{display:flex;gap:6px;margin-bottom:4px;}
-.gp-type-btn{flex:1;padding:5px 4px;border:1px solid #aaa;background:linear-gradient(to bottom,#f8f8f8,#e0e0e0);cursor:pointer;font-size:11px;text-align:center;border-radius:2px;}
-.gp-type-btn:hover{background:linear-gradient(to bottom,#e8f4ff,#c8e4f8);border-color:#99caeb;}
-.gp-type-btn.on{background:linear-gradient(to bottom,#b8dafc,#8ec3f8);border-color:#3399cc;font-weight:600;}
-.gp-stops{display:flex;flex-direction:column;gap:6px;margin-bottom:6px;}
-.gp-stop-row{display:flex;align-items:center;gap:6px;}
-.gp-stop-swatch{width:28px;height:28px;border:2px solid #888;cursor:pointer;flex-shrink:0;position:relative;border-radius:2px;}
-.gp-stop-swatch input[type=color]{opacity:0;position:absolute;inset:0;cursor:pointer;width:100%;height:100%;}
-.gp-stop-pos{flex:1;}
-.gp-stop-del{width:20px;height:20px;border:1px solid #aaa;background:linear-gradient(to bottom,#f8f8f8,#e0e0e0);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:11px;flex-shrink:0;color:#c00;}
-.gp-stop-del:hover{background:#fdd;}
-.gp-add-stop{width:100%;padding:4px;border:1px dashed #aaa;background:transparent;cursor:pointer;font-size:11px;color:#1a6abf;text-align:center;margin-bottom:4px;}
-.gp-add-stop:hover{background:rgba(26,106,191,.08);}
-.gp-angle-row{display:flex;align-items:center;gap:6px;margin-bottom:4px;}
-.gp-angle-sl{-webkit-appearance:none;appearance:none;height:5px;flex:1;border:1px solid #aaa;background:linear-gradient(to bottom,#d4d0c8,#f5f5f5);outline:none;cursor:pointer;}
-.gp-angle-sl::-webkit-slider-thumb{-webkit-appearance:none;width:11px;height:15px;background:linear-gradient(to bottom,#f8f8f8,#ddd);border:1px solid #888;cursor:pointer;}
-.gp-preview{width:100%;height:60px;border:1px solid #aaa;margin-bottom:10px;border-radius:2px;}
-.gp-btn-row{display:flex;gap:6px;}
-.gp-btn{flex:1;padding:6px 4px;border:1px solid #aaa;cursor:pointer;font-size:11px;text-align:center;font-family:Segoe UI,Tahoma,sans-serif;background:linear-gradient(to bottom,#f8f8f8,#e0e0e0);}
-.gp-btn:hover{background:linear-gradient(to bottom,#e8f4ff,#c8e4f8);border-color:#3399cc;}
-.gp-btn.primary{background:linear-gradient(to bottom,#5bb8f5,#1a6abf);color:white;border-color:#0d4a8a;font-weight:600;}
-.gp-btn.primary:hover{filter:brightness(1.1);}
 
 #string-hint{display:none;position:fixed;bottom:32px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,.75);color:#fff;font-size:11px;padding:5px 12px;border-radius:12px;z-index:100;pointer-events:none;}
 #string-hint.show{display:block;}
@@ -401,6 +370,16 @@ body{font-family:Segoe UI,Tahoma,Arial,sans-serif;font-size:11px;overflow:hidden
           <input class="wig-sl" type="range" id="spSlider" min="0.5" max="6" step="0.1" value="2.5" oninput="wSpeed=+this.value;document.getElementById('spv').textContent=(+this.value).toFixed(1)+'×'">
           <span class="wig-val" id="spv">2.5×</span>
         </div>
+        <div class="wig-row">
+          <span class="wig-lbl">Opacity</span>
+          <input class="wig-sl" type="range" min="5" max="100" value="100" oninput="bOp=this.value/100;document.getElementById('ov').textContent=this.value+'%'">
+          <span class="wig-val" id="ov">100%</span>
+        </div>
+        <div class="wig-row">
+          <span class="wig-lbl">Density</span>
+          <input class="wig-sl" type="range" id="densSlider" min="1" max="6" value="1" step="0.5" oninput="wDensity=+this.value;document.getElementById('densv').textContent=(+this.value).toFixed(1)+'×'">
+          <span class="wig-val" id="densv">1.0×</span>
+        </div>
       </div>
       <div class="rg-label">Pixels</div>
     </div>
@@ -518,7 +497,7 @@ body{font-family:Segoe UI,Tahoma,Arial,sans-serif;font-size:11px;overflow:hidden
         <div class="rg-label">Size</div>
       </div>
 
-      <!-- COLORS with gradient creator -->
+      <!-- COLORS -->
       <div class="rg" style="padding-right:4px;">
         <div class="rg-body" style="align-items:flex-start;gap:4px;">
           <div id="clr-preview-row">
@@ -543,27 +522,28 @@ body{font-family:Segoe UI,Tahoma,Arial,sans-serif;font-size:11px;overflow:hidden
               <div class="sw" style="background:#795548" onclick="setColor('#795548',this)"></div>
               <div class="sw rb-swatch"><input type="color" id="cc" value="#ff0000" oninput="setColor(this.value,this.parentElement)"></div>
             </div>
-            <div id="grad-btn" onclick="openGradPanel()" title="Gradient Maker">🎨 Gradient BG</div>
           </div>
         </div>
         <div class="rg-label">Colors</div>
       </div>
 
-      <!-- OPTIONS -->
-      <div class="rg">
-        <div class="rg-body" style="flex-direction:column;justify-content:center;gap:4px;min-width:120px;">
-          <div class="wig-row">
-            <span class="wig-lbl">Opacity</span>
-            <input class="wig-sl" type="range" min="5" max="100" value="100" oninput="bOp=this.value/100;document.getElementById('ov').textContent=this.value+'%'">
-            <span class="wig-val" id="ov">100%</span>
-          </div>
-          <div class="wig-row" id="txt-size-row" style="display:none;">
-            <span class="wig-lbl">Txt Size</span>
-            <input class="wig-sl" type="range" min="8" max="96" value="24" oninput="txtSize=+this.value;document.getElementById('tsv').textContent=this.value+'px';updateTextInputStyle()">
-            <span class="wig-val" id="tsv">24px</span>
+      <!-- PATCH NOTES -->
+      <div class="rg" style="min-width:150px;">
+        <div class="rg-body" style="flex-direction:column;justify-content:flex-start;gap:3px;padding-top:2px;overflow-y:auto;max-height:62px;">
+          <div style="font-size:10px;font-weight:700;color:#555;letter-spacing:.3px;margin-bottom:1px;">PATCH NOTES</div>
+          <div id="patch-notes-list" style="font-size:10px;color:#777;line-height:1.5;">
+            <span style="color:#aaa;font-style:italic;">Nothing new yet.</span>
           </div>
         </div>
-        <div class="rg-label">Options</div>
+        <div class="rg-label">What's New</div>
+      </div>
+      <!-- hidden txt-size-row still needed for text tool -->
+      <div style="display:none;">
+        <div class="wig-row" id="txt-size-row">
+          <span class="wig-lbl">Txt Size</span>
+          <input class="wig-sl" type="range" min="8" max="96" value="24" oninput="txtSize=+this.value;document.getElementById('tsv').textContent=this.value+'px';updateTextInputStyle()">
+          <span class="wig-val" id="tsv">24px</span>
+        </div>
       </div>
     </div>
 
@@ -700,41 +680,6 @@ body{font-family:Segoe UI,Tahoma,Arial,sans-serif;font-size:11px;overflow:hidden
   </div>
 </div>
 
-<!-- GRADIENT PANEL -->
-<div id="grad-panel">
-  <div id="grad-panel-title">
-    <span>🎨 Gradient Maker</span>
-    <span style="cursor:pointer;opacity:.8;font-size:14px;" onclick="closeGradPanel()">✕</span>
-  </div>
-  <div id="grad-panel-body">
-    <div class="gp-section">
-      <div class="gp-label">Type</div>
-      <div class="gp-type-row">
-        <div class="gp-type-btn on" id="gp-type-radial" onclick="setGradType('radial')">◉ Radial</div>
-        <div class="gp-type-btn" id="gp-type-linear" onclick="setGradType('linear')">▬ Linear</div>
-        <div class="gp-type-btn" id="gp-type-random" onclick="setGradType('random')">🎲 Random</div>
-      </div>
-    </div>
-    <div class="gp-section" id="gp-angle-section" style="display:none;">
-      <div class="gp-label">Direction</div>
-      <div class="gp-angle-row">
-        <span style="font-size:10px;color:#555;width:30px;" id="gp-angle-dir">→</span>
-        <input class="gp-angle-sl" type="range" id="gp-angle" min="0" max="360" value="90" oninput="updateGradAngle(this.value)">
-        <span style="font-size:10px;color:#333;width:34px;text-align:right;" id="gp-angle-val">90°</span>
-      </div>
-    </div>
-    <div class="gp-section" id="gp-colors-section">
-      <div class="gp-label">Colors</div>
-      <div class="gp-stops" id="gp-stops"></div>
-      <button class="gp-add-stop" onclick="addGradStop()">+ Add color stop</button>
-    </div>
-    <canvas class="gp-preview" id="gp-preview"></canvas>
-    <div class="gp-btn-row">
-      <button class="gp-btn" onclick="randomizeGrad()">🎲 Randomize</button>
-      <button class="gp-btn primary" onclick="applyGradPanel()">✓ Apply</button>
-    </div>
-  </div>
-</div>
 
 <script>
 
@@ -769,220 +714,29 @@ function changePixelSize(v){if(spInRoom&&!spIsHost){flash('Only the room owner c
 // ══════════════════════════════════════════════════════════
 // WIGGLE
 // ══════════════════════════════════════════════════════════
-let wAmt=1.0,wSpeed=2.5,wigOn=true,snapMode=false,animT=0,phaseX=null,phaseY=null,snapDir=null;
+let wAmt=1.0,wSpeed=2.5,wigOn=true,snapMode=false,animT=0,phaseX=null,phaseY=null,snapDir=null,wDensity=1;
 function buildPhases(){phaseX=new Float32Array(W*H);phaseY=new Float32Array(W*H);snapDir=new Uint8Array(W*H);for(let i=0;i<W*H;i++){phaseX[i]=Math.random()*Math.PI*2;phaseY[i]=Math.random()*Math.PI*2;snapDir[i]=Math.floor(Math.random()*4);}}
 function renderLoop(){animT+=0.016*wSpeed;if(wigOn&&wAmt>0)renderWiggle(animT);else renderFlat();renderOverlayLayer();requestAnimationFrame(renderLoop);}
 function renderFlat(){const DW=W*SCALE,DH=H*SCALE;sCtx.clearRect(0,0,DW,DH);sCtx.imageSmoothingEnabled=false;sCtx.drawImage(dc,0,0,W,H,0,0,DW,DH);}
 function renderWiggle(t){
   const DW=W*SCALE,DH=H*SCALE;const src=dCtx.getImageData(0,0,W,H).data;const dst=sCtx.createImageData(DW,DH);const d=dst.data;
   for(let i=0;i<d.length;i+=4){d[i]=255;d[i+1]=255;d[i+2]=255;d[i+3]=255;}
+  // density: each drawn pixel fills a larger radius to close gaps
+  const spread=Math.round((wDensity-1)*SCALE*0.7);
+  const pxSz=SCALE+spread*2;
   for(let py=0;py<H;py++){for(let px=0;px<W;px++){
     const si=(py*W+px)*4;const r=src[si],g=src[si+1],b=src[si+2],a=src[si+3];
     if(a<10||(r>245&&g>245&&b>245))continue;
     const pi=py*W+px;let ddx,ddy;
     if(snapMode){const sn=Math.floor(t+phaseX[pi])%2===0;if(!sn){ddx=0;ddy=0;}else{const dir=snapDir[pi];ddx=dir===0?1:dir===1?-1:0;ddy=dir===2?1:dir===3?-1:0;}}
     else{ddx=Math.sin(t+phaseX[pi])*wAmt;ddy=Math.sin(t*0.82+phaseY[pi])*wAmt;}
-    const dpx=Math.round(px*SCALE+ddx*SCALE),dpy=Math.round(py*SCALE+ddy*SCALE);
-    for(let sy=0;sy<SCALE;sy++)for(let sx=0;sx<SCALE;sx++){const dx2=dpx+sx,dy2=dpy+sy;if(dx2<0||dx2>=DW||dy2<0||dy2>=DH)continue;const di=(dy2*DW+dx2)*4;d[di]=r;d[di+1]=g;d[di+2]=b;d[di+3]=255;}
+    const dpx=Math.round(px*SCALE+ddx*SCALE)-spread,dpy=Math.round(py*SCALE+ddy*SCALE)-spread;
+    for(let sy=0;sy<pxSz;sy++)for(let sx=0;sx<pxSz;sx++){const dx2=dpx+sx,dy2=dpy+sy;if(dx2<0||dx2>=DW||dy2<0||dy2>=DH)continue;const di=(dy2*DW+dx2)*4;d[di]=r;d[di+1]=g;d[di+2]=b;d[di+3]=255;}
   }}
   sCtx.putImageData(dst,0,0);
 }
 function toggleWiggle(){wigOn=!wigOn;const el=document.getElementById('wiggle-rb');el.textContent=wigOn?'〰 Wiggle ON':'〰 Wiggle OFF';el.classList.toggle('on',wigOn);flash(wigOn?'Wiggle on':'Wiggle off');}
 function toggleSnap(){snapMode=!snapMode;const el=document.getElementById('snap-rb');el.textContent=snapMode?'⚡ Snap ON':'⚡ Snap OFF';el.classList.toggle('on',snapMode);flash(snapMode?'Snap on':'Snap off');}
-
-// ══════════════════════════════════════════════════════════
-// GRADIENT BG
-// ══════════════════════════════════════════════════════════
-function applyGradientBg(){
-  saveHistory();
-  // Pick 3-6 random colors, draw radial blobs at random positions
-  const colors=['#e53935','#fb8c00','#ffd600','#43a047','#00bcd4','#1565c0','#7b1fa2','#ff69b4','#ff5722','#009688','#3f51b5','#e91e63'];
-  const shuffled=colors.sort(()=>Math.random()-.5);
-  const numColors=3+Math.floor(Math.random()*4);
-  const tmp=document.createElement('canvas');tmp.width=W;tmp.height=H;
-  const tC=tmp.getContext('2d');
-  // Draw multiple radial gradients at random positions — smaller radius so they don't flood entire canvas
-  for(let i=0;i<numColors;i++){
-    const cx=Math.random()*W,cy=Math.random()*H;
-    const r=Math.min(W,H)*(0.2+Math.random()*0.35);
-    const grad=tC.createRadialGradient(cx,cy,0,cx,cy,r);
-    grad.addColorStop(0,shuffled[i%shuffled.length]);
-    grad.addColorStop(1,'transparent');
-    tC.globalAlpha=0.55+Math.random()*0.35;
-    tC.fillStyle=grad;
-    tC.fillRect(0,0,W,H);
-  }
-  tC.globalAlpha=1;
-  // Composite: draw gradient under existing drawing
-  const existingData=dCtx.getImageData(0,0,W,H);
-  // First fill canvas with gradient
-  dCtx.drawImage(tmp,0,0);
-  // Re-draw existing non-white pixels on top
-  const gradData=dCtx.getImageData(0,0,W,H);
-  for(let i=0;i<existingData.data.length;i+=4){
-    const r=existingData.data[i],g=existingData.data[i+1],b=existingData.data[i+2],a=existingData.data[i+3];
-    if(a>10&&!(r>240&&g>240&&b>240)){gradData.data[i]=r;gradData.data[i+1]=g;gradData.data[i+2]=b;gradData.data[i+3]=a;}
-  }
-  dCtx.putImageData(gradData,0,0);
-  flash('Gradient background applied!');
-}
-
-// ══════════════════════════════════════════════════════════
-// GRADIENT PANEL
-// ══════════════════════════════════════════════════════════
-let gradType='radial';
-let gradAngle=90;
-let gradStops=[
-  {color:'#e53935',pos:0},
-  {color:'#1565c0',pos:100}
-];
-
-function openGradPanel(){
-  renderGradStops();
-  updateGradPreview();
-  document.getElementById('grad-panel').classList.add('open');
-}
-function closeGradPanel(){document.getElementById('grad-panel').classList.remove('open');}
-
-function setGradType(t){
-  gradType=t;
-  document.querySelectorAll('.gp-type-btn').forEach(b=>b.classList.remove('on'));
-  document.getElementById('gp-type-'+t).classList.add('on');
-  document.getElementById('gp-angle-section').style.display=t==='linear'?'block':'none';
-  document.getElementById('gp-colors-section').style.display=t==='random'?'none':'block';
-  updateGradPreview();
-}
-
-function updateGradAngle(v){
-  gradAngle=+v;
-  document.getElementById('gp-angle-val').textContent=v+'°';
-  // Arrow direction hint
-  const dirs=['→','↘','↓','↙','←','↖','↑','↗'];
-  document.getElementById('gp-angle-dir').textContent=dirs[Math.round(v/45)%8];
-  updateGradPreview();
-}
-
-function renderGradStops(){
-  const cont=document.getElementById('gp-stops');
-  cont.innerHTML='';
-  gradStops.forEach((stop,i)=>{
-    const row=document.createElement('div');
-    row.className='gp-stop-row';
-    const swEl=document.createElement('div');
-    swEl.className='gp-stop-swatch';
-    swEl.style.background=stop.color;
-    const inp=document.createElement('input');
-    inp.type='color';inp.value=stop.color;
-    inp.oninput=e=>{gradStops[i].color=e.target.value;swEl.style.background=e.target.value;updateGradPreview();};
-    swEl.appendChild(inp);
-    const posLbl=document.createElement('span');
-    posLbl.style.cssText='font-size:10px;color:#555;width:22px;flex-shrink:0;';
-    posLbl.textContent=stop.pos+'%';
-    const posSl=document.createElement('input');
-    posSl.type='range';posSl.min=0;posSl.max=100;posSl.value=stop.pos;
-    posSl.className='gp-stop-pos gp-angle-sl';
-    posSl.oninput=e=>{gradStops[i].pos=+e.target.value;posLbl.textContent=e.target.value+'%';updateGradPreview();};
-    const del=document.createElement('div');
-    del.className='gp-stop-del';del.textContent='×';
-    del.onclick=()=>{if(gradStops.length>2)gradStops.splice(i,1);renderGradStops();updateGradPreview();};
-    row.appendChild(swEl);row.appendChild(posSl);row.appendChild(posLbl);row.appendChild(del);
-    cont.appendChild(row);
-  });
-}
-
-function addGradStop(){
-  gradStops.push({color:'#'+Math.floor(Math.random()*0xffffff).toString(16).padStart(6,'0'),pos:Math.round(Math.random()*100)});
-  gradStops.sort((a,b)=>a.pos-b.pos);
-  renderGradStops();updateGradPreview();
-}
-
-function updateGradPreview(){
-  const cv=document.getElementById('gp-preview');
-  if(!cv)return;
-  cv.width=cv.offsetWidth||280;cv.height=60;
-  const ctx=cv.getContext('2d');
-  const sorted=[...gradStops].sort((a,b)=>a.pos-b.pos);
-  if(gradType==='random'){
-    // Draw random-style preview
-    const colors=['#e53935','#fb8c00','#ffd600','#43a047','#00bcd4','#1565c0','#7b1fa2','#ff69b4'];
-    for(let i=0;i<5;i++){
-      const cx=Math.random()*cv.width,cy=Math.random()*cv.height;
-      const r=cv.width*(0.4+Math.random()*0.5);
-      const g=ctx.createRadialGradient(cx,cy,0,cx,cy,r);
-      g.addColorStop(0,colors[Math.floor(Math.random()*colors.length)]);
-      g.addColorStop(1,'transparent');
-      ctx.globalAlpha=0.6+Math.random()*0.4;ctx.fillStyle=g;ctx.fillRect(0,0,cv.width,cv.height);
-    }
-    ctx.globalAlpha=1;
-  } else if(gradType==='radial'){
-    const g=ctx.createRadialGradient(cv.width/2,cv.height/2,0,cv.width/2,cv.height/2,cv.width/2);
-    sorted.forEach(s=>g.addColorStop(s.pos/100,s.color));
-    ctx.fillStyle=g;ctx.fillRect(0,0,cv.width,cv.height);
-  } else {
-    const rad=gradAngle*Math.PI/180;
-    const x1=cv.width/2-Math.cos(rad)*cv.width/2,y1=cv.height/2-Math.sin(rad)*cv.height/2;
-    const x2=cv.width/2+Math.cos(rad)*cv.width/2,y2=cv.height/2+Math.sin(rad)*cv.height/2;
-    const g=ctx.createLinearGradient(x1,y1,x2,y2);
-    sorted.forEach(s=>g.addColorStop(s.pos/100,s.color));
-    ctx.fillStyle=g;ctx.fillRect(0,0,cv.width,cv.height);
-  }
-}
-
-function randomizeGrad(){
-  const palette=['#e53935','#fb8c00','#ffd600','#43a047','#00bcd4','#1565c0','#7b1fa2','#ff69b4','#ff5722','#009688','#3f51b5','#e91e63','#0097a7','#558b2f','#f57f17'];
-  palette.sort(()=>Math.random()-.5);
-  const n=2+Math.floor(Math.random()*3);
-  gradStops=[];
-  for(let i=0;i<n;i++) gradStops.push({color:palette[i],pos:Math.round(i/(n-1)*100)});
-  if(gradType==='linear') gradAngle=Math.round(Math.random()*360);
-  const slider=document.getElementById('gp-angle');
-  if(slider){slider.value=gradAngle;updateGradAngle(gradAngle);}
-  renderGradStops();updateGradPreview();
-}
-
-function applyGradPanel(){
-  saveHistory();
-  const sorted=[...gradStops].sort((a,b)=>a.pos-b.pos);
-  const tmp=document.createElement('canvas');tmp.width=W;tmp.height=H;
-  const tC=tmp.getContext('2d');
-  if(gradType==='random'){
-    const colors=['#e53935','#fb8c00','#ffd600','#43a047','#00bcd4','#1565c0','#7b1fa2','#ff69b4','#ff5722','#009688','#3f51b5','#e91e63'];
-    colors.sort(()=>Math.random()-.5);
-    const n=3+Math.floor(Math.random()*4);
-    for(let i=0;i<n;i++){
-      const cx=Math.random()*W,cy=Math.random()*H;
-      const r=Math.max(W,H)*(0.4+Math.random()*0.7);
-      const grad=tC.createRadialGradient(cx,cy,0,cx,cy,r);
-      grad.addColorStop(0,colors[i%colors.length]);
-      grad.addColorStop(1,'transparent');
-      tC.globalAlpha=0.55+Math.random()*0.45;
-      tC.fillStyle=grad;tC.fillRect(0,0,W,H);
-    }
-    tC.globalAlpha=1;
-  } else if(gradType==='radial'){
-    const grad=tC.createRadialGradient(W/2,H/2,0,W/2,H/2,Math.min(W,H)/2);
-    sorted.forEach(s=>grad.addColorStop(s.pos/100,s.color));
-    tC.fillStyle=grad;tC.fillRect(0,0,W,H);
-  } else {
-    const rad=gradAngle*Math.PI/180;
-    const x1=W/2-Math.cos(rad)*W,y1=H/2-Math.sin(rad)*H;
-    const x2=W/2+Math.cos(rad)*W,y2=H/2+Math.sin(rad)*H;
-    const grad=tC.createLinearGradient(x1,y1,x2,y2);
-    sorted.forEach(s=>grad.addColorStop(s.pos/100,s.color));
-    tC.fillStyle=grad;tC.fillRect(0,0,W,H);
-  }
-  // Composite: keep existing non-white drawing on top
-  const existingData=dCtx.getImageData(0,0,W,H);
-  dCtx.drawImage(tmp,0,0);
-  const gradData=dCtx.getImageData(0,0,W,H);
-  for(let i=0;i<existingData.data.length;i+=4){
-    const r=existingData.data[i],g=existingData.data[i+1],b=existingData.data[i+2],a=existingData.data[i+3];
-    if(a>10&&!(r>240&&g>240&&b>240)){gradData.data[i]=r;gradData.data[i+1]=g;gradData.data[i+2]=b;gradData.data[i+3]=a;}
-  }
-  dCtx.putImageData(gradData,0,0);
-  closeGradPanel();
-  flash('Gradient applied!');
-}
 
 
 // ══════════════════════════════════════════════════════════
@@ -1282,17 +1036,13 @@ function onDown(e){
       rotStartAngle=Math.atan2(p.y-cy,p.x-cx);
       rotOrigAngle=selRotAngle;
       hc.style.cursor='crosshair';
-      spBroadcastGrabState();
     } else if(sel.active&&p.x>=sel.floatX&&p.x<sel.floatX+sel.rect.w&&p.y>=sel.floatY&&p.y<sel.floatY+sel.rect.h){
       painting=true;grabMode='move';grabOffX=p.x-sel.floatX;grabOffY=p.y-sel.floatY;hc.style.cursor='grabbing';
-      spBroadcastGrabState();
     } else {
       // Check resize handles
       const handle=getHandleAt(p);
-      if(handle&&sel.active){grabMode='resize';resizeHandle=handle;painting=true;spBroadcastGrabState();return;}
+      if(handle&&sel.active){grabMode='resize';resizeHandle=handle;painting=true;return;}
       commitSelection();painting=true;grabMode='rect';startX=lastX=p.x;startY=lastY=p.y;
-      // Immediately broadcast starting position of rect selection
-      spBroadcastGrabState();
     }
     return;
   }
@@ -1307,19 +1057,19 @@ function onDown(e){
         // Broadcast fill WITH string state so remotes replicate correctly
         const msg={type:'fill',x:p.x,y:p.y,clr:color,nodes:stringNodes.map(n=>({...n})),edges:stringEdges.map(e=>({...e}))};
         broadcastToPeers(msg);
-        if(!spIsHost&&spConnections[0])try{spConnections[0].send(msg);}catch(ex){}
+        if(!spIsHost&&spConnections[0])try{spConnections[0].send({...msg,_pid:spPeer?spPeer.id:'me'});}catch(ex){}
       } else {
         floodFill(p.x,p.y,null);
         const msg={type:'fill',x:p.x,y:p.y,clr:color,nodes:[],edges:[]};
         broadcastToPeers(msg);
-        if(!spIsHost&&spConnections[0])try{spConnections[0].send(msg);}catch(ex){}
+        if(!spIsHost&&spConnections[0])try{spConnections[0].send({...msg,_pid:spPeer?spPeer.id:'me'});}catch(ex){}
       }
       return;
     }
     floodFill(p.x,p.y,null);painting=false;
     const msg={type:'fill',x:p.x,y:p.y,clr:color,nodes:[],edges:[]};
     broadcastToPeers(msg);
-    if(!spIsHost&&spConnections[0])try{spConnections[0].send(msg);}catch(ex){}
+    if(!spIsHost&&spConnections[0])try{spConnections[0].send({...msg,_pid:spPeer?spPeer.id:'me'});}catch(ex){}
     return;
   }
   snap_=dCtx.getImageData(0,0,W,H);
@@ -1334,6 +1084,7 @@ function onMove(e){
   e.preventDefault();
   const p=gpos(e);
   document.getElementById('sb-pos').textContent=p.x+', '+p.y;
+  spBroadcastCursor(p.x, p.y);
 
   if(tool==='string'){
     stringHoverPos=p;
@@ -1363,7 +1114,6 @@ function onMove(e){
       const curAngle=Math.atan2(p.y-cy,p.x-cx);
       selRotAngle=rotOrigAngle+(curAngle-rotStartAngle);
     }
-    // Broadcast live grab state so other players see it in real-time
     spBroadcastGrabState();
     return;
   }
@@ -1400,12 +1150,7 @@ function onUp(e){
       const x2=Math.max(startX,lastX),y2=Math.max(startY,lastY);
       if(x2-x1>2&&y2-y1>2)finalizeSelection(x1,y1,x2-x1,y2-y1);
       else lCtx.clearRect(0,0,W*SCALE,H*SCALE);
-    }
-    // Clear remote grab overlay (selection committed or rect done)
-    if(spInRoom){
-      const msg={type:'grab-state',mode:'none'};
-      broadcastToPeers(msg);
-      if(!spIsHost&&spConnections[0])try{spConnections[0].send(msg);}catch(e){}
+      spBroadcastGrabState('none');
     }
     grabMode=null;hc.style.cursor='grab';snap_=null;return;
   }
@@ -1415,7 +1160,7 @@ function onUp(e){
   if(['line','rect','circle'].includes(tool)){
     const msg={type:'strokes',strokes:[{t:tool,x0:startX,y0:startY,x:lastX,y:lastY,clr:color,sz:bSz,op:bOp}]};
     broadcastToPeers(msg);
-    if(!spIsHost&&spConnections[0])try{spConnections[0].send(msg);}catch(ex){}
+    if(!spIsHost&&spConnections[0])try{spConnections[0].send({...msg,_pid:spPeer?spPeer.id:'me'});}catch(ex){}
   }
   snap_=null;
 }
@@ -1473,15 +1218,6 @@ function doResize(p){
   if(resizeHandle.includes('w')){nw=Math.max(4,ox+ow-p.x);nx=p.x;}
   if(resizeHandle.includes('n')){nh=Math.max(4,oy+oh-p.y);ny=p.y;}
   sel.floatX=nx;sel.floatY=ny;sel.rect={x:nx,y:ny,w:nw,h:nh};
-  // Scale the image content to match new size (squash & stretch)
-  if(nw!==ow||nh!==oh){
-    const tmp=document.createElement('canvas');tmp.width=nw;tmp.height=nh;
-    const tC=tmp.getContext('2d');tC.imageSmoothingEnabled=false;
-    const src=document.createElement('canvas');src.width=resizeOrigImg.width;src.height=resizeOrigImg.height;
-    src.getContext('2d').putImageData(resizeOrigImg,0,0);
-    tC.drawImage(src,0,0,nw,nh);
-    sel.floatImg=tC.getImageData(0,0,nw,nh);
-  }
 }
 
 function getRotHandlePos(){
@@ -1514,12 +1250,10 @@ function drawGrabOverlay(){
   } else if(sel.active){
     const bx=sel.floatX*SCALE,by=sel.floatY*SCALE,bw=sel.rect.w*SCALE,bh=sel.rect.h*SCALE;
     const cx=bx+bw/2,cy=by+bh/2;
-    // Draw float image with rotation — use offscreen canvas to preserve alpha transparency
+    // Draw float image with rotation — use clearRect so alpha is respected
     if(sel.floatImg){
       const tmp=document.createElement('canvas');tmp.width=sel.rect.w;tmp.height=sel.rect.h;
-      const tCtx=tmp.getContext('2d');
-      tCtx.clearRect(0,0,sel.rect.w,sel.rect.h);
-      tCtx.putImageData(sel.floatImg,0,0);
+      const tCtx=tmp.getContext('2d');tCtx.clearRect(0,0,tmp.width,tmp.height);tCtx.putImageData(sel.floatImg,0,0);
       lCtx.save();
       lCtx.translate(cx,cy);lCtx.rotate(selRotAngle);lCtx.translate(-bw/2,-bh/2);
       lCtx.imageSmoothingEnabled=false;
@@ -1579,44 +1313,10 @@ function drawGrabOverlay(){
 
 function renderOverlayLayer(){
   dashOffset=(dashOffset+0.4)%20;
-  // Clear and draw string layer + grab overlay
   lCtx.clearRect(0,0,W*SCALE,H*SCALE);
   drawGrabOverlay();
-  // Draw remote grab states (other players' selections/floats)
-  drawRemoteGrabOverlays();
-  // Draw string nodes/edges on top
+  drawRemoteOverlays();
   if(stringNodes.length>0)drawStringLayer();
-}
-
-function drawRemoteGrabOverlays(){
-  for(const pid in remoteGrabStates){
-    const rg=remoteGrabStates[pid];
-    lCtx.save();
-    if(rg.mode==='rect'){
-      const rx=rg.x1*SCALE,ry=rg.y1*SCALE,rw=(rg.x2-rg.x1)*SCALE,rh=(rg.y2-rg.y1)*SCALE;
-      lCtx.fillStyle='rgba(255,100,0,0.1)';lCtx.fillRect(rx,ry,rw,rh);
-      lCtx.lineWidth=2;lCtx.setLineDash([6,4]);lCtx.lineDashOffset=dashOffset;
-      lCtx.strokeStyle='#ff6600';lCtx.strokeRect(rx+1,ry+1,rw-2,rh-2);
-      lCtx.lineDashOffset=dashOffset+10;lCtx.strokeStyle='rgba(255,255,255,0.7)';
-      lCtx.strokeRect(rx+1,ry+1,rw-2,rh-2);lCtx.setLineDash([]);
-    } else if(rg.mode==='float'){
-      const bx=rg.floatX*SCALE,by=rg.floatY*SCALE,bw=rg.w*SCALE,bh=rg.h*SCALE;
-      const cx=bx+bw/2,cy=by+bh/2;
-      lCtx.translate(cx,cy);lCtx.rotate(rg.rot||0);
-      // Draw the float image ghost
-      if(rg.imgEl&&rg.imgEl.complete){
-        lCtx.globalAlpha=0.75;lCtx.imageSmoothingEnabled=false;
-        lCtx.drawImage(rg.imgEl,-bw/2,-bh/2,bw,bh);
-        lCtx.globalAlpha=1;
-      }
-      // Dashed border in orange
-      lCtx.lineWidth=2;lCtx.setLineDash([7,5]);lCtx.lineDashOffset=dashOffset;
-      lCtx.strokeStyle='#ff6600';lCtx.strokeRect(-bw/2+1,-bh/2+1,bw-2,bh-2);
-      lCtx.lineDashOffset=dashOffset+12;lCtx.strokeStyle='rgba(255,255,255,0.8)';
-      lCtx.strokeRect(-bw/2+1,-bh/2+1,bw-2,bh-2);lCtx.setLineDash([]);
-    }
-    lCtx.restore();
-  }
 }
 
 function finalizeSelection(rx,ry,rw,rh){
@@ -1629,21 +1329,15 @@ function finalizeSelection(rx,ry,rw,rh){
     const sx=rx+fx,sy=ry+fy;if(sx<0||sx>=W||sy<0||sy>=H)continue;
     const si=(sy*W+sx)*4,di=(fy*rw+fx)*4;
     const r=srcData.data[si],g=srcData.data[si+1],b=srcData.data[si+2],a=srcData.data[si+3];
-    // Make near-white (canvas background) pixels transparent in the float
-    const isBackground = (a<10)||(r>240&&g>240&&b>240);
-    floatImg.data[di]=r;floatImg.data[di+1]=g;floatImg.data[di+2]=b;
-    floatImg.data[di+3]=isBackground?0:a;
-    // Only erase non-background pixels from the source canvas
-    if(!isBackground){
-      srcData.data[si]=255;srcData.data[si+1]=255;srcData.data[si+2]=255;srcData.data[si+3]=255;
-    }
+    const isBg=(a<10)||(r>240&&g>240&&b>240);
+    floatImg.data[di]=r;floatImg.data[di+1]=g;floatImg.data[di+2]=b;floatImg.data[di+3]=isBg?0:a;
+    if(!isBg){srcData.data[si]=255;srcData.data[si+1]=255;srcData.data[si+2]=255;srcData.data[si+3]=255;}
   }
   dCtx.putImageData(srcData,0,0);
   sel.floatImg=floatImg;sel.rect={x:rx,y:ry,w:rw,h:rh};
   sel.floatX=rx;sel.floatY=ry;sel.active=true;selRotAngle=0;
   resizeOrigRect={...sel.rect};resizeOrigImg=floatImg;
-  // Broadcast: canvas now has hole where selection was
-  spBroadcastCanvasSnapshot();
+  spBroadcastCanvasSnap();
   flash('Selected — drag to move, handles to resize, Esc to stamp');
 }
 
@@ -1651,9 +1345,7 @@ function commitSelection(){
   if(!sel.active)return;
   if(sel.floatImg){
     const tmp=document.createElement('canvas');tmp.width=sel.rect.w;tmp.height=sel.rect.h;
-    const tCtx=tmp.getContext('2d');
-    tCtx.clearRect(0,0,sel.rect.w,sel.rect.h);
-    tCtx.putImageData(sel.floatImg,0,0);
+    const tCtx=tmp.getContext('2d');tCtx.clearRect(0,0,tmp.width,tmp.height);tCtx.putImageData(sel.floatImg,0,0);
     dCtx.save();dCtx.imageSmoothingEnabled=false;
     const cx=sel.floatX+sel.rect.w/2,cy=sel.floatY+sel.rect.h/2;
     dCtx.translate(cx,cy);dCtx.rotate(selRotAngle);dCtx.translate(-sel.rect.w/2,-sel.rect.h/2);
@@ -1661,8 +1353,8 @@ function commitSelection(){
     dCtx.restore();
   }
   sel.active=false;sel.floatImg=null;resizeOrigRect=null;resizeOrigImg=null;selRotAngle=0;
-  // Broadcast committed canvas to peers
-  spBroadcastCanvasSnapshot();
+  spBroadcastCanvasSnap();
+  spBroadcastGrabState('none');
 }
 
 function deleteSelection(){if(!sel.active)return;sel.active=false;sel.floatImg=null;flash('Selection deleted');}
@@ -1688,10 +1380,22 @@ let textX=0,textY=0;
 const textOverlay=document.getElementById('text-overlay'),textInputEl=document.getElementById('text-input-el');
 function updateTextInputStyle(){const fs=txtSize*SCALE;textInputEl.style.fontSize=fs+'px';textInputEl.style.fontFamily=`'${txtFont}',sans-serif`;textInputEl.style.color=color;textInputEl.style.minWidth='40px';textInputEl.style.lineHeight='1.2';}
 function placeTextOverlay(drawX,drawY){textX=drawX;textY=drawY;updateTextInputStyle();textOverlay.style.left=(drawX*SCALE)+'px';textOverlay.style.top=(drawY*SCALE-txtSize*SCALE*0.1)+'px';textOverlay.style.display='block';textInputEl.textContent='';textInputEl.focus();}
-function stampText(){const txt=textInputEl.textContent.trim();if(txt){saveHistory();dCtx.save();dCtx.globalAlpha=bOp;dCtx.fillStyle=color;dCtx.font=`${txtSize}px '${txtFont}',sans-serif`;dCtx.textBaseline='top';dCtx.fillText(txt,textX,textY);dCtx.restore();
-  // Broadcast text to peers
-  if(spInRoom){const msg={type:'text-stamp',x:textX,y:textY,txt,font:txtFont,size:txtSize,clr:color,op:bOp};broadcastToPeers(msg);if(!spIsHost&&spConnections[0])try{spConnections[0].send(msg);}catch(ex){}}
-  flash('Text stamped!');}hideTextOverlay(true);}
+function stampText(){
+  const txt=textInputEl.textContent.trim();
+  if(txt){
+    saveHistory();
+    dCtx.save();dCtx.globalAlpha=bOp;dCtx.fillStyle=color;
+    dCtx.font=`${txtSize}px '${txtFont}',sans-serif`;dCtx.textBaseline='top';
+    dCtx.fillText(txt,textX,textY);dCtx.restore();
+    flash('Text stamped!');
+    if(spInRoom){
+      const msg={type:'text-stamp',x:textX,y:textY,txt,font:txtFont,size:txtSize,clr:color,op:bOp};
+      broadcastToPeers(msg);
+      if(!spIsHost&&spConnections[0])try{spConnections[0].send({...msg,_pid:spPeer?spPeer.id:'me'});}catch(ex){}
+    }
+  }
+  hideTextOverlay(true);
+}
 function hideTextOverlay(clear){textOverlay.style.display='none';if(clear)textInputEl.textContent='';}
 function setTextFont(el){document.querySelectorAll('.font-opt,.tb-font-opt').forEach(e=>e.classList.remove('on'));const f=el.dataset.font;txtFont=f;document.querySelectorAll(`[data-font="${f}"]`).forEach(e=>e.classList.add('on'));updateTextInputStyle();textInputEl.focus();}
 textInputEl.addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();stampText();}if(e.key==='Escape')hideTextOverlay(true);e.stopPropagation();});
@@ -1733,9 +1437,9 @@ function redo(){if(!redoStack.length){flash('Nothing to redo');return;}history.p
 // ══════════════════════════════════════════════════════════
 // OBLITERATE
 // ══════════════════════════════════════════════════════════
-function obliterate(remote){
-  if(!remote && spInRoom && !spIsHost){ flash('Only the room owner can Obliterate!'); return; }
-  if(!remote && spInRoom){ broadcastToPeers({type:'obliterate'}); if(!spIsHost&&spConnections[0])try{spConnections[0].send({type:'obliterate'});}catch(e){} }
+function obliterate(){
+  if(spInRoom && !spIsHost){ flash('Only the room owner can Obliterate!'); return; }
+  if(spInRoom){ broadcastToPeers({type:'obliterate'}); }
   saveHistory();const src=dCtx.getImageData(0,0,W,H).data;const DW=W*SCALE,DH=H*SCALE;const pts=[];
   const step=Math.max(1,Math.floor(W/80));
   for(let py=0;py<H;py+=step)for(let px=0;px<W;px+=step){const i=(py*W+px)*4;const r=src[i],g=src[i+1],b=src[i+2],a=src[i+3];if(a<50||(r>240&&g>240&&b>240))continue;const cx=DW/2,cy=DH/2,sx=px*SCALE,sy=py*SCALE;const dx=sx-cx,dy=sy-cy,dist=Math.sqrt(dx*dx+dy*dy)||1;const spd=3+Math.random()*9;pts.push({x:sx,y:sy,vx:(dx/dist)*spd*(0.4+Math.random()),vy:(dy/dist)*spd*(0.4+Math.random())-Math.random()*5,grav:.18+Math.random()*.18,size:SCALE+Math.random()*SCALE*2.5,col:`rgb(${r},${g},${b})`,alpha:1,rot:Math.random()*6.28,rotV:(Math.random()-.5)*.4});}
@@ -1744,7 +1448,7 @@ function obliterate(remote){
   dCtx.fillStyle='#fff';dCtx.fillRect(0,0,W,H);ec.style.display='block';let frame=0;const FRAMES=65;
   function boom(){frame++;eCtx.clearRect(0,0,DW,DH);if(frame<8){eCtx.fillStyle=`rgba(255,255,200,${(1-frame/8)*.95})`;eCtx.fillRect(0,0,DW,DH);}for(let r=0;r<3;r++){const rf=frame-r*5;if(rf<0||rf>28)continue;eCtx.save();eCtx.strokeStyle=`rgba(255,160,0,${(1-rf/28)*.85})`;eCtx.lineWidth=6-rf*.18;eCtx.beginPath();eCtx.arc(DW/2,DH/2,rf*22,0,Math.PI*2);eCtx.stroke();eCtx.restore();}
   for(const p of pts){p.x+=p.vx;p.y+=p.vy;p.vy+=p.grav;p.vx*=.97;p.rot+=p.rotV;p.alpha=Math.max(0,1-frame/FRAMES);if(p.alpha<=0)continue;eCtx.save();eCtx.globalAlpha=p.alpha;eCtx.translate(p.x,p.y);eCtx.rotate(p.rot);eCtx.fillStyle=p.col;if(p.size<7)eCtx.fillRect(-p.size/2,-p.size/2,p.size,p.size);else{eCtx.beginPath();eCtx.arc(0,0,p.size/2,0,Math.PI*2);eCtx.fill();}eCtx.restore();}
-  if(frame<FRAMES)requestAnimationFrame(boom);else{eCtx.clearRect(0,0,DW,DH);ec.style.display='none';flash(remote?'Obliterated by host!':'Obliterated!');}}
+  if(frame<FRAMES)requestAnimationFrame(boom);else{eCtx.clearRect(0,0,DW,DH);ec.style.display='none';flash('Obliterated!');}}
   requestAnimationFrame(boom);
 }
 
@@ -1815,7 +1519,6 @@ const GUIDE_SLIDES=[
   {title:'Welcome to Wiggly Paint',text:`Wiggly Paint — your drawings come alive with animated wiggle!<br><br>Use tools on the left sidebar or ribbon up top. Click <b>Next</b> for a tour.`},
   {title:'String / Node Tool 🔴',text:`The <b>String tool</b> is the new shape maker:<br><br>&bull; <b>Click empty space</b> to place a node (blue dot)<br>&bull; <b>Click another node</b> to draw a string edge between them<br>&bull; <b>Drag a node</b> to reposition it — strings follow along<br>&bull; Nodes persist when you switch tools!<br>&bull; When loop is <b>sealed (closed)</b>, use the <b>Fill tool</b> to paint inside<br>&bull; Fill respects existing drawn content around it`},
   {title:'Grab Tool & Resize',text:`The <b>Grab tool</b> selects a rectangle of pixels:<br><br>&bull; <b>Drag</b> to draw selection — preview shows blue dashed outline while dragging<br>&bull; After release: <b>8 resize handles</b> appear at corners and edges<br>&bull; Drag handles to stretch/shrink the selection<br>&bull; <b>Drag inside</b> to move it<br>&bull; <b>Esc</b> stamps it back, <b>Delete</b> removes it`},
-  {title:'Gradient Background 🎨',text:`In the <b>Colors section</b> of the ribbon, click <b>🎨 Gradient BG</b>:<br><br>&bull; Generates a unique random multi-color gradient<br>&bull; Colors splashed at random positions and sizes<br>&bull; Your existing drawing stays on top!<br>&bull; Works great with the Fill and String tools`},
   {title:'Wiggle & Export',text:`Everything wiggles in real time!<br><br>&bull; <b>View tab</b> → Px Move, Speed, Snap controls<br>&bull; <b>Save GIF</b> exports an animated wiggly GIF<br>&bull; <b>Obliterate</b> explodes your art dramatically<br><br>Go make something wiggly! 🎉`}
 ];
 let guideSlide=0;
@@ -2600,8 +2303,8 @@ function joinRoom(){
 
     conn.on('open',()=>{
       statusEl.innerHTML='<span class="sp-spinner"></span> Waiting for host...';
-      // Send our name to host
-      conn.send({type:'hello', name:spMyName, pfp:getMyPfp()});
+      // Send our name + our own peer ID to host
+      conn.send({type:'hello', name:spMyName, pfp:getMyPfp(), _pid:spPeer.id});
     });
     conn.on('data', data=>{
       if(data.type==='welcome'){
@@ -2612,9 +2315,8 @@ function joinRoom(){
         document.getElementById('sp-join-btn').disabled=false;
         enterRoomUI(false);
         spAddChatMsg('System','Joined the room!','sys');
-      } else if(data.type==='canvas-snap'){
-        applyRemoteCanvas(data.canvas);
       } else {
+        // Route everything through handlePeerData (canvas-snap, grabs, cursors, strokes, etc.)
         handlePeerData(data, conn);
       }
     });
@@ -2650,66 +2352,78 @@ function joinRoom(){
 function sendCanvasSnapshot(conn){
   try{
     const dataURL=dc.toDataURL('image/png');
-    conn.send({type:'canvas-snap', canvas:dataURL,
-      nodes:stringNodes.map(n=>({...n})),
-      edges:stringEdges.map(e=>({...e}))
-    });
+    conn.send({type:'canvas-snap', canvas:dataURL, _pid:spPeer?spPeer.id:'host'});
   }catch(e){}
-}
-
-function applyRemoteCanvas(dataURL, nodes, edges){
-  const img=new Image();
-  img.onload=()=>{
-    saveHistory();
-    dCtx.clearRect(0,0,W,H);
-    dCtx.drawImage(img,0,0,W,H);
-  };
-  img.src=dataURL;
-  if(nodes){ stringNodes=nodes; stringEdges=edges||[]; }
 }
 
 // ══════════════════════════════════════════════════════════
 // PEER MESSAGING
 // ══════════════════════════════════════════════════════════
 function broadcastToPeers(msg, exclude){
+  // Stamp our own peer ID into every outgoing message so all recipients can identify sender
+  const stamped={...msg, _pid: spPeer ? spPeer.id : 'host'};
   const targets = spIsHost
     ? spConnections.filter(c=>c!==exclude && c.open)
     : spConnections.filter(c=>c.open);
-  targets.forEach(c=>{ try{c.send(msg);}catch(e){} });
+  targets.forEach(c=>{ try{c.send(stamped);}catch(e){} });
 }
 
 function handlePeerData(data, fromConn){
+  // Use _pid stamped in the message (survives host relay) so we always know the real sender
+  const senderPid = data._pid || (fromConn ? fromConn.peer : 'unknown');
+
   if(data.type==='hello'){
-    if(fromConn && data.name){ fromConn._spName=data.name; fromConn._spPfp=data.pfp||null; updatePeerList(); }
+    if(fromConn && data.name){
+      fromConn._spName=data.name; fromConn._spPfp=data.pfp||null;
+      fromConn._spPid=senderPid;
+      updatePeerList();
+    }
     return;
   }
+
   if(data.type==='canvas-snap'){
     if(spIsHost) broadcastToPeers(data, fromConn);
-    // Clear any remote grab overlay since canvas is now updated
-    if(fromConn) delete remoteGrabStates[fromConn.peer||'host'];
-    applyRemoteCanvas(data.canvas, data.nodes, data.edges);
+    // Clear that player's grab overlay since canvas is now committed
+    if(remoteStates[senderPid]) remoteStates[senderPid].grab=null;
+    applyRemoteCanvas(data.canvas);
     return;
   }
+
   if(data.type==='grab-state'){
     if(spIsHost) broadcastToPeers(data, fromConn);
-    const pid = fromConn ? (fromConn.peer||'host') : 'host';
-    if(data.mode==='none'){ delete remoteGrabStates[pid]; }
-    else if(data.mode==='rect'){ remoteGrabStates[pid]={mode:'rect',x1:data.x1,y1:data.y1,x2:data.x2,y2:data.y2}; }
+    if(!remoteStates[senderPid]) remoteStates[senderPid]={};
+    const rs=remoteStates[senderPid];
+    if(data.mode==='none'){ rs.grab=null; }
+    else if(data.mode==='rect'){ rs.grab={mode:'rect',x1:data.x1,y1:data.y1,x2:data.x2,y2:data.y2}; }
     else if(data.mode==='float'){
-      const prev = remoteGrabStates[pid];
-      // Reuse cached image if same dimensions
-      if(data.img && (!prev||prev.mode!=='float'||prev.w!==data.w||prev.h!==data.h)){
-        const img=new Image();img.src=data.img;
-        remoteGrabStates[pid]={mode:'float',floatX:data.floatX,floatY:data.floatY,w:data.w,h:data.h,rot:data.rot,imgEl:img};
-      } else if(prev&&prev.mode==='float'){
-        prev.floatX=data.floatX;prev.floatY=data.floatY;prev.rot=data.rot;
-        if(data.img&&data.w===prev.w&&data.h===prev.h&&data.img!==prev.lastImg){prev.lastImg=data.img;const img=new Image();img.src=data.img;prev.imgEl=img;}
+      const prev=rs.grab;
+      if(!prev||prev.mode!=='float'||prev.w!==data.w||prev.h!==data.h||data.img!==prev.lastImg){
+        const img=new Image(); if(data.img){img.src=data.img;}
+        rs.grab={mode:'float',floatX:data.floatX,floatY:data.floatY,w:data.w,h:data.h,rot:data.rot||0,imgEl:img,lastImg:data.img};
       } else {
-        remoteGrabStates[pid]={mode:'float',floatX:data.floatX,floatY:data.floatY,w:data.w,h:data.h,rot:data.rot};
+        prev.floatX=data.floatX; prev.floatY=data.floatY; prev.rot=data.rot||0;
       }
     }
     return;
   }
+
+  if(data.type==='cursor'){
+    if(spIsHost) broadcastToPeers(data, fromConn);
+    if(!remoteStates[senderPid]) remoteStates[senderPid]={};
+    remoteStates[senderPid].cursor={x:data.x, y:data.y, name:data.name};
+    return;
+  }
+
+  if(data.type==='text-stamp'){
+    if(spIsHost) broadcastToPeers(data, fromConn);
+    spRemoteDrawing=true;
+    dCtx.save();dCtx.globalAlpha=data.op||1;dCtx.fillStyle=data.clr||'#000';
+    dCtx.font=`${data.size||24}px '${data.font||'Comic Sans MS'}',sans-serif`;
+    dCtx.textBaseline='top';dCtx.fillText(data.txt,data.x,data.y);dCtx.restore();
+    spRemoteDrawing=false;
+    return;
+  }
+
   if(data.type==='strokes'){
     if(spIsHost) broadcastToPeers(data, fromConn);
     replayStrokes(data.strokes);
@@ -2721,15 +2435,9 @@ function handlePeerData(data, fromConn){
     stringNodes=data.nodes; stringEdges=data.edges;
   } else if(data.type==='obliterate'){
     if(spIsHost) broadcastToPeers(data, fromConn);
-    // Run full obliterate animation on remote too
-    obliterate(true);
-  } else if(data.type==='text-stamp'){
-    if(spIsHost) broadcastToPeers(data, fromConn);
-    spRemoteDrawing=true;
-    dCtx.save();dCtx.globalAlpha=data.op||1;dCtx.fillStyle=data.clr||'#000';
-    dCtx.font=`${data.size||24}px '${data.font||'Comic Sans MS'}',sans-serif`;
-    dCtx.textBaseline='top';dCtx.fillText(data.txt,data.x,data.y);dCtx.restore();
-    spRemoteDrawing=false;
+    saveHistory();
+    dCtx.fillStyle='#fff'; dCtx.fillRect(0,0,W,H);
+    flash('Canvas obliterated!');
   } else if(data.type==='chat'){
     spAddChatMsg(data.name||'Peer', data.msg, 'peer', data.pfp||null);
     if(spIsHost) broadcastToPeers(data, fromConn);
@@ -2739,14 +2447,151 @@ function handlePeerData(data, fromConn){
   }
 }
 
+// ── Remote player state tracking ──────────────────────────
+// keyed by _pid: { cursor:{x,y,name}, grab:{mode,...} }
+const remoteStates = {};
+
+// Stable color per player from their peer ID hash
+const PLAYER_COLORS=['#e53935','#00897b','#1e88e5','#8e24aa','#f4511e','#43a047','#d81b60','#00acc1','#fb8c00','#6d4c41'];
+function playerColor(pid){
+  let h=0; for(let i=0;i<pid.length;i++) h=(h*31+pid.charCodeAt(i))&0xffff;
+  return PLAYER_COLORS[h%PLAYER_COLORS.length];
+}
+
+// ── Canvas snap broadcast ──────────────────────────────────
+function spBroadcastCanvasSnap(){
+  if(!spInRoom||spRemoteDrawing) return;
+  try{
+    const canvas=dc.toDataURL('image/png');
+    const msg={type:'canvas-snap', canvas};
+    broadcastToPeers(msg);
+    if(!spIsHost&&spConnections[0]) try{spConnections[0].send({...msg,_pid:spPeer?spPeer.id:'me'});}catch(e){}
+  }catch(e){}
+}
+
+function applyRemoteCanvas(dataURL){
+  if(!dataURL) return;
+  spRemoteDrawing=true;
+  const img=new Image();
+  img.onload=()=>{ dCtx.clearRect(0,0,W,H); dCtx.drawImage(img,0,0,W,H); spRemoteDrawing=false; };
+  img.src=dataURL;
+}
+
+// ── Cursor broadcast ───────────────────────────────────────
+let _cursorTimer=null;
+function spBroadcastCursor(x,y){
+  if(!spInRoom||spRemoteDrawing) return;
+  clearTimeout(_cursorTimer);
+  _cursorTimer=setTimeout(()=>{
+    const msg={type:'cursor', x, y, name:spMyName};
+    broadcastToPeers(msg);
+    if(!spIsHost&&spConnections[0]) try{spConnections[0].send({...msg,_pid:spPeer?spPeer.id:'me'});}catch(e){}
+  },16);
+}
+
+// ── Grab state broadcast ───────────────────────────────────
+let _grabTimer=null;
+function spBroadcastGrabState(forceMode){
+  if(!spInRoom||spRemoteDrawing) return;
+  // If forced to 'none', send immediately
+  if(forceMode==='none'){
+    const msg={type:'grab-state', mode:'none'};
+    broadcastToPeers(msg);
+    if(!spIsHost&&spConnections[0]) try{spConnections[0].send({...msg,_pid:spPeer?spPeer.id:'me'});}catch(e){}
+    return;
+  }
+  // Rect: send immediately for real-time feel
+  if(grabMode==='rect'){
+    const msg={type:'grab-state', mode:'rect', x1:Math.min(startX,lastX),y1:Math.min(startY,lastY),x2:Math.max(startX,lastX),y2:Math.max(startY,lastY)};
+    broadcastToPeers(msg);
+    if(!spIsHost&&spConnections[0]) try{spConnections[0].send({...msg,_pid:spPeer?spPeer.id:'me'});}catch(e){}
+    return;
+  }
+  // Float: throttle at ~60fps
+  clearTimeout(_grabTimer);
+  _grabTimer=setTimeout(()=>{
+    if(!sel.active){spBroadcastGrabState('none');return;}
+    let imgDataUrl=null;
+    try{
+      const tmp=document.createElement('canvas');tmp.width=Math.max(1,sel.rect.w);tmp.height=Math.max(1,sel.rect.h);
+      const tCtx=tmp.getContext('2d');tCtx.clearRect(0,0,tmp.width,tmp.height);tCtx.putImageData(sel.floatImg,0,0);
+      imgDataUrl=tmp.toDataURL('image/png');
+    }catch(ex){}
+    const msg={type:'grab-state',mode:'float',floatX:sel.floatX,floatY:sel.floatY,w:sel.rect.w,h:sel.rect.h,rot:selRotAngle,img:imgDataUrl};
+    broadcastToPeers(msg);
+    if(!spIsHost&&spConnections[0]) try{spConnections[0].send({...msg,_pid:spPeer?spPeer.id:'me'});}catch(e){}
+  },16);
+}
+
+// ── Remote overlay rendering ───────────────────────────────
+function drawRemoteOverlays(){
+  for(const pid in remoteStates){
+    const rs=remoteStates[pid];
+    const col=playerColor(pid);
+    lCtx.save();
+
+    // Grab overlay
+    if(rs.grab){
+      const g=rs.grab;
+      if(g.mode==='rect'){
+        const rx=g.x1*SCALE,ry=g.y1*SCALE,rw=(g.x2-g.x1)*SCALE,rh=(g.y2-g.y1)*SCALE;
+        lCtx.fillStyle=col+'22';lCtx.fillRect(rx,ry,rw,rh);
+        lCtx.lineWidth=2;lCtx.setLineDash([6,4]);lCtx.lineDashOffset=dashOffset;
+        lCtx.strokeStyle=col;lCtx.strokeRect(rx+1,ry+1,rw-2,rh-2);
+        lCtx.lineDashOffset=dashOffset+10;lCtx.strokeStyle='#fff';lCtx.strokeRect(rx+1,ry+1,rw-2,rh-2);
+        lCtx.setLineDash([]);
+      } else if(g.mode==='float'){
+        const bx=g.floatX*SCALE,by=g.floatY*SCALE,bw=g.w*SCALE,bh=g.h*SCALE;
+        const cx=bx+bw/2,cy=by+bh/2;
+        lCtx.save();
+        lCtx.translate(cx,cy);lCtx.rotate(g.rot||0);
+        if(g.imgEl&&g.imgEl.complete&&g.imgEl.naturalWidth>0){
+          lCtx.globalAlpha=0.8;lCtx.imageSmoothingEnabled=false;
+          lCtx.drawImage(g.imgEl,-bw/2,-bh/2,bw,bh);lCtx.globalAlpha=1;
+        }
+        lCtx.lineWidth=2;lCtx.setLineDash([7,5]);lCtx.lineDashOffset=dashOffset;
+        lCtx.strokeStyle=col;lCtx.strokeRect(-bw/2+1,-bh/2+1,bw-2,bh-2);
+        lCtx.lineDashOffset=dashOffset+12;lCtx.strokeStyle='#fff';lCtx.strokeRect(-bw/2+1,-bh/2+1,bw-2,bh-2);
+        lCtx.setLineDash([]);
+        lCtx.restore();
+      }
+    }
+    lCtx.restore();
+
+    // Cursor
+    if(rs.cursor){
+      const cx=rs.cursor.x*SCALE, cy=rs.cursor.y*SCALE;
+      const name=rs.cursor.name||pid.slice(-4);
+      lCtx.save();
+      // Arrow cursor shape
+      lCtx.beginPath();
+      lCtx.moveTo(cx,cy);
+      lCtx.lineTo(cx+1,cy+13);
+      lCtx.lineTo(cx+4,cy+9);
+      lCtx.lineTo(cx+7,cy+15);
+      lCtx.lineTo(cx+9,cy+13.5);
+      lCtx.lineTo(cx+6,cy+8);
+      lCtx.lineTo(cx+11,cy+8);
+      lCtx.closePath();
+      lCtx.fillStyle=col; lCtx.fill();
+      lCtx.strokeStyle='#fff'; lCtx.lineWidth=1.5; lCtx.stroke();
+      // Name tag
+      lCtx.font='bold 10px Segoe UI,sans-serif';
+      const tw=lCtx.measureText(name).width+8;
+      lCtx.fillStyle=col; lCtx.fillRect(cx+13,cy-1,tw,14);
+      lCtx.fillStyle='#fff'; lCtx.fillText(name,cx+17,cy+10);
+      lCtx.restore();
+    }
+  }
+}
+
 // ── Stroke buffering ───────────────────────────────────────
 let spStrokeBuffer=[];
 let spStrokeTimer=null;
 
 function spBroadcastPoint(t, x, y, extra){
   if(!spInRoom||spRemoteDrawing) return;
-  const actualSz = sw(); // use sw() which accounts for tool-specific multipliers
-  const pt={t, x, y, clr:color, sz:actualSz, op:bOp, er:(tool==='eraser'), tl:tool, ...extra};
+  const pt={t, x, y, clr:color, sz:sw(), op:bOp, er:(tool==='eraser'), tl:tool, ...extra};
   spStrokeBuffer.push(pt);
   if(!spStrokeTimer){
     spStrokeTimer=setTimeout(()=>{
@@ -2754,7 +2599,7 @@ function spBroadcastPoint(t, x, y, extra){
         const msg={type:'strokes', strokes:[...spStrokeBuffer]};
         broadcastToPeers(msg);
         // Non-host also sends to host for rebroadcast
-        if(!spIsHost && spConnections[0]){ try{spConnections[0].send(msg);}catch(e){} }
+        if(!spIsHost && spConnections[0]){ try{spConnections[0].send({...msg,_pid:spPeer?spPeer.id:'me'});}catch(e){} }
       }
       spStrokeBuffer=[];
       spStrokeTimer=null;
@@ -2768,8 +2613,7 @@ function replayStrokes(strokes){
   dCtx.save();
   strokes.forEach(s=>{
     const isErase=!!s.er;
-    let alpha = isErase ? 1 : (s.op||1);
-    dCtx.globalAlpha=alpha;
+    dCtx.globalAlpha=isErase?1:(s.op||1);
     dCtx.strokeStyle=dCtx.fillStyle=isErase?'#fff':s.clr;
     dCtx.lineWidth=s.sz||1;
     dCtx.lineJoin=dCtx.lineCap='round';
@@ -2780,9 +2624,8 @@ function replayStrokes(strokes){
       dCtx.beginPath();
       dCtx.moveTo(s.x,s.y);
     } else if(s.t==='move'){
-      // Apply tool-specific opacity for move strokes
-      if(s.tl==='brush') dCtx.globalAlpha=Math.min(alpha,0.45);
-      else if(s.tl==='marker') dCtx.globalAlpha=Math.min(alpha,0.85);
+      if(s.tl==='brush') dCtx.globalAlpha=Math.min(s.op||1,0.45);
+      else if(s.tl==='marker') dCtx.globalAlpha=Math.min(s.op||1,0.85);
       dCtx.lineTo(s.x,s.y);
       dCtx.stroke();
       dCtx.beginPath();
@@ -2827,53 +2670,6 @@ function replayFill(data){
 
 // ── String state sync ──────────────────────────────────────
 let spStringTimer=null;
-// Helper: broadcast full canvas snapshot to all peers (used after grab/text/paste ops)
-function spBroadcastCanvasSnapshot(){
-  if(!spInRoom||spRemoteDrawing) return;
-  try{
-    const dataURL=dc.toDataURL('image/png');
-    const msg={type:'canvas-snap', canvas:dataURL};
-    broadcastToPeers(msg);
-    if(!spIsHost && spConnections[0]){ try{spConnections[0].send(msg);}catch(e){} }
-  }catch(e){}
-}
-
-// Remote grab overlays: map of peerId -> {mode, x1,y1,x2,y2, floatX,floatY,w,h,rot,imgData}
-const remoteGrabStates = {};
-let spGrabTimer = null;
-function spBroadcastGrabState(){
-  if(!spInRoom||spRemoteDrawing) return;
-  // For rect selection, send immediately (no throttle) for responsive feel
-  if(grabMode==='rect'){
-    const msg={type:'grab-state', mode:'rect', x1:Math.min(startX,lastX),y1:Math.min(startY,lastY),x2:Math.max(startX,lastX),y2:Math.max(startY,lastY)};
-    broadcastToPeers(msg);
-    if(!spIsHost && spConnections[0]){ try{spConnections[0].send(msg);}catch(e){} }
-    return;
-  }
-  // For float/move/resize, throttle to ~60fps
-  clearTimeout(spGrabTimer);
-  spGrabTimer = setTimeout(()=>{
-    let msg;
-    if(sel.active && (grabMode==='move'||grabMode==='resize'||grabMode==='rotate')){
-      // Encode the float image as a data URL for remote preview
-      let imgDataUrl=null;
-      try{
-        const tmp=document.createElement('canvas');tmp.width=Math.max(1,sel.rect.w);tmp.height=Math.max(1,sel.rect.h);
-        tmp.getContext('2d').putImageData(sel.floatImg,0,0);
-        imgDataUrl=tmp.toDataURL('image/png');
-      }catch(ex){}
-      msg={type:'grab-state', mode:'float', floatX:sel.floatX,floatY:sel.floatY,w:sel.rect.w,h:sel.rect.h,rot:selRotAngle,img:imgDataUrl};
-    } else {
-      msg={type:'grab-state', mode:'none'};
-    }
-    broadcastToPeers(msg);
-    if(!spIsHost && spConnections[0]){ try{spConnections[0].send(msg);}catch(e){} }
-  }, 16);
-}
-function spClearGrabState(peerId){
-  delete remoteGrabStates[peerId||'_any'];
-}
-function spClearAllGrabStates(){ for(const k in remoteGrabStates) delete remoteGrabStates[k]; }
 function spBroadcastStringState(){
   if(!spInRoom||spRemoteDrawing) return;
   clearTimeout(spStringTimer);
@@ -2883,7 +2679,7 @@ function spBroadcastStringState(){
       edges:stringEdges.map(e=>({...e}))
     };
     broadcastToPeers(msg);
-    if(!spIsHost && spConnections[0]){ try{spConnections[0].send(msg);}catch(e){} }
+    if(!spIsHost && spConnections[0]){ try{spConnections[0].send({...msg,_pid:spPeer?spPeer.id:'me'});}catch(e){} }
   }, 50);
 }
 
