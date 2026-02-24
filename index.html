@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <title>Wiggly Paint</title>
 <script src="https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
 <style>
 *{box-sizing:border-box;margin:0;padding:0;image-rendering:pixelated;}
 body{font-family:Segoe UI,Tahoma,Arial,sans-serif;font-size:11px;overflow:hidden;height:100vh;display:flex;flex-direction:column;user-select:none;background:#6b6b6b;}
@@ -264,7 +264,6 @@ body{font-family:Segoe UI,Tahoma,Arial,sans-serif;font-size:11px;overflow:hidden
 #noacct-error-title{background:linear-gradient(to bottom,#cc0000,#880000);color:#fff;font-weight:700;padding:4px 6px;display:flex;align-items:center;justify-content:space-between;font-size:12px;}
 #noacct-error-body{padding:14px;display:flex;flex-direction:column;gap:10px;}
 .noacct-icon{font-size:32px;text-align:center;}
-.noacct-msg{text-align:center;font-size:12px;color:#000;line-height:1.5;}
 .noacct-btns{display:flex;gap:8px;justify-content:center;}
 .noacct-btn{font-family:Segoe UI,Tahoma,Arial,sans-serif;font-size:11px;padding:5px 16px;border:2px solid;border-color:#fff #808080 #808080 #fff;background:#c0c0c0;cursor:pointer;font-weight:600;}
 .noacct-btn:hover{background:#d0d8e8;}
@@ -300,18 +299,7 @@ body{font-family:Segoe UI,Tahoma,Arial,sans-serif;font-size:11px;overflow:hidden
 .sp-status-box.ok{border-left-color:#2a2;}
 .sp-status-box.err{border-left-color:#c00;color:#c00;}
 .sp-status-box.info{border-left-color:#18f;}
-#social-room-list{display:flex;flex-direction:column;gap:6px;min-height:60px;}
-.sp-room-card{background:#fff;border:1px solid #ccc;padding:8px 10px;cursor:pointer;display:flex;align-items:center;gap:8px;}
-.sp-room-card:hover{background:linear-gradient(to bottom,#e8f4ff,#d8ecfc);border-color:#3399cc;}
-.sp-room-card-info{flex:1;min-width:0;}
-.sp-room-name{font-weight:700;font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-.sp-room-meta{font-size:10px;color:#666;margin-top:2px;}
-.sp-room-badge{font-size:9px;padding:2px 5px;border-radius:2px;font-weight:600;flex-shrink:0;}
-.sp-room-badge.pub{background:#d4f0d4;color:#155;border:1px solid #8c8;}
-.sp-room-badge.priv{background:#fde8d8;color:#631;border:1px solid #c85;}
-.sp-peers{display:flex;flex-wrap:wrap;gap:4px;margin-top:4px;}
-.sp-peer-chip{background:#e8f4ff;border:1px solid #9cc;padding:2px 6px;font-size:10px;border-radius:10px;color:#1a5ca8;}
-.sp-peer-chip.me{background:#d4f0d4;border-color:#8a8;color:#155;}
+
 #sp-chat-log{flex:1;overflow-y:auto;background:#fff;border:1px solid #bbb;padding:6px;display:flex;flex-direction:column;gap:3px;min-height:80px;max-height:150px;}
 .sp-chat-msg{font-size:11px;line-height:1.4;}
 .sp-chat-msg .sp-chat-who{font-weight:700;color:#1a5ca8;}
@@ -2083,43 +2071,19 @@ hc.addEventListener('touchend',()=>{ setTimeout(()=>scheduleAutoSave(),100); });
   </div>
   <div id="social-panel-body">
     <div class="sp-tab-bar">
-      <div class="sp-tab active" id="sp-tab-browse" onclick="spSwitchTab('browse')">🌐 Browse</div>
-      <div class="sp-tab" id="sp-tab-host" onclick="spSwitchTab('host')">📡 Host</div>
+      <div class="sp-tab active" id="sp-tab-host" onclick="spSwitchTab('host')">📡 Host</div>
       <div class="sp-tab" id="sp-tab-join" onclick="spSwitchTab('join')">🔗 Join</div>
       <div class="sp-tab" id="sp-tab-room" onclick="spSwitchTab('room')" style="display:none;">🖌 Room</div>
     </div>
 
-    <!-- BROWSE TAB -->
-    <div class="sp-page active" id="sp-page-browse">
-      <div>
-        <div class="sp-section-label">Public Rooms</div>
-        <div id="social-room-list"><div class="sp-empty"><span class="sp-spinner"></span> Loading rooms...</div></div>
-      </div>
-      <button class="sp-btn" onclick="refreshRoomList()" style="align-self:flex-start;">↺ Refresh</button>
-      <hr class="sp-divider">
-      <div style="font-size:10px;color:#888;">Rooms hosted publicly appear here. Join instantly or enter a password for private rooms.</div>
-    </div>
-
     <!-- HOST TAB -->
-    <div class="sp-page" id="sp-page-host">
+    <div class="sp-page active" id="sp-page-host">
       <div style="background:#e8f4ff;border:1px solid #9cc;padding:8px;font-size:11px;color:#1a5ca8;" id="sp-host-acct-info">
         Hosting as: <strong id="sp-host-as-name">—</strong>
       </div>
       <div>
         <div class="sp-section-label">Room Name</div>
         <input class="sp-input" id="sp-host-name" type="text" maxlength="30" placeholder="My Drawing Room" value="My Drawing Room">
-      </div>
-      <div class="sp-toggle-row">
-        <input type="checkbox" class="sp-checkbox" id="sp-host-private" onchange="spTogglePrivacy()">
-        <label for="sp-host-private" style="font-size:11px;color:#333;cursor:pointer;">Private room (password required)</label>
-      </div>
-      <div id="sp-host-pw-row" style="display:none;">
-        <div class="sp-section-label">Password</div>
-        <input class="sp-input" id="sp-host-pw" type="password" maxlength="30" placeholder="Set a password...">
-      </div>
-      <div class="sp-toggle-row">
-        <input type="checkbox" class="sp-checkbox" id="sp-host-listed" checked>
-        <label for="sp-host-listed" style="font-size:11px;color:#333;cursor:pointer;">Show in public room list</label>
       </div>
       <button class="sp-btn primary" id="sp-host-btn" onclick="startHosting()">📡 Start Hosting</button>
       <div id="sp-host-status" class="sp-status-box info" style="display:none;"></div>
@@ -2133,13 +2097,9 @@ hc.addEventListener('touchend',()=>{ setTimeout(()=>scheduleAutoSave(),100); });
       <div>
         <div class="sp-section-label">Room Code</div>
         <div class="sp-row">
-          <input class="sp-input" id="sp-join-code" type="text" maxlength="20" placeholder="Enter room code..." style="flex:1;">
+          <input class="sp-input" id="sp-join-code" type="text" maxlength="60" placeholder="Paste room code here..." style="flex:1;">
         </div>
         <div style="font-size:10px;color:#888;margin-top:3px;">Paste the code shared by the host</div>
-      </div>
-      <div>
-        <div class="sp-section-label">Password <span style="color:#999;font-weight:400;">(if required)</span></div>
-        <input class="sp-input" id="sp-join-pw" type="password" maxlength="30" placeholder="Leave blank if public">
       </div>
       <button class="sp-btn primary" id="sp-join-btn" onclick="joinRoom()">🔗 Join Room</button>
       <div id="sp-join-status" class="sp-status-box info" style="display:none;"></div>
@@ -2351,42 +2311,39 @@ document.addEventListener('DOMContentLoaded',()=>{ if(typeof spMyName!=='undefin
 
 <script>
 // ══════════════════════════════════════════════════════════
-// SOCIAL DRAWING — PeerJS + Supabase powered multiplayer
+// SOCIAL DRAWING — PeerJS direct room code multiplayer
 // ══════════════════════════════════════════════════════════
 
-const SUPABASE_URL = 'https://bgyntnlmtylblqrkybiz.supabase.co';
-const SUPABASE_KEY = 'sb_publishable_kQbWU_tkMEX-q6MSBFKXYA_xjQ_U5IB';
-let sbClient = null;
-try { sbClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY); } catch(e) { sbClient = null; }
+const ICE_CONFIG = {iceServers:[
+  {urls:'stun:stun.l.google.com:19302'},
+  {urls:'stun:stun1.l.google.com:19302'},
+  {urls:'stun:openrelay.metered.ca:80'},
+  {urls:'turn:openrelay.metered.ca:80',username:'openrelayproject',credential:'openrelayproject'},
+  {urls:'turn:openrelay.metered.ca:443',username:'openrelayproject',credential:'openrelayproject'},
+  {urls:'turn:openrelay.metered.ca:443?transport=tcp',username:'openrelayproject',credential:'openrelayproject'}
+]};
 
 // PeerJS state
-let spPeer = null;       // our Peer instance
-let spConnections = [];  // DataConnection[] (host: list of clients; client: [host conn])
+let spPeer = null;
+let spConnections = [];
 let spIsHost = false;
 let spRoomName = '';
-let spRoomCode = '';     // peerjs peer id
-let spRoomPrivate = false;
-let spRoomPassword = '';
-let spRoomListed = true;
+let spRoomCode = '';
 let spMyName = '';
 let spInRoom = false;
-let spLobbyCode = null; // code of our hosted room in supabase
-let spRemoteDrawing = false; // are we currently replaying a remote stroke?
+let spRemoteDrawing = false;
 
 // Username from account session
 spMyName = (typeof acctSession!=='undefined'&&acctSession) ? acctSession.username : '';
 
 function openSocialPanel(){
-  // Sync name from account
   if(typeof acctSession!=='undefined'&&acctSession) spMyName=acctSession.username;
   document.getElementById('social-panel').classList.add('open');
-  // Update "joining/hosting as" labels
   const nameDisplay = isLoggedIn() ? getUsername() : '— (not signed in)';
   const asEl1 = document.getElementById('sp-join-as-name');
   const asEl2 = document.getElementById('sp-host-as-name');
   if(asEl1) asEl1.textContent = nameDisplay;
   if(asEl2) asEl2.textContent = nameDisplay;
-  refreshRoomList();
 }
 function closeSocialPanel(){
   document.getElementById('social-panel').classList.remove('open');
@@ -2399,62 +2356,14 @@ function spSwitchTab(tab){
   document.getElementById('sp-page-'+tab).classList.add('active');
 }
 
-function spTogglePrivacy(){
-  const priv = document.getElementById('sp-host-private').checked;
-  document.getElementById('sp-host-pw-row').style.display = priv ? 'block' : 'none';
-}
-
-// ── ROOM LIST ──────────────────────────────────────────────
-async function refreshRoomList(){
-  const list = document.getElementById('social-room-list');
-  list.innerHTML = '<div class="sp-empty"><span class="sp-spinner"></span> Loading rooms...</div>';
-  if(!sbClient){ list.innerHTML='<div class="sp-empty">⚠ Could not connect to lobby server. Use room code to join directly.</div>'; return; }
-  const staleTs = Date.now() - 5*60*1000;
-  const {data, error} = await sbClient.from('rooms').select('*').gt('ts', staleTs).eq('priv', false);
-  if(error){ list.innerHTML='<div class="sp-empty">⚠ Could not load rooms. Use room code to join directly.</div>'; return; }
-  renderRooms(data || [], list);
-}
-
-function renderRooms(rooms, list){
-  if(rooms.length===0){ list.innerHTML='<div class="sp-empty">No public rooms found. Host one!</div>'; return; }
-  list.innerHTML = '';
-  rooms.sort((a,b)=>(b.ts||0)-(a.ts||0));
-  rooms.forEach(r=>{
-    const card = document.createElement('div');
-    card.className = 'sp-room-card';
-    card.innerHTML = `
-      <div class="sp-room-card-info">
-        <div class="sp-room-name">${escHtml(r.name||'Unnamed')}</div>
-        <div class="sp-room-meta">👤 ${escHtml(r.host||'Unknown')} · ${r.priv?'🔒 Private':'🌐 Public'}</div>
-      </div>
-      <span class="sp-room-badge ${r.priv?'priv':'pub'}">${r.priv?'🔒 Private':'Public'}</span>`;
-    card.onclick = ()=>{
-      if(!isLoggedIn()){ closeSocialPanel(); showNoAcctError(); return; }
-      spSwitchTab('join');
-      document.getElementById('sp-join-code').value = r.code||'';
-      if(r.priv) document.getElementById('sp-join-pw').focus();
-      else document.getElementById('sp-join-btn').click();
-    };
-    list.appendChild(card);
-  });
-}
-
 // ── HOSTING ───────────────────────────────────────────────
 function startHosting(){
   if(!isLoggedIn()){ closeSocialPanel(); showNoAcctError(); return; }
   if(typeof acctSession!=='undefined'&&acctSession) spMyName=acctSession.username;
   const name = document.getElementById('sp-host-name').value.trim() || 'My Drawing Room';
-  const priv = document.getElementById('sp-host-private').checked;
-  const pw = document.getElementById('sp-host-pw').value;
-  const listed = document.getElementById('sp-host-listed').checked;
-  if(priv && !pw){ alert('Please set a password for private rooms.'); return; }
 
   spRoomName = name;
-  spRoomPrivate = priv;
-  spRoomPassword = pw;
-  spRoomListed = listed;
   spIsHost = true;
-  // spMyName is already set from account session
 
   const statusEl = document.getElementById('sp-host-status');
   statusEl.style.display='block';
@@ -2462,71 +2371,30 @@ function startHosting(){
   statusEl.innerHTML='<span class="sp-spinner"></span> Creating room...';
   document.getElementById('sp-host-btn').disabled=true;
 
-  spPeer = new Peer(undefined, {debug:0, config:{iceServers:[
-    {urls:'stun:stun.l.google.com:19302'},
-    {urls:'stun:stun1.l.google.com:19302'},
-    {urls:'stun:openrelay.metered.ca:80'},
-    {urls:'turn:openrelay.metered.ca:80',username:'openrelayproject',credential:'openrelayproject'},
-    {urls:'turn:openrelay.metered.ca:443',username:'openrelayproject',credential:'openrelayproject'},
-    {urls:'turn:openrelay.metered.ca:443?transport=tcp',username:'openrelayproject',credential:'openrelayproject'}
-  ]}});
+  spPeer = new Peer(undefined, {debug:0, config:ICE_CONFIG});
 
   spPeer.on('open', id=>{
     spRoomCode = id;
     spInRoom = true;
     statusEl.className='sp-status-box ok';
+    statusEl.innerHTML='✓ Room created!';
     document.getElementById('sp-host-btn').disabled=false;
-
-    // Advertise to Supabase lobby
-    if(sbClient && listed){
-      const roomData = {code:id, name, host:spMyName, priv, ts:Date.now()};
-      spLobbyCode = id;
-      sbClient.from('rooms').upsert(roomData).then(()=>{});
-      // Keepalive: refresh ts every 60s so room stays visible
-      spGunInterval = setInterval(async ()=>{
-        await sbClient.from('rooms').update({ts:Date.now()}).eq('code', id);
-      }, 60*1000);
-    }
-
     enterRoomUI(true);
     spAddChatMsg('System','Room created! Share the code above with friends.','sys');
   });
 
   spPeer.on('connection', conn=>{
     conn.on('open',()=>{
-      // Auth if private
-      if(spRoomPrivate){
-        conn._spAuthed = false;
-        conn.send({type:'auth-req', name:spRoomName});
-      } else {
-        conn._spAuthed = true;
-        conn._spName = conn.peer.slice(-6);
-        spConnections.push(conn);
-        spAddChatMsg('System', conn._spName+' joined!', 'sys');
-        updatePeerList();
-        // Send current canvas to new peer
-        sendCanvasSnapshot(conn);
-      }
+      conn._spName = conn.peer.slice(-6);
+      spConnections.push(conn);
+      // Send joining peer our room name and canvas
+      conn.send({type:'welcome', roomName:spRoomName});
+      sendCanvasSnapshot(conn);
+      spAddChatMsg('System', conn._spName+' joined!', 'sys');
+      updatePeerList();
+      broadcastToPeers({type:'peer-join', name:conn._spName}, conn);
     });
-    conn.on('data', data=>{
-      if(!conn._spAuthed){
-        if(data.type==='auth' && data.pw===spRoomPassword){
-          conn._spAuthed=true;
-          conn._spName = data.name || conn.peer.slice(-6);
-          spConnections.push(conn);
-          conn.send({type:'auth-ok', canvasW:W, canvasH:H});
-          spAddChatMsg('System', conn._spName+' joined!','sys');
-          updatePeerList();
-          sendCanvasSnapshot(conn);
-          broadcastToPeers({type:'peer-join', name:conn._spName}, conn);
-        } else if(data.type==='auth'){
-          conn.send({type:'auth-fail'});
-          conn.close();
-        }
-        return;
-      }
-      handlePeerData(data, conn);
-    });
+    conn.on('data', data=>{ handlePeerData(data, conn); });
     conn.on('close',()=>{
       spConnections = spConnections.filter(c=>c!==conn);
       if(conn._spName) spAddChatMsg('System', conn._spName+' left.','sys');
@@ -2551,8 +2419,6 @@ function joinRoom(){
   if(!isLoggedIn()){ closeSocialPanel(); showNoAcctError(); return; }
   if(typeof acctSession!=='undefined'&&acctSession) spMyName=acctSession.username;
   const code = document.getElementById('sp-join-code').value.trim();
-  const pw = document.getElementById('sp-join-pw').value;
-  const name = spMyName; // Always use account username
   if(!code){ alert('Please enter a room code.'); return; }
 
   const statusEl = document.getElementById('sp-join-status');
@@ -2561,14 +2427,7 @@ function joinRoom(){
   statusEl.innerHTML='<span class="sp-spinner"></span> Connecting...';
   document.getElementById('sp-join-btn').disabled=true;
 
-  spPeer = new Peer(undefined, {debug:0, config:{iceServers:[
-    {urls:'stun:stun.l.google.com:19302'},
-    {urls:'stun:stun1.l.google.com:19302'},
-    {urls:'stun:openrelay.metered.ca:80'},
-    {urls:'turn:openrelay.metered.ca:80',username:'openrelayproject',credential:'openrelayproject'},
-    {urls:'turn:openrelay.metered.ca:443',username:'openrelayproject',credential:'openrelayproject'},
-    {urls:'turn:openrelay.metered.ca:443?transport=tcp',username:'openrelayproject',credential:'openrelayproject'}
-  ]}});
+  spPeer = new Peer(undefined, {debug:0, config:ICE_CONFIG});
   spPeer.on('open', ()=>{
     const conn = spPeer.connect(code, {reliable:true});
     spConnections = [conn];
@@ -2576,15 +2435,12 @@ function joinRoom(){
     spRoomCode = code;
 
     conn.on('open',()=>{
-      statusEl.innerHTML='<span class="sp-spinner"></span> Authenticating...';
-      // Send auth either way
-      conn.send({type:'auth', pw:pw||'', name});
+      statusEl.innerHTML='<span class="sp-spinner"></span> Waiting for host...';
+      // Send our name to host
+      conn.send({type:'hello', name:spMyName});
     });
     conn.on('data', data=>{
-      if(data.type==='auth-req'){
-        // Host wants auth
-        conn.send({type:'auth', pw:pw||'', name});
-      } else if(data.type==='auth-ok'){
+      if(data.type==='welcome'){
         spInRoom=true;
         spRoomName = data.roomName || code;
         statusEl.className='sp-status-box ok';
@@ -2592,13 +2448,6 @@ function joinRoom(){
         document.getElementById('sp-join-btn').disabled=false;
         enterRoomUI(false);
         spAddChatMsg('System','Joined the room!','sys');
-        // Apply canvas if sent
-        if(data.canvas) applyRemoteCanvas(data.canvas);
-      } else if(data.type==='auth-fail'){
-        statusEl.className='sp-status-box err';
-        statusEl.textContent='Wrong password!';
-        document.getElementById('sp-join-btn').disabled=false;
-        spPeer.destroy(); spPeer=null; spConnections=[];
       } else if(data.type==='canvas-snap'){
         applyRemoteCanvas(data.canvas);
       } else {
@@ -2679,6 +2528,11 @@ function broadcastToPeers(msg, exclude){
 }
 
 function handlePeerData(data, fromConn){
+  if(data.type==='hello'){
+    // Peer sent us their username
+    if(fromConn && data.name) { fromConn._spName = data.name; updatePeerList(); }
+    return;
+  }
   if(data.type==='strokes'){
     // Rebroadcast if host
     if(spIsHost) broadcastToPeers(data, fromConn);
@@ -2779,8 +2633,6 @@ hc.addEventListener('touchend', spOnUp);
 // (fill broadcast is handled in spOnDown below)
 
 // ── ROOM UI ───────────────────────────────────────────────
-let spGunInterval = null;
-
 function enterRoomUI(isHost){
   spSwitchTab('room');
   document.getElementById('sp-tab-room').style.display='flex';
@@ -2799,7 +2651,7 @@ function enterRoomUI(isHost){
 
 function updatePeerList(){
   const peers = spIsHost
-    ? [{name:spMyName,me:true},...spConnections.filter(c=>c._spAuthed).map(c=>({name:c._spName||'Peer',me:false}))]
+    ? [{name:spMyName,me:true},...spConnections.map(c=>({name:c._spName||'Peer',me:false}))]
     : [{name:spMyName,me:true}];
   document.getElementById('sp-peer-count').textContent = peers.length;
   document.getElementById('sp-peer-list').innerHTML = peers.map(p=>
@@ -2832,12 +2684,6 @@ function spSendChat(){
 
 function leaveRoom(){
   spInRoom=false;
-  // Remove from Supabase lobby
-  if(sbClient && spIsHost && spLobbyCode){
-    sbClient.from('rooms').delete().eq('code', spLobbyCode).then(()=>{});
-    clearInterval(spGunInterval);
-    spLobbyCode = null;
-  }
   // Close connections
   spConnections.forEach(c=>{ try{c.close();}catch(e){} });
   spConnections=[];
@@ -2848,7 +2694,7 @@ function leaveRoom(){
   document.getElementById('social-btn').textContent = '🎨 Social';
   document.getElementById('sp-tab-room').style.display='none';
   document.getElementById('sp-chat-log').innerHTML='';
-  spSwitchTab('browse');
+  spSwitchTab('host');
   document.getElementById('sp-host-btn').disabled=false;
   document.getElementById('sp-host-status').style.display='none';
   document.getElementById('sp-join-status').style.display='none';
