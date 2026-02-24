@@ -2505,7 +2505,7 @@ function startHosting(){
       conn._spName = conn.peer.slice(-6);
       spConnections.push(conn);
       // Send joining peer our room name and canvas
-      conn.send({type:'welcome', roomName:spRoomName});
+      conn.send({type:'welcome', roomName:spRoomName, galleryPosts:getGalleryPosts()});
       sendCanvasSnapshot(conn);
       spAddChatMsg('System', conn._spName+' joined!', 'sys');
       updatePeerList();
@@ -2565,6 +2565,10 @@ function joinRoom(){
         document.getElementById('sp-join-btn').disabled=false;
         enterRoomUI(false);
         spAddChatMsg('System','Joined the room!','sys');
+        // Merge host's gallery posts with ours
+        if(data.galleryPosts && data.galleryPosts.length){
+          galMergePosts(data.galleryPosts);
+        }
       } else if(data.type==='canvas-snap'){
         applyRemoteCanvas(data.canvas);
       } else {
@@ -2635,7 +2639,7 @@ function spBroadcastStroke(data){
 
 function broadcastToPeers(msg, exclude){
   const targets = spIsHost
-    ? spConnections.filter(c=>c!==exclude && c._spAuthed && c.open)
+    ? spConnections.filter(c=>c!==exclude && c.open)
     : spConnections.filter(c=>c.open);
   targets.forEach(c=>{ try{c.send(msg);}catch(e){} });
   // As client, forward strokes to host who rebroadcasts
@@ -2660,6 +2664,14 @@ function handlePeerData(data, fromConn){
   } else if(data.type==='peer-join'){
     spAddChatMsg('System', (data.name||'Someone')+' joined!','sys');
     updatePeerList();
+  } else if(data.type==='gallery-post'){
+    // Someone in the room published a post — add it locally
+    if(data.post){
+      galMergePosts([data.post]);
+      flash('📸 '+escHtml(data.post.author||'Someone')+' published "'+escHtml((data.post.name||'').slice(0,30))+'" to the gallery!');
+    }
+    // Host rebroadcasts to other clients
+    if(spIsHost) broadcastToPeers(data, fromConn);
   }
 }
 
@@ -2850,6 +2862,32 @@ function getGalleryPosts(){
 function saveGalleryPosts(posts){
   try{ localStorage.setItem(GALLERY_KEY, JSON.stringify(posts)); }
   catch(e){ flash('Storage full — delete some posts first.'); }
+}
+
+// Merge incoming posts into local gallery (deduplicate by id, newest wins)
+function galMergePosts(incoming){
+  if(!incoming || !incoming.length) return;
+  const posts = getGalleryPosts();
+  const byId = {};
+  posts.forEach(p=>{ byId[p.id]=p; });
+  let changed = false;
+  incoming.forEach(p=>{
+    if(!p||!p.id) return;
+    if(!byId[p.id]){
+      byId[p.id]=p;
+      changed=true;
+    } else {
+      // merge comments — keep longest list
+      const existing=byId[p.id];
+      const ec=(existing.comments||[]).length, ic=(p.comments||[]).length;
+      if(ic>ec){ existing.comments=p.comments; changed=true; }
+    }
+  });
+  if(changed){
+    saveGalleryPosts(Object.values(byId).sort((a,b)=>a.ts-b.ts));
+    // Refresh gallery panel if open
+    if(document.getElementById('gallery-panel').classList.contains('open')) renderGallery();
+  }
 }
 
 function openGallery(){
@@ -3052,6 +3090,10 @@ async function submitPublish(){
   const posts=getGalleryPosts();
   posts.push(post);
   saveGalleryPosts(posts);
+  // Broadcast to anyone in the room right now
+  if(typeof spInRoom!=='undefined' && spInRoom){
+    broadcastToPeers({type:'gallery-post', post});
+  }
   btn.textContent='🌐 Publish'; btn.disabled=false;
   closePublish();
   flash('Published to Gallery! 🎉');
@@ -3065,11 +3107,18 @@ let _selClipboard = null; // {img: ImageData, w, h}
 document.addEventListener('keydown', e=>{
   if(e.target&&(e.target.tagName==='INPUT'||e.target.tagName==='TEXTAREA'||e.target.isContentEditable)) return;
   if(tool!=='grab') return;
-  // Ctrl+C — copy selection
+  // Ctrl+C — copy selection (knock out near-white = background)
   if((e.ctrlKey||e.metaKey)&&e.key==='c'&&sel.active){
     e.preventDefault();
-    _selClipboard={img:sel.floatImg, w:sel.rect.w, h:sel.rect.h, angle:selRotAngle};
-    flash('Selection copied');
+    const src=sel.floatImg;
+    const masked=new ImageData(new Uint8ClampedArray(src.data), src.width, src.height);
+    for(let i=0;i<masked.data.length;i+=4){
+      const r=masked.data[i],g=masked.data[i+1],b=masked.data[i+2];
+      // Treat near-white pixels (canvas background) as transparent
+      if(r>240&&g>240&&b>240) masked.data[i+3]=0;
+    }
+    _selClipboard={img:masked, w:src.width, h:src.height, angle:selRotAngle};
+    flash('Selection copied (background stripped)');
   }
   // Ctrl+V — paste clipboard as new floating selection
   if((e.ctrlKey||e.metaKey)&&e.key==='v'&&_selClipboard){
