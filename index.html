@@ -330,58 +330,7 @@ body{font-family:Segoe UI,Tahoma,Arial,sans-serif;font-size:11px;overflow:hidden
 .sp-chat-msg-body .sp-chat-who.me{color:#155;}
 .sp-chat-msg-body .sp-chat-who.sys{color:#888;font-style:italic;}
 
-/* GALLERY PANEL */
-#gallery-panel{position:fixed;top:0;right:-520px;width:500px;height:100vh;background:#f0f0f0;border-left:2px solid #999;box-shadow:-4px 0 16px rgba(0,0,0,.3);z-index:400;transition:right .25s cubic-bezier(.4,0,.2,1);display:flex;flex-direction:column;font-size:12px;}
-#gallery-panel.open{right:0;}
-#gallery-panel-title{background:linear-gradient(to bottom,#4b9fdb,#1a5ca8);color:white;font-size:12px;font-weight:600;padding:6px 10px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;}
-#gallery-body{flex:1;overflow-y:auto;padding:10px;display:flex;flex-direction:column;gap:10px;}
-.gal-post{background:#fff;border:1px solid #ccc;box-shadow:1px 1px 4px rgba(0,0,0,.1);}
-.gal-post-header{display:flex;align-items:center;gap:8px;padding:8px 10px;border-bottom:1px solid #eee;}
-.gal-post-avatar{width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,#4b9fdb,#7b1fa2);display:flex;align-items:center;justify-content:center;color:#fff;font-size:13px;font-weight:700;flex-shrink:0;overflow:hidden;border:1px solid #bbb;}
-.gal-post-avatar img{width:100%;height:100%;object-fit:cover;border-radius:50%;}
-.gal-post-meta{flex:1;min-width:0;}
-.gal-post-name{font-weight:700;font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-.gal-post-author{font-size:10px;color:#888;margin-top:1px;}
-.gal-post-img{width:100%;display:block;image-rendering:pixelated;}
-.gal-post-footer{padding:6px 10px;display:flex;align-items:center;gap:8px;}
-.gal-comment-toggle{font-size:10px;color:#1a5ca8;cursor:pointer;text-decoration:underline;flex:1;}
-.gal-post-del{font-size:10px;color:#c00;cursor:pointer;opacity:.6;}
-.gal-post-del:hover{opacity:1;}
-.gal-comments{display:none;border-top:1px solid #eee;padding:8px 10px;background:#fafafa;}
-.gal-comments.open{display:block;}
-.gal-comment-list{display:flex;flex-direction:column;gap:5px;margin-bottom:8px;max-height:120px;overflow-y:auto;}
-.gal-comment{display:flex;align-items:flex-start;gap:6px;font-size:11px;}
-.gal-comment-av{width:20px;height:20px;border-radius:50%;background:linear-gradient(135deg,#4b9fdb,#7b1fa2);display:flex;align-items:center;justify-content:center;color:#fff;font-size:9px;font-weight:700;flex-shrink:0;overflow:hidden;border:1px solid #bbb;}
-.gal-comment-av img{width:100%;height:100%;object-fit:cover;border-radius:50%;}
-.gal-comment-body{flex:1;}
-.gal-comment-who{font-weight:700;color:#1a5ca8;}
-.gal-comment-row{display:flex;gap:4px;}
-.gal-comment-inp{flex:1;border:1px solid #bbb;padding:3px 6px;font-size:11px;font-family:inherit;outline:none;}
-.gal-comment-btn{padding:3px 8px;background:#1a5ca8;color:#fff;border:none;font-size:11px;cursor:pointer;}
-.gal-comment-btn:hover{background:#2b7fd4;}
-.gal-empty{text-align:center;color:#888;padding:30px;font-size:12px;}
 
-/* PUBLISH MODAL */
-#publish-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:1300;align-items:center;justify-content:center;}
-#publish-overlay.show{display:flex;}
-#publish-box{width:360px;background:#f0f0f0;border:2px solid;border-color:#fff #808080 #808080 #fff;box-shadow:4px 4px 0 #000;font-size:12px;}
-#publish-titlebar{background:linear-gradient(to bottom,#4b9fdb 0%,#1e6abf 50%,#1a5ca8 51%,#2b7fd4 100%);color:white;font-size:12px;font-weight:700;padding:4px 6px;display:flex;align-items:center;justify-content:space-between;}
-#publish-body{padding:14px;display:flex;flex-direction:column;gap:10px;}
-#publish-preview{width:100%;max-height:160px;object-fit:contain;image-rendering:pixelated;border:1px solid #ccc;background:#fff;}
-.pub-label{font-size:11px;font-weight:600;color:#333;margin-bottom:2px;}
-#publish-name-inp{width:100%;box-sizing:border-box;border:2px solid;border-color:#808080 #fff #fff #808080;padding:4px 6px;font-size:12px;font-family:inherit;outline:none;}
-#publish-name-inp:focus{border-color:#0054e3 #d0d8e8 #d0d8e8 #0054e3;}
-.pub-char-count{font-size:10px;color:#888;text-align:right;}
-.pub-footer{display:flex;justify-content:flex-end;gap:8px;padding-top:4px;}
-.pub-btn{font-size:11px;padding:4px 16px;border:2px solid;border-color:#fff #808080 #808080 #fff;background:#c0c0c0;cursor:pointer;font-family:inherit;}
-.pub-btn:hover{background:#d0d8e8;}
-.pub-btn.primary{background:#1a5ca8;color:#fff;border-color:#0c3f7a;}
-.pub-btn.primary:hover{background:#2b7fd4;}
-#publish-err{color:#c00;font-size:10px;min-height:14px;}
-
-/* GALLERY BTN */
-#gallery-btn{display:flex;align-items:center;gap:3px;padding:2px 7px;height:22px;background:rgba(255,180,50,.25);border:1px solid rgba(255,180,50,.5);border-radius:2px;cursor:pointer;color:white;font-size:11px;font-weight:600;white-space:nowrap;user-select:none;}
-#gallery-btn:hover{background:rgba(255,180,50,.4);}
 </style>
 </head>
 <body>
@@ -401,7 +350,6 @@ body{font-family:Segoe UI,Tahoma,Arial,sans-serif;font-size:11px;overflow:hidden
   </div>
 
   <div id="social-btn" onclick="openSocialPanel()" title="Social Drawing">🎨 Social</div>
-  <div id="gallery-btn" onclick="openGallery()" title="Community Gallery">🖼 Gallery</div>
   <div id="acct-btn" onclick="openAccountModal()" title="Account" style="display:flex;align-items:center;gap:3px;padding:2px 7px;height:22px;background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.35);border-radius:2px;cursor:pointer;color:white;font-size:11px;font-weight:600;white-space:nowrap;user-select:none;">👤 Account</div>
   <div id="qa">
     <div class="qa-btn" title="Save GIF (Ctrl+S)" onclick="exportGIF()">💾</div>
@@ -811,12 +759,12 @@ function setCanvasSize(drawW,drawH,keepImg){
 function initDefault(){const area=document.getElementById('canvas-area');const aw=Math.floor((area.clientWidth-24)/SCALE);const ah=Math.floor((area.clientHeight-24)/SCALE);setCanvasSize(Math.min(aw,900),Math.min(ah,660),false);}
 window.addEventListener('load',()=>{initDefault();renderLoop();openGuide();});
 const PRESETS={standard:null,hd:{w:1280,h:720},square:{w:512,h:512},portrait:{w:360,h:640},banner:{w:800,h:200}};
-function applyPreset(name){if(name==='standard'){initDefault();flash('Standard canvas');return;}const p=PRESETS[name];if(!p)return;setCanvasSize(Math.round(p.w/SCALE),Math.round(p.h/SCALE),false);flash(name+': '+p.w+'×'+p.h);}
+function applyPreset(name){if(spInRoom&&!spIsHost){flash('Only the room owner can change canvas size!');return;}if(name==='standard'){initDefault();flash('Standard canvas');return;}const p=PRESETS[name];if(!p)return;setCanvasSize(Math.round(p.w/SCALE),Math.round(p.h/SCALE),false);flash(name+': '+p.w+'×'+p.h);}
 function openCustomCanvas(){document.getElementById('inp-w').value=W*SCALE;document.getElementById('inp-h').value=H*SCALE;document.getElementById('aspect-warn').textContent='';document.getElementById('modal-canvas').classList.add('show');}
 function closeModal(id){document.getElementById(id).classList.remove('show');}
 function validateAspect(){const w=+document.getElementById('inp-w').value,h=+document.getElementById('inp-h').value;const warn=document.getElementById('aspect-warn'),ok=document.getElementById('btn-apply-canvas');if(w>0&&h>0&&(w/h)>(16/9+0.001)){warn.textContent=`⚠ Too wide! Max ${Math.floor(h*16/9)}px`;ok.disabled=true;ok.style.opacity='0.5';}else{warn.textContent='';ok.disabled=false;ok.style.opacity='1';}}
-function applyCustomCanvas(){const w=Math.round(+document.getElementById('inp-w').value/SCALE);const h=Math.round(+document.getElementById('inp-h').value/SCALE);if(!w||!h)return;closeModal('modal-canvas');setCanvasSize(w,h,false);flash('Custom: '+(w*SCALE)+'×'+(h*SCALE));}
-function changePixelSize(v){SCALE=v;document.getElementById('pxv').textContent=v+'×';document.getElementById('sb-zoom').textContent='Pixel: '+v+'×';setCanvasSize(W,H,true);flash('Pixel size: '+v+'×');}
+function applyCustomCanvas(){if(spInRoom&&!spIsHost){flash('Only the room owner can change canvas size!');return;}const w=Math.round(+document.getElementById('inp-w').value/SCALE);const h=Math.round(+document.getElementById('inp-h').value/SCALE);if(!w||!h)return;closeModal('modal-canvas');setCanvasSize(w,h,false);flash('Custom: '+(w*SCALE)+'×'+(h*SCALE));}
+function changePixelSize(v){if(spInRoom&&!spIsHost){flash('Only the room owner can change canvas size!');return;}SCALE=v;document.getElementById('pxv').textContent=v+'×';document.getElementById('sb-zoom').textContent='Pixel: '+v+'×';setCanvasSize(W,H,true);flash('Pixel size: '+v+'×');}
 
 // ══════════════════════════════════════════════════════════
 // WIGGLE
@@ -1227,6 +1175,7 @@ function stringHandleClick(p, eHeld){
     stringActiveStart = newId;
     flash('Node placed');
   }
+  spBroadcastStringState();
 }
 
 // ══════════════════════════════════════════════════════════
@@ -1350,14 +1299,31 @@ function onDown(e){
     if(stringEdges.length>0){
       const filled=fillStringLoop(p.x,p.y);
       painting=false;
-      if(!filled) floodFill(p.x,p.y,null); // fallback to normal fill if outside edges
+      if(filled){
+        // Broadcast fill WITH string state so remotes replicate correctly
+        const msg={type:'fill',x:p.x,y:p.y,clr:color,nodes:stringNodes.map(n=>({...n})),edges:stringEdges.map(e=>({...e}))};
+        broadcastToPeers(msg);
+        if(!spIsHost&&spConnections[0])try{spConnections[0].send(msg);}catch(ex){}
+      } else {
+        floodFill(p.x,p.y,null);
+        const msg={type:'fill',x:p.x,y:p.y,clr:color,nodes:[],edges:[]};
+        broadcastToPeers(msg);
+        if(!spIsHost&&spConnections[0])try{spConnections[0].send(msg);}catch(ex){}
+      }
       return;
     }
-    floodFill(p.x,p.y,null);painting=false;return;
+    floodFill(p.x,p.y,null);painting=false;
+    const msg={type:'fill',x:p.x,y:p.y,clr:color,nodes:[],edges:[]};
+    broadcastToPeers(msg);
+    if(!spIsHost&&spConnections[0])try{spConnections[0].send(msg);}catch(ex){}
+    return;
   }
   snap_=dCtx.getImageData(0,0,W,H);
   applyStyle(tool==='eraser');dCtx.lineWidth=sw();
-  if(['pen','marker','brush','eraser'].includes(tool)){dCtx.beginPath();dCtx.arc(p.x,p.y,sw()/2,0,Math.PI*2);dCtx.fill();dCtx.beginPath();dCtx.moveTo(p.x,p.y);}
+  if(['pen','marker','brush','eraser'].includes(tool)){
+    dCtx.beginPath();dCtx.arc(p.x,p.y,sw()/2,0,Math.PI*2);dCtx.fill();dCtx.beginPath();dCtx.moveTo(p.x,p.y);
+    spBroadcastPoint('down',p.x,p.y);
+  }
 }
 
 function onMove(e){
@@ -1398,9 +1364,9 @@ function onMove(e){
 
   if(!painting)return;
   applyStyle(tool==='eraser');dCtx.lineWidth=sw();
-  if(tool==='pen'){const mx=(lastX+p.x)/2,my=(lastY+p.y)/2;dCtx.quadraticCurveTo(lastX,lastY,mx,my);dCtx.stroke();dCtx.beginPath();dCtx.moveTo(mx,my);}
-  else if(['marker','brush','eraser'].includes(tool)){if(tool==='brush')dCtx.globalAlpha=Math.min(bOp,0.45);if(tool==='marker')dCtx.globalAlpha=Math.min(bOp,0.85);dCtx.lineTo(p.x,p.y);dCtx.stroke();dCtx.beginPath();dCtx.moveTo(p.x,p.y);}
-  else if(tool==='spray'){const rad=bSz*2.5,den=Math.max(10,bSz*4);dCtx.globalAlpha=bOp*0.08;dCtx.fillStyle=color;for(let i=0;i<den;i++){const a=Math.random()*Math.PI*2,r=Math.random()*rad;dCtx.fillRect(Math.round(p.x+r*Math.cos(a)),Math.round(p.y+r*Math.sin(a)),1,1);}}
+  if(tool==='pen'){const mx=(lastX+p.x)/2,my=(lastY+p.y)/2;dCtx.quadraticCurveTo(lastX,lastY,mx,my);dCtx.stroke();dCtx.beginPath();dCtx.moveTo(mx,my);spBroadcastPoint('move',p.x,p.y);}
+  else if(['marker','brush','eraser'].includes(tool)){if(tool==='brush')dCtx.globalAlpha=Math.min(bOp,0.45);if(tool==='marker')dCtx.globalAlpha=Math.min(bOp,0.85);dCtx.lineTo(p.x,p.y);dCtx.stroke();dCtx.beginPath();dCtx.moveTo(p.x,p.y);spBroadcastPoint('move',p.x,p.y);}
+  else if(tool==='spray'){const rad=bSz*2.5,den=Math.max(10,bSz*4);dCtx.globalAlpha=bOp*0.08;dCtx.fillStyle=color;const dots=[];for(let i=0;i<den;i++){const a=Math.random()*Math.PI*2,r=Math.random()*rad;const sx=Math.round(p.x+r*Math.cos(a)),sy=Math.round(p.y+r*Math.sin(a));dCtx.fillRect(sx,sy,1,1);dots.push({x:sx,y:sy});}spBroadcastPoint('spray',p.x,p.y,{dots});}
   else if(['line','rect','circle'].includes(tool)){if(!snap_)return;dCtx.putImageData(snap_,0,0);applyStyle(false);dCtx.lineWidth=bSz;dCtx.beginPath();if(tool==='line'){dCtx.moveTo(startX,startY);dCtx.lineTo(p.x,p.y);dCtx.stroke();}else if(tool==='rect'){dCtx.strokeRect(startX,startY,p.x-startX,p.y-startY);}else{const rx=Math.abs(p.x-startX)/2,ry=Math.abs(p.y-startY)/2;dCtx.ellipse(startX+(p.x-startX)/2,startY+(p.y-startY)/2,rx,ry,0,0,Math.PI*2);dCtx.stroke();}}
   lastX=p.x;lastY=p.y;
 }
@@ -1409,20 +1375,19 @@ function onUp(e){
   if(tool==='string'){
     if(stringDragNodeId!==null){
       if(!stringDragging){
-        // Was a click (not drag) — handle as connect/extend
-        // If E held OR the node has connections already → treat as connect
         stringHandleClick(gpos(e), eKeyHeld);
       }
-      // Reset drag state
       stringDragNodeId=null;
       stringDragging=false;
       stringMouseDownPt=null;
       hc.style.cursor=stringHoverNodeId!==null?'grab':'crosshair';
     }
+    // Broadcast string state whenever we finish any string interaction
+    spBroadcastStringState();
     return;
   }
   if(!painting){painting=false;return;}
-  painting=false;dCtx.globalAlpha=1;snap_=null;
+  painting=false;dCtx.globalAlpha=1;
   if(tool==='grab'){
     if(grabMode==='rect'){
       const x1=Math.min(startX,lastX),y1=Math.min(startY,lastY);
@@ -1430,8 +1395,17 @@ function onUp(e){
       if(x2-x1>2&&y2-y1>2)finalizeSelection(x1,y1,x2-x1,y2-y1);
       else lCtx.clearRect(0,0,W*SCALE,H*SCALE);
     }
-    grabMode=null;hc.style.cursor='grab';return;
+    grabMode=null;hc.style.cursor='grab';snap_=null;return;
   }
+  // Broadcast stroke end
+  spBroadcastPoint('up',lastX,lastY);
+  // For shape tools, send final shape as single atomic message
+  if(['line','rect','circle'].includes(tool)){
+    const msg={type:'strokes',strokes:[{t:tool,x0:startX,y0:startY,x:lastX,y:lastY,clr:color,sz:bSz,op:bOp}]};
+    broadcastToPeers(msg);
+    if(!spIsHost&&spConnections[0])try{spConnections[0].send(msg);}catch(ex){}
+  }
+  snap_=null;
 }
 
 hc.addEventListener('mousedown',onDown);
@@ -1689,6 +1663,8 @@ function redo(){if(!redoStack.length){flash('Nothing to redo');return;}history.p
 // OBLITERATE
 // ══════════════════════════════════════════════════════════
 function obliterate(){
+  if(spInRoom && !spIsHost){ flash('Only the room owner can Obliterate!'); return; }
+  if(spInRoom){ broadcastToPeers({type:'obliterate'}); }
   saveHistory();const src=dCtx.getImageData(0,0,W,H).data;const DW=W*SCALE,DH=H*SCALE;const pts=[];
   const step=Math.max(1,Math.floor(W/80));
   for(let py=0;py<H;py+=step)for(let px=0;px<W;px+=step){const i=(py*W+px)*4;const r=src[i],g=src[i+1],b=src[i+2],a=src[i+3];if(a<50||(r>240&&g>240&&b>240))continue;const cx=DW/2,cy=DH/2,sx=px*SCALE,sy=py*SCALE;const dx=sx-cx,dy=sy-cy,dist=Math.sqrt(dx*dx+dy*dy)||1;const spd=3+Math.random()*9;pts.push({x:sx,y:sy,vx:(dx/dist)*spd*(0.4+Math.random()),vy:(dy/dist)*spd*(0.4+Math.random())-Math.random()*5,grav:.18+Math.random()*.18,size:SCALE+Math.random()*SCALE*2.5,col:`rgb(${r},${g},${b})`,alpha:1,rot:Math.random()*6.28,rotV:(Math.random()-.5)*.4});}
@@ -1794,6 +1770,7 @@ document.addEventListener('keydown',e=>{
       stringEdges=stringEdges.filter(ed=>ed.a!==delId&&ed.b!==delId);
       if(stringActiveStart===delId) stringActiveStart=null;
       flash('Node deleted');
+      spBroadcastStringState();
       return;
     }
   }
@@ -1939,7 +1916,6 @@ function renderFilesDropdown(){
 
   html+='<div class="fd-section">';
   html+='<div class="fd-action" onclick="fsNewDrawing()">✚ New Drawing</div>';
-  html+='<div class="fd-action" onclick="openPublish()">🌐 Publish to Gallery</div>';
   html+='<div class="fd-action" onclick="fsSaveAs()">💾 Save as new copy</div>';
   html+='</div>';
 
@@ -2505,7 +2481,7 @@ function startHosting(){
       conn._spName = conn.peer.slice(-6);
       spConnections.push(conn);
       // Send joining peer our room name and canvas
-      conn.send({type:'welcome', roomName:spRoomName, galleryPosts:getGalleryPosts()});
+      conn.send({type:'welcome', roomName:spRoomName});
       sendCanvasSnapshot(conn);
       spAddChatMsg('System', conn._spName+' joined!', 'sys');
       updatePeerList();
@@ -2565,10 +2541,6 @@ function joinRoom(){
         document.getElementById('sp-join-btn').disabled=false;
         enterRoomUI(false);
         spAddChatMsg('System','Joined the room!','sys');
-        // Merge host's gallery posts with ours
-        if(data.galleryPosts && data.galleryPosts.length){
-          galMergePosts(data.galleryPosts);
-        }
       } else if(data.type==='canvas-snap'){
         applyRemoteCanvas(data.canvas);
       } else {
@@ -2601,176 +2573,174 @@ function joinRoom(){
   });
 }
 
-// ── CANVAS SYNC ───────────────────────────────────────────
+// ══════════════════════════════════════════════════════════
+// CANVAS SYNC
+// ══════════════════════════════════════════════════════════
 function sendCanvasSnapshot(conn){
   try{
-    const dataURL = dc.toDataURL('image/png');
-    conn.send({type:'canvas-snap', canvas:dataURL});
+    const dataURL=dc.toDataURL('image/png');
+    conn.send({type:'canvas-snap', canvas:dataURL,
+      nodes:stringNodes.map(n=>({...n})),
+      edges:stringEdges.map(e=>({...e}))
+    });
   }catch(e){}
 }
 
-function applyRemoteCanvas(dataURL){
-  const img = new Image();
-  img.onload = ()=>{
+function applyRemoteCanvas(dataURL, nodes, edges){
+  const img=new Image();
+  img.onload=()=>{
     saveHistory();
     dCtx.clearRect(0,0,W,H);
     dCtx.drawImage(img,0,0,W,H);
   };
-  img.src = dataURL;
+  img.src=dataURL;
+  if(nodes){ stringNodes=nodes; stringEdges=edges||[]; }
 }
 
-// Intercept drawing to broadcast strokes
-let spStrokeBuffer = [];
-let spStrokeTimer = null;
-
-function spBroadcastStroke(data){
-  if(!spInRoom || spRemoteDrawing) return;
-  spStrokeBuffer.push(data);
-  if(!spStrokeTimer){
-    spStrokeTimer = setTimeout(()=>{
-      if(spStrokeBuffer.length>0){
-        broadcastToPeers({type:'strokes', data:spStrokeBuffer});
-        spStrokeBuffer=[];
-      }
-      spStrokeTimer=null;
-    }, 16);
-  }
-}
-
+// ══════════════════════════════════════════════════════════
+// PEER MESSAGING
+// ══════════════════════════════════════════════════════════
 function broadcastToPeers(msg, exclude){
   const targets = spIsHost
     ? spConnections.filter(c=>c!==exclude && c.open)
     : spConnections.filter(c=>c.open);
   targets.forEach(c=>{ try{c.send(msg);}catch(e){} });
-  // As client, forward strokes to host who rebroadcasts
-  if(!spIsHost && msg.type==='strokes' && spConnections[0]){
-    try{ spConnections[0].send(msg); }catch(e){}
-  }
 }
 
 function handlePeerData(data, fromConn){
   if(data.type==='hello'){
-    // Peer sent us their username
-    if(fromConn && data.name) { fromConn._spName = data.name; fromConn._spPfp = data.pfp||null; updatePeerList(); }
+    if(fromConn && data.name){ fromConn._spName=data.name; fromConn._spPfp=data.pfp||null; updatePeerList(); }
     return;
   }
   if(data.type==='strokes'){
-    // Rebroadcast if host
     if(spIsHost) broadcastToPeers(data, fromConn);
-    replayStrokes(data.data, fromConn._spName||'Peer');
+    replayStrokes(data.strokes);
+  } else if(data.type==='fill'){
+    if(spIsHost) broadcastToPeers(data, fromConn);
+    replayFill(data);
+  } else if(data.type==='string-state'){
+    if(spIsHost) broadcastToPeers(data, fromConn);
+    stringNodes=data.nodes; stringEdges=data.edges;
+  } else if(data.type==='obliterate'){
+    if(spIsHost) broadcastToPeers(data, fromConn);
+    // Clear canvas remotely — no animation for others
+    saveHistory();
+    dCtx.fillStyle='#fff'; dCtx.fillRect(0,0,W,H);
+    flash('Host obliterated the canvas!');
   } else if(data.type==='chat'){
     spAddChatMsg(data.name||'Peer', data.msg, 'peer', data.pfp||null);
     if(spIsHost) broadcastToPeers(data, fromConn);
   } else if(data.type==='peer-join'){
-    spAddChatMsg('System', (data.name||'Someone')+' joined!','sys');
+    spAddChatMsg('System',(data.name||'Someone')+' joined!','sys');
     updatePeerList();
-  } else if(data.type==='gallery-post'){
-    // Someone in the room published a post — add it locally
-    if(data.post){
-      galMergePosts([data.post]);
-      flash('📸 '+escHtml(data.post.author||'Someone')+' published "'+escHtml((data.post.name||'').slice(0,30))+'" to the gallery!');
-    }
-    // Host rebroadcasts to other clients
-    if(spIsHost) broadcastToPeers(data, fromConn);
   }
 }
 
-function replayStrokes(strokes, who){
-  spRemoteDrawing = true;
+// ── Stroke buffering ───────────────────────────────────────
+let spStrokeBuffer=[];
+let spStrokeTimer=null;
+
+function spBroadcastPoint(t, x, y, extra){
+  if(!spInRoom||spRemoteDrawing) return;
+  const pt={t, x, y, clr:color, sz:bSz, op:bOp, er:(tool==='eraser'), ...extra};
+  spStrokeBuffer.push(pt);
+  if(!spStrokeTimer){
+    spStrokeTimer=setTimeout(()=>{
+      if(spStrokeBuffer.length){
+        const msg={type:'strokes', strokes:[...spStrokeBuffer]};
+        broadcastToPeers(msg);
+        // Non-host also sends to host for rebroadcast
+        if(!spIsHost && spConnections[0]){ try{spConnections[0].send(msg);}catch(e){} }
+      }
+      spStrokeBuffer=[];
+      spStrokeTimer=null;
+    },16);
+  }
+}
+
+function replayStrokes(strokes){
+  if(!strokes||!strokes.length) return;
+  spRemoteDrawing=true;
+  dCtx.save();
   strokes.forEach(s=>{
+    dCtx.globalAlpha=s.op||1;
+    dCtx.strokeStyle=dCtx.fillStyle=s.er?'#fff':s.clr;
+    dCtx.lineWidth=s.sz||1;
+    dCtx.lineJoin=dCtx.lineCap='round';
     if(s.t==='down'){
-      dCtx.globalAlpha = s.op||1;
-      dCtx.strokeStyle = dCtx.fillStyle = s.er?'#fff':s.clr;
-      dCtx.lineWidth = s.sz||1;
-      dCtx.lineJoin = dCtx.lineCap = 'round';
       dCtx.beginPath();
       dCtx.arc(s.x,s.y,(s.sz||1)/2,0,Math.PI*2);
       dCtx.fill();
       dCtx.beginPath();
       dCtx.moveTo(s.x,s.y);
     } else if(s.t==='move'){
-      dCtx.globalAlpha = s.op||1;
-      dCtx.strokeStyle = dCtx.fillStyle = s.er?'#fff':s.clr;
-      dCtx.lineWidth = s.sz||1;
-      dCtx.lineJoin = dCtx.lineCap = 'round';
-      const mx=(s.px+s.x)/2,my=(s.py+s.y)/2;
-      dCtx.quadraticCurveTo(s.px,s.py,mx,my);
+      dCtx.lineTo(s.x,s.y);
       dCtx.stroke();
       dCtx.beginPath();
-      dCtx.moveTo(mx,my);
+      dCtx.moveTo(s.x,s.y);
     } else if(s.t==='up'){
-      dCtx.globalAlpha=1;
+      dCtx.stroke();
+    } else if(s.t==='line'||s.t==='rect'||s.t==='circle'){
+      dCtx.lineWidth=s.sz;
+      dCtx.beginPath();
+      if(s.t==='line'){ dCtx.moveTo(s.x0,s.y0); dCtx.lineTo(s.x,s.y); dCtx.stroke(); }
+      else if(s.t==='rect'){ dCtx.strokeRect(s.x0,s.y0,s.x-s.x0,s.y-s.y0); }
+      else { const rx=Math.abs(s.x-s.x0)/2,ry=Math.abs(s.y-s.y0)/2; dCtx.ellipse(s.x0+(s.x-s.x0)/2,s.y0+(s.y-s.y0)/2,rx,ry,0,0,Math.PI*2); dCtx.stroke(); }
     } else if(s.t==='fill'){
-      // Replay fill - temporarily override color
-      const savedColor = color;
-      color = s.clr;
-      floodFill(s.x,s.y,null);
-      color = savedColor;
+      replayFill(s);
+    } else if(s.t==='spray'){
+      dCtx.fillStyle=s.clr; dCtx.globalAlpha=0.08;
+      (s.dots||[]).forEach(d=>{ dCtx.fillRect(d.x,d.y,1,1); });
     }
   });
-  spRemoteDrawing = false;
+  dCtx.restore();
+  dCtx.globalAlpha=1;
+  spRemoteDrawing=false;
 }
 
-// Patch drawing events to capture strokes for broadcast
-const _origOnDown = onDown;
-const _origOnMove = onMove;
-const _origOnUp = onUp;
-hc.removeEventListener('mousedown', onDown);
-hc.removeEventListener('mousemove', onMove);
-hc.removeEventListener('mouseup', onUp);
-hc.removeEventListener('touchstart', onDown);
-hc.removeEventListener('touchmove', onMove);
-hc.removeEventListener('touchend', onUp);
-
-function spOnDown(e){
-  _origOnDown(e);
-  if(!spInRoom || spRemoteDrawing) return;
-  const p=gpos(e);
-  if(['pen','marker','brush','eraser'].includes(tool)){
-    spBroadcastStroke({t:'down',x:p.x,y:p.y,clr:color,sz:sw(),op:bOp,er:tool==='eraser'});
-  } else if(tool==='fill'){
-    // Broadcast fill after a tiny delay so local fill completes
-    setTimeout(()=>spBroadcastStroke({t:'fill',x:p.x,y:p.y,clr:color}),50);
+function replayFill(data){
+  spRemoteDrawing=true;
+  const savedColor=color;
+  color=data.clr;
+  if(data.nodes && data.nodes.length>0){
+    // Restore sender's string state temporarily, fill, then restore ours
+    const myNodes=stringNodes, myEdges=stringEdges;
+    stringNodes=data.nodes; stringEdges=data.edges||[];
+    const filled=fillStringLoop(data.x, data.y);
+    if(!filled) floodFill(data.x, data.y, null);
+    stringNodes=myNodes; stringEdges=myEdges;
+  } else {
+    floodFill(data.x, data.y, null);
   }
-}
-function spOnMove(e){
-  const p=gpos(e);
-  const prevX=lastX, prevY=lastY;
-  _origOnMove(e);
-  if(!spInRoom || spRemoteDrawing || !painting) return;
-  if(['pen','marker','brush','eraser'].includes(tool)){
-    spBroadcastStroke({t:'move',x:p.x,y:p.y,px:prevX,py:prevY,clr:color,sz:sw(),op:bOp,er:tool==='eraser'});
-  }
-}
-function spOnUp(e){
-  _origOnUp(e);
-  if(!spInRoom || spRemoteDrawing) return;
-  if(['pen','marker','brush','eraser'].includes(tool)){
-    spBroadcastStroke({t:'up'});
-  }
+  color=savedColor;
+  spRemoteDrawing=false;
 }
 
-hc.addEventListener('mousedown', spOnDown);
-hc.addEventListener('mousemove', spOnMove);
-hc.addEventListener('mouseup', spOnUp);
-hc.addEventListener('mouseleave', e=>{if(tool==='string'){stringHoverNodeId=null;stringHoverPos=null;}else spOnUp(e);});
-hc.addEventListener('touchstart', spOnDown, {passive:false});
-hc.addEventListener('touchmove', spOnMove, {passive:false});
-hc.addEventListener('touchend', spOnUp);
+// ── String state sync ──────────────────────────────────────
+let spStringTimer=null;
+function spBroadcastStringState(){
+  if(!spInRoom||spRemoteDrawing) return;
+  clearTimeout(spStringTimer);
+  spStringTimer=setTimeout(()=>{
+    const msg={type:'string-state',
+      nodes:stringNodes.map(n=>({...n})),
+      edges:stringEdges.map(e=>({...e}))
+    };
+    broadcastToPeers(msg);
+    if(!spIsHost && spConnections[0]){ try{spConnections[0].send(msg);}catch(e){} }
+  }, 50);
+}
 
-// Also broadcast fill tool
-// (fill broadcast is handled in spOnDown below)
-
-// ── ROOM UI ───────────────────────────────────────────────
+// ── Room UI ────────────────────────────────────────────────
 function enterRoomUI(isHost){
   spSwitchTab('room');
   document.getElementById('sp-tab-room').style.display='flex';
   document.getElementById('social-btn').classList.add('connected');
-  document.getElementById('social-btn').textContent = '🎨 Live';
-  document.getElementById('sp-room-title-label').textContent = 'Room: '+spRoomName;
+  document.getElementById('social-btn').textContent='🎨 Live';
+  document.getElementById('sp-room-title-label').textContent='Room: '+spRoomName;
   if(isHost){
     document.getElementById('sp-room-code-wrap').style.display='block';
-    document.getElementById('sp-room-code-display').textContent = spRoomCode;
+    document.getElementById('sp-room-code-display').textContent=spRoomCode;
   } else {
     document.getElementById('sp-room-code-wrap').style.display='none';
   }
@@ -2780,10 +2750,10 @@ function enterRoomUI(isHost){
 
 function updatePeerList(){
   const peers = spIsHost
-    ? [{name:spMyName,me:true},...spConnections.map(c=>({name:c._spName||'Peer',me:false}))]
+    ? [{name:spMyName,me:true}, ...spConnections.map(c=>({name:c._spName||'Peer',me:false}))]
     : [{name:spMyName,me:true}];
-  document.getElementById('sp-peer-count').textContent = peers.length;
-  document.getElementById('sp-peer-list').innerHTML = peers.map(p=>
+  document.getElementById('sp-peer-count').textContent=peers.length;
+  document.getElementById('sp-peer-list').innerHTML=peers.map(p=>
     `<span class="sp-peer-chip${p.me?' me':''}">${escHtml(p.name)}</span>`
   ).join('');
 }
@@ -2852,254 +2822,6 @@ function leaveRoom(){
 
 
 // ══════════════════════════════════════════════════════════
-// GALLERY & PUBLISH
-// ══════════════════════════════════════════════════════════
-const GALLERY_KEY = 'wiggly_gallery_v1';
-
-function getGalleryPosts(){
-  try{ return JSON.parse(localStorage.getItem(GALLERY_KEY)) || []; } catch(e){ return []; }
-}
-function saveGalleryPosts(posts){
-  try{ localStorage.setItem(GALLERY_KEY, JSON.stringify(posts)); }
-  catch(e){ flash('Storage full — delete some posts first.'); }
-}
-
-// Merge incoming posts into local gallery (deduplicate by id, newest wins)
-function galMergePosts(incoming){
-  if(!incoming || !incoming.length) return;
-  const posts = getGalleryPosts();
-  const byId = {};
-  posts.forEach(p=>{ byId[p.id]=p; });
-  let changed = false;
-  incoming.forEach(p=>{
-    if(!p||!p.id) return;
-    if(!byId[p.id]){
-      byId[p.id]=p;
-      changed=true;
-    } else {
-      // merge comments — keep longest list
-      const existing=byId[p.id];
-      const ec=(existing.comments||[]).length, ic=(p.comments||[]).length;
-      if(ic>ec){ existing.comments=p.comments; changed=true; }
-    }
-  });
-  if(changed){
-    saveGalleryPosts(Object.values(byId).sort((a,b)=>a.ts-b.ts));
-    // Refresh gallery panel if open
-    if(document.getElementById('gallery-panel').classList.contains('open')) renderGallery();
-  }
-}
-
-function openGallery(){
-  document.getElementById('gallery-panel').classList.add('open');
-  renderGallery();
-}
-function closeGallery(){
-  document.getElementById('gallery-panel').classList.remove('open');
-}
-
-function renderGallery(){
-  const body = document.getElementById('gallery-body');
-  const posts = getGalleryPosts();
-  if(!posts.length){
-    body.innerHTML='<div class="gal-empty">No posts yet.<br>Publish a drawing from Files → Publish to Gallery!</div>';
-    return;
-  }
-  body.innerHTML='';
-  const myUser = isLoggedIn() ? getUsername().toLowerCase() : null;
-  [...posts].reverse().forEach(post=>{
-    const isMe = myUser && post.author && post.author.toLowerCase()===myUser;
-    const comments = post.comments||[];
-    const avHtml = post.authorPfp
-      ? `<img src="${post.authorPfp}" alt="${escHtml(post.author||'?')}">`
-      : escHtml((post.author||'?')[0].toUpperCase());
-    const div = document.createElement('div');
-    div.className='gal-post';
-    div.dataset.pid = post.id;
-    div.innerHTML=`
-      <div class="gal-post-header">
-        <div class="gal-post-avatar">${avHtml}</div>
-        <div class="gal-post-meta">
-          <div class="gal-post-name">${escHtml(post.name||'Untitled')}</div>
-          <div class="gal-post-author">by ${escHtml(post.author||'Unknown')} · ${new Date(post.ts).toLocaleDateString()}</div>
-        </div>
-        ${isMe?`<div class="gal-post-del" onclick="galDeletePost('${post.id}')">✕ Delete</div>`:''}
-      </div>
-      <img class="gal-post-img" src="${post.dataUrl}" alt="${escHtml(post.name||'')}">
-      <div class="gal-post-footer">
-        <span class="gal-comment-toggle" onclick="galToggleComments('${post.id}')">💬 ${comments.length} comment${comments.length!==1?'s':''} — click to ${comments.length?'view':'add'}</span>
-      </div>
-      <div class="gal-comments" id="gal-comments-${post.id}">
-        <div class="gal-comment-list" id="gal-clist-${post.id}">${galRenderComments(comments)}</div>
-        ${isLoggedIn()
-          ?`<div class="gal-comment-row">
-              <input class="gal-comment-inp" id="gal-cinp-${post.id}" type="text" maxlength="200" placeholder="Write a comment…" onkeydown="if(event.key==='Enter')galSubmitComment('${post.id}')">
-              <button class="gal-comment-btn" onclick="galSubmitComment('${post.id}')">Send</button>
-            </div>`
-          :'<div style="font-size:10px;color:#888;padding:2px 0;">Log in to comment.</div>'}
-      </div>`;
-    body.appendChild(div);
-  });
-}
-
-function galRenderComments(comments){
-  if(!comments.length) return '<div style="font-size:10px;color:#888;font-style:italic;margin-bottom:4px;">No comments yet.</div>';
-  return comments.map(c=>{
-    const avHtml = c.authorPfp
-      ? `<img src="${c.authorPfp}" alt="${escHtml(c.author||'?')}">`
-      : escHtml((c.author||'?')[0].toUpperCase());
-    return `<div class="gal-comment"><div class="gal-comment-av">${avHtml}</div><div class="gal-comment-body"><span class="gal-comment-who">${escHtml(c.author||'?')}:</span> ${escHtml(c.text)}</div></div>`;
-  }).join('');
-}
-
-function galToggleComments(pid){
-  const el=document.getElementById('gal-comments-'+pid);
-  if(!el) return;
-  el.classList.toggle('open');
-  const toggle=el.previousElementSibling&&el.previousElementSibling.querySelector('.gal-comment-toggle');
-  if(toggle){
-    const posts=getGalleryPosts();
-    const post=posts.find(p=>p.id===pid);
-    const n=(post&&post.comments||[]).length;
-    const open=el.classList.contains('open');
-    toggle.textContent=`💬 ${n} comment${n!==1?'s':''} — click to ${open?'hide':'view/add'}`;
-  }
-}
-
-function galDeletePost(pid){
-  if(!confirm('Delete this post?')) return;
-  saveGalleryPosts(getGalleryPosts().filter(p=>p.id!==pid));
-  renderGallery();
-  flash('Post deleted.');
-}
-
-function galSubmitComment(pid){
-  if(!isLoggedIn()){ alert('Log in to comment.'); return; }
-  const inp=document.getElementById('gal-cinp-'+pid);
-  if(!inp) return;
-  const text=inp.value.trim();
-  if(!text) return;
-  inp.value='';
-  const posts=getGalleryPosts();
-  const post=posts.find(p=>p.id===pid);
-  if(!post) return;
-  const accts=getAccounts();
-  const u=getUsername();
-  const rec=accts[u.toLowerCase()]||{};
-  if(!post.comments) post.comments=[];
-  post.comments.push({author:u, authorPfp:rec.pfp||null, text, ts:Date.now()});
-  saveGalleryPosts(posts);
-  // Re-render comment list in place
-  const cList=document.getElementById('gal-clist-'+pid);
-  if(cList){ cList.innerHTML=galRenderComments(post.comments); cList.scrollTop=cList.scrollHeight; }
-  // Update toggle text
-  const footer=document.getElementById('gal-comments-'+pid);
-  const toggle=footer&&footer.previousElementSibling&&footer.previousElementSibling.querySelector('.gal-comment-toggle');
-  if(toggle){
-    const n=post.comments.length;
-    toggle.textContent=`💬 ${n} comment${n!==1?'s':''} — click to hide`;
-  }
-}
-
-// ── Publish flow ──────────────────────────────────────────
-let _publishDataUrl = null;
-
-function openPublish(){
-  closeFilesDropdown();
-  if(!isLoggedIn()){ showNoAcctError(); return; }
-  _publishDataUrl = dc.toDataURL('image/png');
-  // Show static preview first, then overwrite with GIF after render
-  const prev=document.getElementById('publish-preview');
-  const img=new Image();
-  img.onload=()=>{
-    prev.width=Math.min(img.width,460); prev.height=Math.round(img.height*(prev.width/img.width));
-    prev.getContext('2d').drawImage(img,0,0,prev.width,prev.height);
-  };
-  img.src=_publishDataUrl;
-  document.getElementById('publish-name-inp').value='';
-  document.getElementById('publish-err').textContent='';
-  document.getElementById('pub-char-count').textContent='0';
-  document.getElementById('publish-overlay').classList.add('show');
-  setTimeout(()=>document.getElementById('publish-name-inp').focus(),100);
-}
-
-function closePublish(){
-  document.getElementById('publish-overlay').classList.remove('show');
-  _publishDataUrl=null;
-}
-
-function pubUpdateCount(){
-  const v=document.getElementById('publish-name-inp').value;
-  const cc=document.getElementById('pub-char-count');
-  cc.textContent=v.length;
-  cc.style.color=v.length>50?'#c00':'#888';
-}
-
-async function submitPublish(){
-  if(!isLoggedIn()){alert('Log in to publish.');return;}
-  const name=document.getElementById('publish-name-inp').value.trim();
-  const errEl=document.getElementById('publish-err');
-  errEl.textContent='';
-  if(!name){errEl.textContent='Please enter a post name.';return;}
-  if(name.length>56){errEl.textContent='Post name must be 56 characters or less.';return;}
-
-  const btn=document.querySelector('#publish-box .pub-btn.primary');
-  btn.textContent='⏳ Generating GIF…';
-  btn.disabled=true;
-
-  let gifDataUrl=null;
-  try{
-    // Build animated GIF (inline, same logic as exportGIF)
-    const src=dCtx.getImageData(0,0,W,H).data;
-    const colorMap=new Map(); colorMap.set(0xFFFFFF,0);
-    for(let i=0;i<W*H;i++){const r=src[i*4],g=src[i*4+1],b=src[i*4+2],a=src[i*4+3];if(a<10||(r>245&&g>245&&b>245))continue;const rq=(r>>2)<<2,gq=(g>>2)<<2,bq=(b>>2)<<2;const key=(rq<<16)|(gq<<8)|bq;if(!colorMap.has(key)&&colorMap.size<255)colorMap.set(key,colorMap.size);}
-    const palette=new Array(colorMap.size);for(const[key,idx]of colorMap)palette[idx]=[(key>>16)&255,(key>>8)&255,key&255];
-    function ni(r,g,b){const rq=(r>>2)<<2,gq=(g>>2)<<2,bq=(b>>2)<<2;const key=(rq<<16)|(gq<<8)|bq;if(colorMap.has(key))return colorMap.get(key);let best=0,bestD=1e9;for(const[k,idx]of colorMap){const dr=((k>>16)&255)-r,dg=((k>>8)&255)-g,db=(k&255)-b,d=dr*dr+dg*dg+db*db;if(d<bestD){bestD=d;best=idx;}}return best;}
-    if(!phaseX)buildPhases();
-    const NF=24,AMP=Math.max(0.01,wAmt),GW=W*SCALE,GH=H*SCALE,frames=[];
-    for(let f=0;f<NF;f++){
-      await new Promise(r=>setTimeout(r,0));
-      const ft=(f/NF)*Math.PI*2,indices=new Uint8Array(GW*GH);
-      for(let py=0;py<H;py++)for(let px=0;px<W;px++){
-        const si=(py*W+px)*4,r=src[si],g=src[si+1],b=src[si+2],a=src[si+3];
-        if(a<10||(r>245&&g>245&&b>245))continue;
-        const pi=py*W+px;let ddx,ddy;
-        if(snapMode){const sn=Math.floor(ft/Math.PI+phaseX[pi])%2===0;if(!sn){ddx=0;ddy=0;}else{const dir=snapDir[pi];ddx=dir===0?1:dir===1?-1:0;ddy=dir===2?1:dir===3?-1:0;}}
-        else{ddx=Math.round(Math.sin(ft+phaseX[pi])*AMP);ddy=Math.round(Math.sin(ft*0.82+phaseY[pi])*AMP);}
-        const dpx=Math.max(0,Math.min(W-1,px+ddx)),dpy=Math.max(0,Math.min(H-1,py+ddy));
-        const cidx=ni(r,g,b);
-        for(let sy=0;sy<SCALE;sy++)for(let sx=0;sx<SCALE;sx++){const gx=dpx*SCALE+sx,gy=dpy*SCALE+sy;if(gx<GW&&gy<GH)indices[gy*GW+gx]=cidx;}
-      }
-      frames.push(indices);
-    }
-    const gifData=buildGIF(frames,GW,GH,palette,4);
-    const blob=new Blob([gifData],{type:'image/gif'});
-    gifDataUrl=await new Promise(res=>{const fr=new FileReader();fr.onload=e=>res(e.target.result);fr.readAsDataURL(blob);});
-  } catch(err){
-    errEl.textContent='GIF generation failed: '+err.message;
-    btn.textContent='🌐 Publish'; btn.disabled=false;
-    return;
-  }
-
-  const accts=getAccounts(), u=getUsername(), rec=accts[u.toLowerCase()]||{};
-  const post={
-    id:'p_'+Date.now()+'_'+Math.random().toString(36).slice(2,7),
-    name, author:u, authorPfp:rec.pfp||null,
-    dataUrl:gifDataUrl, ts:Date.now(), comments:[]
-  };
-  const posts=getGalleryPosts();
-  posts.push(post);
-  saveGalleryPosts(posts);
-  // Broadcast to anyone in the room right now
-  if(typeof spInRoom!=='undefined' && spInRoom){
-    broadcastToPeers({type:'gallery-post', post});
-  }
-  btn.textContent='🌐 Publish'; btn.disabled=false;
-  closePublish();
-  flash('Published to Gallery! 🎉');
-}
-
-// ══════════════════════════════════════════════════════════
 // COPY / PASTE SELECTION (Grab tool)
 // ══════════════════════════════════════════════════════════
 let _selClipboard = null; // {img: ImageData, w, h}
@@ -3140,40 +2862,5 @@ document.addEventListener('keydown', e=>{
 
 </script>
 
-<!-- GALLERY PANEL -->
-<div id="gallery-panel">
-  <div id="gallery-panel-title">
-    <span>🖼 Community Gallery</span>
-    <span style="cursor:pointer;opacity:.8;font-size:14px;" onclick="closeGallery()">✕</span>
-  </div>
-  <div style="padding:8px 10px;background:#e8e8e8;border-bottom:1px solid #bbb;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;">
-    <span style="font-size:11px;color:#555;">Drawings published by your room</span>
-    <button onclick="renderGallery()" style="font-size:10px;padding:2px 8px;cursor:pointer;border:1px solid #aaa;background:#f0f0f0;">↺ Refresh</button>
-  </div>
-  <div id="gallery-body"><div class="gal-empty">No posts yet.<br>Publish a drawing from the Files menu!</div></div>
-</div>
-
-<!-- PUBLISH MODAL -->
-<div id="publish-overlay">
-  <div id="publish-box">
-    <div id="publish-titlebar">
-      <span>🌐 Publish to Gallery</span>
-      <span style="cursor:pointer;opacity:.8;" onclick="closePublish()">✕</span>
-    </div>
-    <div id="publish-body">
-      <canvas id="publish-preview" width="200" height="150"></canvas>
-      <div>
-        <div class="pub-label">Post Name</div>
-        <input id="publish-name-inp" type="text" maxlength="56" placeholder="Give your drawing a name..." oninput="pubUpdateCount()">
-        <div class="pub-char-count"><span id="pub-char-count">0</span>/56</div>
-      </div>
-      <div id="publish-err"></div>
-      <div class="pub-footer">
-        <button class="pub-btn" onclick="closePublish()">Cancel</button>
-        <button class="pub-btn primary" onclick="submitPublish()">🌐 Publish</button>
-      </div>
-    </div>
-  </div>
-</div>
 </body>
 </html>
