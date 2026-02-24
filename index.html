@@ -2492,7 +2492,11 @@ function startHosting(){
     {urls:'turn:openrelay.metered.ca:443',username:'openrelayproject',credential:'openrelayproject'},
     {urls:'turn:openrelay.metered.ca:443?transport=tcp',username:'openrelayproject',credential:'openrelayproject'}
   ]}});
-    statusEl.innerHTML='✓ Room created! Code: <b>'+id+'</b>';
+
+  spPeer.on('open', id=>{
+    spRoomCode = id;
+    spInRoom = true;
+    statusEl.className='sp-status-box ok';
     document.getElementById('sp-host-btn').disabled=false;
 
     // Advertise to Gun lobby
