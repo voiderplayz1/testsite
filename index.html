@@ -801,14 +801,14 @@ function applyGradientBg(){
   const numColors=3+Math.floor(Math.random()*4);
   const tmp=document.createElement('canvas');tmp.width=W;tmp.height=H;
   const tC=tmp.getContext('2d');
-  // Draw multiple radial gradients at random positions
+  // Draw multiple radial gradients at random positions — smaller radius so they don't flood entire canvas
   for(let i=0;i<numColors;i++){
     const cx=Math.random()*W,cy=Math.random()*H;
-    const r=Math.max(W,H)*(0.4+Math.random()*0.7);
+    const r=Math.min(W,H)*(0.2+Math.random()*0.35);
     const grad=tC.createRadialGradient(cx,cy,0,cx,cy,r);
     grad.addColorStop(0,shuffled[i%shuffled.length]);
     grad.addColorStop(1,'transparent');
-    tC.globalAlpha=0.55+Math.random()*0.45;
+    tC.globalAlpha=0.55+Math.random()*0.35;
     tC.fillStyle=grad;
     tC.fillRect(0,0,W,H);
   }
@@ -960,7 +960,7 @@ function applyGradPanel(){
     }
     tC.globalAlpha=1;
   } else if(gradType==='radial'){
-    const grad=tC.createRadialGradient(W/2,H/2,0,W/2,H/2,Math.max(W,H)/1.4);
+    const grad=tC.createRadialGradient(W/2,H/2,0,W/2,H/2,Math.min(W,H)/2);
     sorted.forEach(s=>grad.addColorStop(s.pos/100,s.color));
     tC.fillStyle=grad;tC.fillRect(0,0,W,H);
   } else {
@@ -1461,6 +1461,15 @@ function doResize(p){
   if(resizeHandle.includes('w')){nw=Math.max(4,ox+ow-p.x);nx=p.x;}
   if(resizeHandle.includes('n')){nh=Math.max(4,oy+oh-p.y);ny=p.y;}
   sel.floatX=nx;sel.floatY=ny;sel.rect={x:nx,y:ny,w:nw,h:nh};
+  // Scale the image content to match new size (squash & stretch)
+  if(nw!==ow||nh!==oh){
+    const tmp=document.createElement('canvas');tmp.width=nw;tmp.height=nh;
+    const tC=tmp.getContext('2d');tC.imageSmoothingEnabled=false;
+    const src=document.createElement('canvas');src.width=resizeOrigImg.width;src.height=resizeOrigImg.height;
+    src.getContext('2d').putImageData(resizeOrigImg,0,0);
+    tC.drawImage(src,0,0,nw,nh);
+    sel.floatImg=tC.getImageData(0,0,nw,nh);
+  }
 }
 
 function getRotHandlePos(){
@@ -1580,6 +1589,8 @@ function finalizeSelection(rx,ry,rw,rh){
   sel.floatImg=floatImg;sel.rect={x:rx,y:ry,w:rw,h:rh};
   sel.floatX=rx;sel.floatY=ry;sel.active=true;selRotAngle=0;
   resizeOrigRect={...sel.rect};resizeOrigImg=floatImg;
+  // Broadcast: canvas now has hole where selection was
+  spBroadcastCanvasSnapshot();
   flash('Selected — drag to move, handles to resize, Esc to stamp');
 }
 
@@ -1595,6 +1606,8 @@ function commitSelection(){
     dCtx.restore();
   }
   sel.active=false;sel.floatImg=null;resizeOrigRect=null;resizeOrigImg=null;selRotAngle=0;
+  // Broadcast committed canvas to peers
+  spBroadcastCanvasSnapshot();
 }
 
 function deleteSelection(){if(!sel.active)return;sel.active=false;sel.floatImg=null;flash('Selection deleted');}
@@ -1620,7 +1633,10 @@ let textX=0,textY=0;
 const textOverlay=document.getElementById('text-overlay'),textInputEl=document.getElementById('text-input-el');
 function updateTextInputStyle(){const fs=txtSize*SCALE;textInputEl.style.fontSize=fs+'px';textInputEl.style.fontFamily=`'${txtFont}',sans-serif`;textInputEl.style.color=color;textInputEl.style.minWidth='40px';textInputEl.style.lineHeight='1.2';}
 function placeTextOverlay(drawX,drawY){textX=drawX;textY=drawY;updateTextInputStyle();textOverlay.style.left=(drawX*SCALE)+'px';textOverlay.style.top=(drawY*SCALE-txtSize*SCALE*0.1)+'px';textOverlay.style.display='block';textInputEl.textContent='';textInputEl.focus();}
-function stampText(){const txt=textInputEl.textContent.trim();if(txt){saveHistory();dCtx.save();dCtx.globalAlpha=bOp;dCtx.fillStyle=color;dCtx.font=`${txtSize}px '${txtFont}',sans-serif`;dCtx.textBaseline='top';dCtx.fillText(txt,textX,textY);dCtx.restore();flash('Text stamped!');}hideTextOverlay(true);}
+function stampText(){const txt=textInputEl.textContent.trim();if(txt){saveHistory();dCtx.save();dCtx.globalAlpha=bOp;dCtx.fillStyle=color;dCtx.font=`${txtSize}px '${txtFont}',sans-serif`;dCtx.textBaseline='top';dCtx.fillText(txt,textX,textY);dCtx.restore();
+  // Broadcast text to peers
+  if(spInRoom){const msg={type:'text-stamp',x:textX,y:textY,txt,font:txtFont,size:txtSize,clr:color,op:bOp};broadcastToPeers(msg);if(!spIsHost&&spConnections[0])try{spConnections[0].send(msg);}catch(ex){}}
+  flash('Text stamped!');}hideTextOverlay(true);}
 function hideTextOverlay(clear){textOverlay.style.display='none';if(clear)textInputEl.textContent='';}
 function setTextFont(el){document.querySelectorAll('.font-opt,.tb-font-opt').forEach(e=>e.classList.remove('on'));const f=el.dataset.font;txtFont=f;document.querySelectorAll(`[data-font="${f}"]`).forEach(e=>e.classList.add('on'));updateTextInputStyle();textInputEl.focus();}
 textInputEl.addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();stampText();}if(e.key==='Escape')hideTextOverlay(true);e.stopPropagation();});
@@ -1662,9 +1678,9 @@ function redo(){if(!redoStack.length){flash('Nothing to redo');return;}history.p
 // ══════════════════════════════════════════════════════════
 // OBLITERATE
 // ══════════════════════════════════════════════════════════
-function obliterate(){
-  if(spInRoom && !spIsHost){ flash('Only the room owner can Obliterate!'); return; }
-  if(spInRoom){ broadcastToPeers({type:'obliterate'}); }
+function obliterate(remote){
+  if(!remote && spInRoom && !spIsHost){ flash('Only the room owner can Obliterate!'); return; }
+  if(!remote && spInRoom){ broadcastToPeers({type:'obliterate'}); if(!spIsHost&&spConnections[0])try{spConnections[0].send({type:'obliterate'});}catch(e){} }
   saveHistory();const src=dCtx.getImageData(0,0,W,H).data;const DW=W*SCALE,DH=H*SCALE;const pts=[];
   const step=Math.max(1,Math.floor(W/80));
   for(let py=0;py<H;py+=step)for(let px=0;px<W;px+=step){const i=(py*W+px)*4;const r=src[i],g=src[i+1],b=src[i+2],a=src[i+3];if(a<50||(r>240&&g>240&&b>240))continue;const cx=DW/2,cy=DH/2,sx=px*SCALE,sy=py*SCALE;const dx=sx-cx,dy=sy-cy,dist=Math.sqrt(dx*dx+dy*dy)||1;const spd=3+Math.random()*9;pts.push({x:sx,y:sy,vx:(dx/dist)*spd*(0.4+Math.random()),vy:(dy/dist)*spd*(0.4+Math.random())-Math.random()*5,grav:.18+Math.random()*.18,size:SCALE+Math.random()*SCALE*2.5,col:`rgb(${r},${g},${b})`,alpha:1,rot:Math.random()*6.28,rotV:(Math.random()-.5)*.4});}
@@ -1673,7 +1689,7 @@ function obliterate(){
   dCtx.fillStyle='#fff';dCtx.fillRect(0,0,W,H);ec.style.display='block';let frame=0;const FRAMES=65;
   function boom(){frame++;eCtx.clearRect(0,0,DW,DH);if(frame<8){eCtx.fillStyle=`rgba(255,255,200,${(1-frame/8)*.95})`;eCtx.fillRect(0,0,DW,DH);}for(let r=0;r<3;r++){const rf=frame-r*5;if(rf<0||rf>28)continue;eCtx.save();eCtx.strokeStyle=`rgba(255,160,0,${(1-rf/28)*.85})`;eCtx.lineWidth=6-rf*.18;eCtx.beginPath();eCtx.arc(DW/2,DH/2,rf*22,0,Math.PI*2);eCtx.stroke();eCtx.restore();}
   for(const p of pts){p.x+=p.vx;p.y+=p.vy;p.vy+=p.grav;p.vx*=.97;p.rot+=p.rotV;p.alpha=Math.max(0,1-frame/FRAMES);if(p.alpha<=0)continue;eCtx.save();eCtx.globalAlpha=p.alpha;eCtx.translate(p.x,p.y);eCtx.rotate(p.rot);eCtx.fillStyle=p.col;if(p.size<7)eCtx.fillRect(-p.size/2,-p.size/2,p.size,p.size);else{eCtx.beginPath();eCtx.arc(0,0,p.size/2,0,Math.PI*2);eCtx.fill();}eCtx.restore();}
-  if(frame<FRAMES)requestAnimationFrame(boom);else{eCtx.clearRect(0,0,DW,DH);ec.style.display='none';flash('Obliterated!');}}
+  if(frame<FRAMES)requestAnimationFrame(boom);else{eCtx.clearRect(0,0,DW,DH);ec.style.display='none';flash(remote?'Obliterated by host!':'Obliterated!');}}
   requestAnimationFrame(boom);
 }
 
@@ -2612,6 +2628,11 @@ function handlePeerData(data, fromConn){
     if(fromConn && data.name){ fromConn._spName=data.name; fromConn._spPfp=data.pfp||null; updatePeerList(); }
     return;
   }
+  if(data.type==='canvas-snap'){
+    if(spIsHost) broadcastToPeers(data, fromConn);
+    applyRemoteCanvas(data.canvas, data.nodes, data.edges);
+    return;
+  }
   if(data.type==='strokes'){
     if(spIsHost) broadcastToPeers(data, fromConn);
     replayStrokes(data.strokes);
@@ -2623,10 +2644,15 @@ function handlePeerData(data, fromConn){
     stringNodes=data.nodes; stringEdges=data.edges;
   } else if(data.type==='obliterate'){
     if(spIsHost) broadcastToPeers(data, fromConn);
-    // Clear canvas remotely — no animation for others
-    saveHistory();
-    dCtx.fillStyle='#fff'; dCtx.fillRect(0,0,W,H);
-    flash('Host obliterated the canvas!');
+    // Run full obliterate animation on remote too
+    obliterate(true);
+  } else if(data.type==='text-stamp'){
+    if(spIsHost) broadcastToPeers(data, fromConn);
+    spRemoteDrawing=true;
+    dCtx.save();dCtx.globalAlpha=data.op||1;dCtx.fillStyle=data.clr||'#000';
+    dCtx.font=`${data.size||24}px '${data.font||'Comic Sans MS'}',sans-serif`;
+    dCtx.textBaseline='top';dCtx.fillText(data.txt,data.x,data.y);dCtx.restore();
+    spRemoteDrawing=false;
   } else if(data.type==='chat'){
     spAddChatMsg(data.name||'Peer', data.msg, 'peer', data.pfp||null);
     if(spIsHost) broadcastToPeers(data, fromConn);
@@ -2642,7 +2668,8 @@ let spStrokeTimer=null;
 
 function spBroadcastPoint(t, x, y, extra){
   if(!spInRoom||spRemoteDrawing) return;
-  const pt={t, x, y, clr:color, sz:bSz, op:bOp, er:(tool==='eraser'), ...extra};
+  const eraserSz = tool==='eraser' ? bSz*2.5 : bSz;
+  const pt={t, x, y, clr:color, sz:eraserSz, op:bOp, er:(tool==='eraser'), ...extra};
   spStrokeBuffer.push(pt);
   if(!spStrokeTimer){
     spStrokeTimer=setTimeout(()=>{
@@ -2718,6 +2745,16 @@ function replayFill(data){
 
 // ── String state sync ──────────────────────────────────────
 let spStringTimer=null;
+// Helper: broadcast full canvas snapshot to all peers (used after grab/text/paste ops)
+function spBroadcastCanvasSnapshot(){
+  if(!spInRoom||spRemoteDrawing) return;
+  try{
+    const dataURL=dc.toDataURL('image/png');
+    const msg={type:'canvas-snap', canvas:dataURL};
+    broadcastToPeers(msg);
+    if(!spIsHost && spConnections[0]){ try{spConnections[0].send(msg);}catch(e){} }
+  }catch(e){}
+}
 function spBroadcastStringState(){
   if(!spInRoom||spRemoteDrawing) return;
   clearTimeout(spStringTimer);
