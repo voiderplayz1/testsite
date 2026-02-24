@@ -220,9 +220,6 @@ body{font-family:Segoe UI,Tahoma,Arial,sans-serif;font-size:11px;overflow:hidden
 .fd-empty{padding:8px;color:#999;text-align:center;font-style:italic;font-size:11px;}
 #fd-autosave-badge{font-size:9px;background:rgba(0,200,80,.7);color:#fff;border-radius:3px;padding:1px 4px;margin-left:3px;font-weight:400;}
 
-/* PANEL BUTTON */
-#panel-btn{display:flex;align-items:center;gap:3px;padding:2px 7px;height:22px;background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.35);border-radius:2px;cursor:pointer;color:white;font-size:11px;font-weight:600;white-space:nowrap;user-select:none;}
-#panel-btn:hover{background:rgba(255,255,255,.3);}
 #social-btn{display:flex;align-items:center;gap:3px;padding:2px 7px;height:22px;background:rgba(100,220,150,.3);border:1px solid rgba(100,220,150,.5);border-radius:2px;cursor:pointer;color:white;font-size:11px;font-weight:600;white-space:nowrap;user-select:none;}
 #social-btn:hover{background:rgba(100,220,150,.45);}
 #social-btn.connected{background:rgba(50,200,100,.5);border-color:rgba(50,200,100,.8);animation:socialPulse 2s infinite;}
@@ -330,55 +327,7 @@ body{font-family:Segoe UI,Tahoma,Arial,sans-serif;font-size:11px;overflow:hidden
 .sp-spinner{display:inline-block;width:12px;height:12px;border:2px solid #bbb;border-top-color:#1a5ca8;border-radius:50%;animation:spSpin .6s linear infinite;vertical-align:middle;margin-right:4px;}
 @keyframes spSpin{to{transform:rotate(360deg)}}
 
-/* PANEL DIALOG — MS Paint floating dialog box */
-#panel-dialog{display:none;position:fixed;bottom:50px;left:50%;transform:translateX(-50%) translateY(20px);width:370px;background:#c0c0c0;border:2px solid;border-color:#fff #808080 #808080 #fff;box-shadow:2px 2px 0 #000,inset 0 0 0 1px #c0c0c0;z-index:800;font-size:11px;font-family:Segoe UI,Tahoma,Arial,sans-serif;opacity:0;transition:opacity .18s ease,transform .22s cubic-bezier(.4,0,.2,1);pointer-events:none;}
-#panel-dialog.open{display:block;opacity:1;transform:translateX(-50%) translateY(0);pointer-events:all;}
-#pd-titlebar{background:linear-gradient(to bottom,#4b9fdb 0%,#1e6abf 50%,#1a5ca8 51%,#2b7fd4 100%);color:white;font-size:11px;font-weight:700;padding:2px 4px 3px 5px;display:flex;align-items:center;justify-content:space-between;user-select:none;}
-#pd-title-left{display:flex;align-items:center;gap:4px;}
-#pd-icon{width:13px;height:13px;background:radial-gradient(circle at 40% 35%,#ff69b4,#d4006a);border-radius:50%;border:1px solid #7a0035;flex-shrink:0;}
-#pd-winbtns{display:flex;gap:2px;}
-#pd-close-btn{width:16px;height:14px;background:linear-gradient(to bottom,#f0f0f0,#d0d0d0);border:1px solid;border-color:#fff #808080 #808080 #fff;display:flex;align-items:center;justify-content:center;font-size:8px;cursor:pointer;color:#000;font-weight:700;line-height:1;}
-#pd-close-btn:hover{background:linear-gradient(to bottom,#ffd0d0,#e08080);border-color:#fff #600 #600 #fff;}
-#pd-close-btn:active{border-color:#808080 #fff #fff #808080;}
-#pd-body{padding:8px 10px;display:flex;flex-direction:column;gap:7px;background:#c0c0c0;}
-/* sunken panel for messages */
-.pd-sunken{background:#fff;border:2px solid;border-color:#808080 #fff #fff #808080;padding:5px 7px;font-size:11px;color:#000;line-height:1.5;}
-/* Lock section */
-#pd-lock{display:flex;flex-direction:column;gap:7px;}
-#pd-code-row{display:flex;align-items:center;gap:5px;}
-#pd-code-label{color:#000;white-space:nowrap;min-width:48px;}
-#pd-code-inp{flex:1;border:2px solid;border-color:#808080 #fff #fff #808080;background:#fff;padding:2px 4px;font-size:11px;font-family:Segoe UI,Tahoma,Arial,sans-serif;outline:none;box-shadow:none;}
-#pd-code-inp:focus{border-color:#0054e3 #d0d8e8 #d0d8e8 #0054e3;}
-#pd-code-inp.wrong{background:#ffe8e8;animation:pdshake .25s;}
-@keyframes pdshake{0%,100%{transform:translateX(0)}30%{transform:translateX(-5px)}70%{transform:translateX(5px)}}
-#pd-code-err{color:#c00;font-size:10px;min-height:14px;padding-left:2px;}
-/* Interior section */
-#pd-interior{display:none;flex-direction:column;gap:7px;}
-#pd-interior.show{display:flex;}
-#pd-shout-row{display:flex;gap:4px;align-items:center;}
-#pd-shout-inp{flex:1;border:2px solid;border-color:#808080 #fff #fff #808080;background:#fff;padding:2px 4px;font-size:11px;font-family:Segoe UI,Tahoma,Arial,sans-serif;outline:none;}
-#pd-shout-inp:focus{border-color:#0054e3 #d0d8e8 #d0d8e8 #0054e3;}
-/* MS Paint style buttons */
-.pd-btn{font-family:Segoe UI,Tahoma,Arial,sans-serif;font-size:11px;padding:3px 14px;background:#c0c0c0;border:2px solid;border-color:#fff #808080 #808080 #fff;cursor:pointer;white-space:nowrap;color:#000;min-width:60px;text-align:center;}
-.pd-btn:hover{background:#d0d8e8;}
-.pd-btn:active{border-color:#808080 #fff #fff #808080;padding:4px 13px 2px 15px;}
-#pd-shout-btn{font-weight:700;border-color:#fff #808080 #808080 #fff;}
-#pd-shout-status{font-size:10px;color:#444;min-height:13px;padding-left:2px;}
-#pd-footer{display:flex;justify-content:flex-end;gap:4px;padding-top:5px;border-top:1px solid #808080;margin-top:2px;}
 
-/* BROADCAST TOAST — MS Paint style */
-#broadcast-toast-container{position:fixed;top:14px;right:14px;z-index:9999;display:flex;flex-direction:column;gap:6px;pointer-events:none;}
-.bc-toast{background:#c0c0c0;border:2px solid;border-color:#fff #808080 #808080 #fff;box-shadow:2px 2px 0 #000;min-width:200px;max-width:260px;pointer-events:all;animation:toastIn .18s ease;}
-@keyframes toastIn{from{opacity:0;transform:translateX(30px)}to{opacity:1;transform:translateX(0)}}
-.bc-toast.out{animation:toastOut .18s ease forwards;}
-@keyframes toastOut{to{opacity:0;transform:translateX(30px)}}
-.bc-toast-head{background:linear-gradient(to bottom,#4b9fdb 0%,#1e6abf 50%,#1a5ca8 51%,#2b7fd4 100%);padding:2px 4px 3px 5px;display:flex;align-items:center;justify-content:space-between;}
-.bc-toast-title{color:#fff;font-weight:700;font-size:11px;display:flex;align-items:center;gap:3px;}
-.bc-toast-x{width:14px;height:12px;background:linear-gradient(to bottom,#f0f0f0,#d0d0d0);border:1px solid;border-color:#fff #808080 #808080 #fff;display:flex;align-items:center;justify-content:center;color:#000;font-size:8px;font-weight:700;cursor:pointer;flex-shrink:0;}
-.bc-toast-x:hover{background:#fdd;}
-.bc-toast-body{padding:6px 8px;font-size:11px;color:#000;background:#c0c0c0;}
-.bc-toast-label{font-size:9px;color:#555;text-transform:uppercase;letter-spacing:.4px;}
-.bc-toast-msg{font-weight:600;word-break:break-word;margin-top:2px;background:#fff;border:2px solid;border-color:#808080 #fff #fff #808080;padding:3px 5px;}
 </style>
 </head>
 <body>
@@ -396,7 +345,7 @@ body{font-family:Segoe UI,Tahoma,Arial,sans-serif;font-size:11px;overflow:hidden
       <div id="fd-body"></div>
     </div>
   </div>
-  <div id="panel-btn" onclick="openPanel()" title="Open Panel">⚡ Panel</div>
+
   <div id="social-btn" onclick="openSocialPanel()" title="Social Drawing">🎨 Social</div>
   <div id="acct-btn" onclick="openAccountModal()" title="Account" style="display:flex;align-items:center;gap:3px;padding:2px 7px;height:22px;background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.35);border-radius:2px;cursor:pointer;color:white;font-size:11px;font-weight:600;white-space:nowrap;user-select:none;">👤 Account</div>
   <div id="qa">
@@ -2032,45 +1981,6 @@ hc.addEventListener('touchend',()=>{ setTimeout(()=>scheduleAutoSave(),100); });
 })();
 </script>
 
-<!-- PANEL DIALOG — MS Paint style floating window -->
-<div id="panel-dialog">
-  <div id="pd-titlebar">
-    <div id="pd-title-left">
-      <div id="pd-icon"></div>
-      <span>Wiggly Panel</span>
-    </div>
-    <div id="pd-winbtns">
-      <div id="pd-close-btn" onclick="closePanel()" title="Close">✕</div>
-    </div>
-  </div>
-  <div id="pd-body">
-    <!-- LOCK -->
-    <div id="pd-lock">
-      <div class="pd-sunken">To access panel, please enter the correct code.</div>
-      <div id="pd-code-row">
-        <label id="pd-code-label" for="pd-code-inp">Code:</label>
-        <input id="pd-code-inp" type="password" placeholder="Enter code..." autocomplete="off">
-        <button class="pd-btn" onclick="tryUnlock()">OK</button>
-      </div>
-      <div id="pd-code-err"></div>
-    </div>
-    <!-- INTERIOR -->
-    <div id="pd-interior">
-      <div class="pd-sunken" style="color:#006600;font-size:10px;">🔓 Access granted — Grug approves.</div>
-      <div style="font-weight:700;color:#000;font-size:11px;">📢 Broadcast Message</div>
-      <div id="pd-shout-row">
-        <input id="pd-shout-inp" type="text" placeholder="Type message... (Enter to send)" maxlength="200">
-        <button class="pd-btn" id="pd-shout-btn" onclick="sendShout()">SHOUT</button>
-      </div>
-      <div id="pd-shout-status"></div>
-      <div id="pd-footer">
-        <button class="pd-btn" onclick="lockOut()">🔒 Lock</button>
-        <button class="pd-btn" onclick="closePanel()">Close</button>
-      </div>
-    </div>
-  </div>
-</div>
-
 <!-- ACCOUNT MODAL -->
 <div id="acct-overlay">
   <div id="acct-box">
@@ -2266,130 +2176,13 @@ hc.addEventListener('touchend',()=>{ setTimeout(()=>scheduleAutoSave(),100); });
   </div>
 </div>
 
-<!-- BROADCAST TOAST CONTAINER -->
-<div id="broadcast-toast-container"></div>
-
-<script>
-// ══════════════════════════════════════════════════════════
-// PANEL — MS Paint style dialog + shout broadcast
-// ══════════════════════════════════════════════════════════
-const PANEL_CODE = 'Grug4Life';
-let panelUnlocked = false;
-const BC_KEY = 'wiggly_broadcast';
-let lastBcSeen = localStorage.getItem(BC_KEY+'_ts') || '0';
-
-function openPanel(){
-  const d=document.getElementById('panel-dialog');
-  d.style.display='block';
-  requestAnimationFrame(()=>requestAnimationFrame(()=>d.classList.add('open')));
-  if(panelUnlocked) showInterior(); else showLock();
-}
-function closePanel(){
-  const d=document.getElementById('panel-dialog');
-  d.classList.remove('open');
-  setTimeout(()=>{ if(!d.classList.contains('open')) d.style.display='none'; },220);
-}
-function showLock(){
-  document.getElementById('pd-lock').style.display='flex';
-  document.getElementById('pd-interior').classList.remove('show');
-  document.getElementById('pd-code-inp').value='';
-  document.getElementById('pd-code-err').textContent='';
-}
-function showInterior(){
-  document.getElementById('pd-lock').style.display='none';
-  document.getElementById('pd-interior').classList.add('show');
-}
-function tryUnlock(){
-  const inp=document.getElementById('pd-code-inp');
-  if(inp.value===PANEL_CODE){
-    panelUnlocked=true;
-    showInterior();
-  } else {
-    inp.classList.remove('wrong');
-    void inp.offsetWidth;
-    inp.classList.add('wrong');
-    document.getElementById('pd-code-err').textContent='Incorrect code. Try again.';
-    inp.value='';
-    playBeep(200,0.12);
-  }
-}
-function lockOut(){
-  panelUnlocked=false;
-  showLock();
-}
-document.getElementById('pd-code-inp').addEventListener('keydown',e=>{if(e.key==='Enter')tryUnlock();});
-
-function sendShout(){
-  const inp=document.getElementById('pd-shout-inp');
-  const msg=inp.value.trim();
-  if(!msg){document.getElementById('pd-shout-status').textContent='Please type a message first.';return;}
-  const ts=Date.now();
-  localStorage.setItem(BC_KEY,JSON.stringify({msg,ts}));
-  localStorage.setItem(BC_KEY+'_ts',String(ts));
-  lastBcSeen=String(ts);
-  inp.value='';
-  document.getElementById('pd-shout-status').textContent='Sent!';
-  setTimeout(()=>document.getElementById('pd-shout-status').textContent='',2000);
-  showBroadcastToast(msg);
-  playBeep(800,0.1);
-  // Also broadcast to room peers if connected
-  if(typeof spInRoom!=='undefined' && spInRoom){
-    broadcastToPeers({type:'chat',name:'📢 Shout',msg});
-  }
-}
-document.getElementById('pd-shout-inp').addEventListener('keydown',e=>{if(e.key==='Enter')sendShout();});
-
-function showBroadcastToast(msg){
-  const container=document.getElementById('broadcast-toast-container');
-  const toast=document.createElement('div');
-  toast.className='bc-toast';
-  toast.innerHTML=`
-    <div class="bc-toast-head">
-      <div class="bc-toast-title">📢 Alert!</div>
-      <div class="bc-toast-x" onclick="dismissToast(this)">✕</div>
-    </div>
-    <div class="bc-toast-body">
-      <div class="bc-toast-label">Broadcast</div>
-      <div class="bc-toast-msg">${escHtml(msg)}</div>
-    </div>`;
-  container.appendChild(toast);
-  setTimeout(()=>dismissToast(toast.querySelector('.bc-toast-x')),7000);
-}
-function dismissToast(el){
-  const toast=el.closest('.bc-toast');
-  if(!toast||toast.classList.contains('out'))return;
-  toast.classList.add('out');
-  setTimeout(()=>toast.remove(),200);
-}
-function escHtml(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
-
-// Poll for broadcasts from other tabs
-setInterval(()=>{
-  try{
-    const stored=localStorage.getItem(BC_KEY);
-    if(!stored)return;
-    const {msg,ts}=JSON.parse(stored);
-    if(String(ts)!==lastBcSeen){lastBcSeen=String(ts);showBroadcastToast(msg);playBeep(600,0.08);}
-  }catch(e){}
-},1000);
-
-function playBeep(freq,vol){
-  try{
-    const ctx=new(window.AudioContext||window.webkitAudioContext)();
-    const o=ctx.createOscillator(),g=ctx.createGain();
-    o.connect(g);g.connect(ctx.destination);
-    o.frequency.value=freq;o.type='sine';
-    g.gain.setValueAtTime(vol,ctx.currentTime);
-    g.gain.exponentialRampToValueAtTime(0.001,ctx.currentTime+0.2);
-    o.start();o.stop(ctx.currentTime+0.2);
-  }catch(e){}
-}
-</script>
 
 <script>
 // ══════════════════════════════════════════════════════════
 // ACCOUNT SYSTEM
 // ══════════════════════════════════════════════════════════
+
+function escHtml(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
 
 const ACCT_STORE_KEY = 'wiggly_accounts_v1';
 const ACCT_SESSION_KEY = 'wiggly_session_v1';
@@ -2561,7 +2354,12 @@ document.addEventListener('DOMContentLoaded',()=>{ if(typeof spMyName!=='undefin
 // SOCIAL DRAWING — PeerJS + Gun.js powered multiplayer
 // ══════════════════════════════════════════════════════════
 
-const GUN_PEERS = ['https://gun-manhattan.herokuapp.com/gun','https://gun-us.herokuapp.com/gun'];
+const GUN_PEERS = [
+  'https://gun-manhattan.herokuapp.com/gun',
+  'https://gun-us.herokuapp.com/gun',
+  'https://gun-eu.herokuapp.com/gun',
+  'https://gundb-relay-mlmtype.onrender.com/gun'
+];
 let gun = null;
 let spGun = null; // gun node for rooms
 
@@ -2686,12 +2484,14 @@ function startHosting(){
   statusEl.innerHTML='<span class="sp-spinner"></span> Creating room...';
   document.getElementById('sp-host-btn').disabled=true;
 
-  spPeer = new Peer(undefined, {debug:0});
-
-  spPeer.on('open', id=>{
-    spRoomCode = id;
-    spInRoom = true;
-    statusEl.className='sp-status-box ok';
+  spPeer = new Peer(undefined, {debug:0, config:{iceServers:[
+    {urls:'stun:stun.l.google.com:19302'},
+    {urls:'stun:stun1.l.google.com:19302'},
+    {urls:'stun:openrelay.metered.ca:80'},
+    {urls:'turn:openrelay.metered.ca:80',username:'openrelayproject',credential:'openrelayproject'},
+    {urls:'turn:openrelay.metered.ca:443',username:'openrelayproject',credential:'openrelayproject'},
+    {urls:'turn:openrelay.metered.ca:443?transport=tcp',username:'openrelayproject',credential:'openrelayproject'}
+  ]}});
     statusEl.innerHTML='✓ Room created! Code: <b>'+id+'</b>';
     document.getElementById('sp-host-btn').disabled=false;
 
@@ -2777,7 +2577,14 @@ function joinRoom(){
   statusEl.innerHTML='<span class="sp-spinner"></span> Connecting...';
   document.getElementById('sp-join-btn').disabled=true;
 
-  spPeer = new Peer(undefined, {debug:0});
+  spPeer = new Peer(undefined, {debug:0, config:{iceServers:[
+    {urls:'stun:stun.l.google.com:19302'},
+    {urls:'stun:stun1.l.google.com:19302'},
+    {urls:'stun:openrelay.metered.ca:80'},
+    {urls:'turn:openrelay.metered.ca:80',username:'openrelayproject',credential:'openrelayproject'},
+    {urls:'turn:openrelay.metered.ca:443',username:'openrelayproject',credential:'openrelayproject'},
+    {urls:'turn:openrelay.metered.ca:443?transport=tcp',username:'openrelayproject',credential:'openrelayproject'}
+  ]}});
   spPeer.on('open', ()=>{
     const conn = spPeer.connect(code, {reliable:true});
     spConnections = [conn];
@@ -3063,7 +2870,6 @@ function leaveRoom(){
   flash('Left room.');
 }
 
-// Shout is already integrated into sendShout above
 
 </script>
 </body>
