@@ -1359,6 +1359,8 @@ function onMove(e){
       const curAngle=Math.atan2(p.y-cy,p.x-cx);
       selRotAngle=rotOrigAngle+(curAngle-rotStartAngle);
     }
+    // Broadcast live grab state so other players see it in real-time
+    spBroadcastGrabState();
     return;
   }
 
@@ -1394,6 +1396,12 @@ function onUp(e){
       const x2=Math.max(startX,lastX),y2=Math.max(startY,lastY);
       if(x2-x1>2&&y2-y1>2)finalizeSelection(x1,y1,x2-x1,y2-y1);
       else lCtx.clearRect(0,0,W*SCALE,H*SCALE);
+    }
+    // Clear remote grab overlay (selection committed or rect done)
+    if(spInRoom){
+      const msg={type:'grab-state',mode:'none'};
+      broadcastToPeers(msg);
+      if(!spIsHost&&spConnections[0])try{spConnections[0].send(msg);}catch(e){}
     }
     grabMode=null;hc.style.cursor='grab';snap_=null;return;
   }
@@ -1568,8 +1576,41 @@ function renderOverlayLayer(){
   // Clear and draw string layer + grab overlay
   lCtx.clearRect(0,0,W*SCALE,H*SCALE);
   drawGrabOverlay();
+  // Draw remote grab states (other players' selections/floats)
+  drawRemoteGrabOverlays();
   // Draw string nodes/edges on top
   if(stringNodes.length>0)drawStringLayer();
+}
+
+function drawRemoteGrabOverlays(){
+  for(const pid in remoteGrabStates){
+    const rg=remoteGrabStates[pid];
+    lCtx.save();
+    if(rg.mode==='rect'){
+      const rx=rg.x1*SCALE,ry=rg.y1*SCALE,rw=(rg.x2-rg.x1)*SCALE,rh=(rg.y2-rg.y1)*SCALE;
+      lCtx.fillStyle='rgba(255,100,0,0.1)';lCtx.fillRect(rx,ry,rw,rh);
+      lCtx.lineWidth=2;lCtx.setLineDash([6,4]);lCtx.lineDashOffset=dashOffset;
+      lCtx.strokeStyle='#ff6600';lCtx.strokeRect(rx+1,ry+1,rw-2,rh-2);
+      lCtx.lineDashOffset=dashOffset+10;lCtx.strokeStyle='rgba(255,255,255,0.7)';
+      lCtx.strokeRect(rx+1,ry+1,rw-2,rh-2);lCtx.setLineDash([]);
+    } else if(rg.mode==='float'){
+      const bx=rg.floatX*SCALE,by=rg.floatY*SCALE,bw=rg.w*SCALE,bh=rg.h*SCALE;
+      const cx=bx+bw/2,cy=by+bh/2;
+      lCtx.translate(cx,cy);lCtx.rotate(rg.rot||0);
+      // Draw the float image ghost
+      if(rg.imgEl&&rg.imgEl.complete){
+        lCtx.globalAlpha=0.75;lCtx.imageSmoothingEnabled=false;
+        lCtx.drawImage(rg.imgEl,-bw/2,-bh/2,bw,bh);
+        lCtx.globalAlpha=1;
+      }
+      // Dashed border in orange
+      lCtx.lineWidth=2;lCtx.setLineDash([7,5]);lCtx.lineDashOffset=dashOffset;
+      lCtx.strokeStyle='#ff6600';lCtx.strokeRect(-bw/2+1,-bh/2+1,bw-2,bh-2);
+      lCtx.lineDashOffset=dashOffset+12;lCtx.strokeStyle='rgba(255,255,255,0.8)';
+      lCtx.strokeRect(-bw/2+1,-bh/2+1,bw-2,bh-2);lCtx.setLineDash([]);
+    }
+    lCtx.restore();
+  }
 }
 
 function finalizeSelection(rx,ry,rw,rh){
@@ -2630,7 +2671,29 @@ function handlePeerData(data, fromConn){
   }
   if(data.type==='canvas-snap'){
     if(spIsHost) broadcastToPeers(data, fromConn);
+    // Clear any remote grab overlay since canvas is now updated
+    if(fromConn) delete remoteGrabStates[fromConn.peer||'host'];
     applyRemoteCanvas(data.canvas, data.nodes, data.edges);
+    return;
+  }
+  if(data.type==='grab-state'){
+    if(spIsHost) broadcastToPeers(data, fromConn);
+    const pid = fromConn ? (fromConn.peer||'host') : 'host';
+    if(data.mode==='none'){ delete remoteGrabStates[pid]; }
+    else if(data.mode==='rect'){ remoteGrabStates[pid]={mode:'rect',x1:data.x1,y1:data.y1,x2:data.x2,y2:data.y2}; }
+    else if(data.mode==='float'){
+      const prev = remoteGrabStates[pid];
+      // Reuse cached image if same dimensions
+      if(data.img && (!prev||prev.mode!=='float'||prev.w!==data.w||prev.h!==data.h)){
+        const img=new Image();img.src=data.img;
+        remoteGrabStates[pid]={mode:'float',floatX:data.floatX,floatY:data.floatY,w:data.w,h:data.h,rot:data.rot,imgEl:img};
+      } else if(prev&&prev.mode==='float'){
+        prev.floatX=data.floatX;prev.floatY=data.floatY;prev.rot=data.rot;
+        if(data.img&&data.w===prev.w&&data.h===prev.h&&data.img!==prev.lastImg){prev.lastImg=data.img;const img=new Image();img.src=data.img;prev.imgEl=img;}
+      } else {
+        remoteGrabStates[pid]={mode:'float',floatX:data.floatX,floatY:data.floatY,w:data.w,h:data.h,rot:data.rot};
+      }
+    }
     return;
   }
   if(data.type==='strokes'){
@@ -2668,8 +2731,8 @@ let spStrokeTimer=null;
 
 function spBroadcastPoint(t, x, y, extra){
   if(!spInRoom||spRemoteDrawing) return;
-  const eraserSz = tool==='eraser' ? bSz*2.5 : bSz;
-  const pt={t, x, y, clr:color, sz:eraserSz, op:bOp, er:(tool==='eraser'), ...extra};
+  const actualSz = sw(); // use sw() which accounts for tool-specific multipliers
+  const pt={t, x, y, clr:color, sz:actualSz, op:bOp, er:(tool==='eraser'), tl:tool, ...extra};
   spStrokeBuffer.push(pt);
   if(!spStrokeTimer){
     spStrokeTimer=setTimeout(()=>{
@@ -2690,8 +2753,10 @@ function replayStrokes(strokes){
   spRemoteDrawing=true;
   dCtx.save();
   strokes.forEach(s=>{
-    dCtx.globalAlpha=s.op||1;
-    dCtx.strokeStyle=dCtx.fillStyle=s.er?'#fff':s.clr;
+    const isErase=!!s.er;
+    let alpha = isErase ? 1 : (s.op||1);
+    dCtx.globalAlpha=alpha;
+    dCtx.strokeStyle=dCtx.fillStyle=isErase?'#fff':s.clr;
     dCtx.lineWidth=s.sz||1;
     dCtx.lineJoin=dCtx.lineCap='round';
     if(s.t==='down'){
@@ -2701,6 +2766,9 @@ function replayStrokes(strokes){
       dCtx.beginPath();
       dCtx.moveTo(s.x,s.y);
     } else if(s.t==='move'){
+      // Apply tool-specific opacity for move strokes
+      if(s.tl==='brush') dCtx.globalAlpha=Math.min(alpha,0.45);
+      else if(s.tl==='marker') dCtx.globalAlpha=Math.min(alpha,0.85);
       dCtx.lineTo(s.x,s.y);
       dCtx.stroke();
       dCtx.beginPath();
@@ -2755,6 +2823,37 @@ function spBroadcastCanvasSnapshot(){
     if(!spIsHost && spConnections[0]){ try{spConnections[0].send(msg);}catch(e){} }
   }catch(e){}
 }
+
+// Remote grab overlays: map of peerId -> {mode, x1,y1,x2,y2, floatX,floatY,w,h,rot,imgData}
+const remoteGrabStates = {};
+let spGrabTimer = null;
+function spBroadcastGrabState(){
+  if(!spInRoom||spRemoteDrawing) return;
+  clearTimeout(spGrabTimer);
+  spGrabTimer = setTimeout(()=>{
+    let msg;
+    if(grabMode==='rect'){
+      msg={type:'grab-state', mode:'rect', x1:Math.min(startX,lastX),y1:Math.min(startY,lastY),x2:Math.max(startX,lastX),y2:Math.max(startY,lastY)};
+    } else if(sel.active && (grabMode==='move'||grabMode==='resize'||grabMode==='rotate')){
+      // Encode the float image as a data URL for remote preview
+      let imgDataUrl=null;
+      try{
+        const tmp=document.createElement('canvas');tmp.width=Math.max(1,sel.rect.w);tmp.height=Math.max(1,sel.rect.h);
+        tmp.getContext('2d').putImageData(sel.floatImg,0,0);
+        imgDataUrl=tmp.toDataURL('image/png');
+      }catch(ex){}
+      msg={type:'grab-state', mode:'float', floatX:sel.floatX,floatY:sel.floatY,w:sel.rect.w,h:sel.rect.h,rot:selRotAngle,img:imgDataUrl};
+    } else {
+      msg={type:'grab-state', mode:'none'};
+    }
+    broadcastToPeers(msg);
+    if(!spIsHost && spConnections[0]){ try{spConnections[0].send(msg);}catch(e){} }
+  }, 16);
+}
+function spClearGrabState(peerId){
+  delete remoteGrabStates[peerId||'_any'];
+}
+function spClearAllGrabStates(){ for(const k in remoteGrabStates) delete remoteGrabStates[k]; }
 function spBroadcastStringState(){
   if(!spInRoom||spRemoteDrawing) return;
   clearTimeout(spStringTimer);
