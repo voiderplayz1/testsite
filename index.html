@@ -1282,13 +1282,17 @@ function onDown(e){
       rotStartAngle=Math.atan2(p.y-cy,p.x-cx);
       rotOrigAngle=selRotAngle;
       hc.style.cursor='crosshair';
+      spBroadcastGrabState();
     } else if(sel.active&&p.x>=sel.floatX&&p.x<sel.floatX+sel.rect.w&&p.y>=sel.floatY&&p.y<sel.floatY+sel.rect.h){
       painting=true;grabMode='move';grabOffX=p.x-sel.floatX;grabOffY=p.y-sel.floatY;hc.style.cursor='grabbing';
+      spBroadcastGrabState();
     } else {
       // Check resize handles
       const handle=getHandleAt(p);
-      if(handle&&sel.active){grabMode='resize';resizeHandle=handle;painting=true;return;}
+      if(handle&&sel.active){grabMode='resize';resizeHandle=handle;painting=true;spBroadcastGrabState();return;}
       commitSelection();painting=true;grabMode='rect';startX=lastX=p.x;startY=lastY=p.y;
+      // Immediately broadcast starting position of rect selection
+      spBroadcastGrabState();
     }
     return;
   }
@@ -1510,10 +1514,12 @@ function drawGrabOverlay(){
   } else if(sel.active){
     const bx=sel.floatX*SCALE,by=sel.floatY*SCALE,bw=sel.rect.w*SCALE,bh=sel.rect.h*SCALE;
     const cx=bx+bw/2,cy=by+bh/2;
-    // Draw float image with rotation
+    // Draw float image with rotation — use offscreen canvas to preserve alpha transparency
     if(sel.floatImg){
       const tmp=document.createElement('canvas');tmp.width=sel.rect.w;tmp.height=sel.rect.h;
-      tmp.getContext('2d').putImageData(sel.floatImg,0,0);
+      const tCtx=tmp.getContext('2d');
+      tCtx.clearRect(0,0,sel.rect.w,sel.rect.h);
+      tCtx.putImageData(sel.floatImg,0,0);
       lCtx.save();
       lCtx.translate(cx,cy);lCtx.rotate(selRotAngle);lCtx.translate(-bw/2,-bh/2);
       lCtx.imageSmoothingEnabled=false;
@@ -1622,9 +1628,15 @@ function finalizeSelection(rx,ry,rw,rh){
   for(let fy=0;fy<rh;fy++)for(let fx=0;fx<rw;fx++){
     const sx=rx+fx,sy=ry+fy;if(sx<0||sx>=W||sy<0||sy>=H)continue;
     const si=(sy*W+sx)*4,di=(fy*rw+fx)*4;
-    floatImg.data[di]=srcData.data[si];floatImg.data[di+1]=srcData.data[si+1];
-    floatImg.data[di+2]=srcData.data[si+2];floatImg.data[di+3]=srcData.data[si+3];
-    srcData.data[si]=255;srcData.data[si+1]=255;srcData.data[si+2]=255;srcData.data[si+3]=255;
+    const r=srcData.data[si],g=srcData.data[si+1],b=srcData.data[si+2],a=srcData.data[si+3];
+    // Make near-white (canvas background) pixels transparent in the float
+    const isBackground = (a<10)||(r>240&&g>240&&b>240);
+    floatImg.data[di]=r;floatImg.data[di+1]=g;floatImg.data[di+2]=b;
+    floatImg.data[di+3]=isBackground?0:a;
+    // Only erase non-background pixels from the source canvas
+    if(!isBackground){
+      srcData.data[si]=255;srcData.data[si+1]=255;srcData.data[si+2]=255;srcData.data[si+3]=255;
+    }
   }
   dCtx.putImageData(srcData,0,0);
   sel.floatImg=floatImg;sel.rect={x:rx,y:ry,w:rw,h:rh};
@@ -1639,7 +1651,9 @@ function commitSelection(){
   if(!sel.active)return;
   if(sel.floatImg){
     const tmp=document.createElement('canvas');tmp.width=sel.rect.w;tmp.height=sel.rect.h;
-    tmp.getContext('2d').putImageData(sel.floatImg,0,0);
+    const tCtx=tmp.getContext('2d');
+    tCtx.clearRect(0,0,sel.rect.w,sel.rect.h);
+    tCtx.putImageData(sel.floatImg,0,0);
     dCtx.save();dCtx.imageSmoothingEnabled=false;
     const cx=sel.floatX+sel.rect.w/2,cy=sel.floatY+sel.rect.h/2;
     dCtx.translate(cx,cy);dCtx.rotate(selRotAngle);dCtx.translate(-sel.rect.w/2,-sel.rect.h/2);
@@ -2829,12 +2843,18 @@ const remoteGrabStates = {};
 let spGrabTimer = null;
 function spBroadcastGrabState(){
   if(!spInRoom||spRemoteDrawing) return;
+  // For rect selection, send immediately (no throttle) for responsive feel
+  if(grabMode==='rect'){
+    const msg={type:'grab-state', mode:'rect', x1:Math.min(startX,lastX),y1:Math.min(startY,lastY),x2:Math.max(startX,lastX),y2:Math.max(startY,lastY)};
+    broadcastToPeers(msg);
+    if(!spIsHost && spConnections[0]){ try{spConnections[0].send(msg);}catch(e){} }
+    return;
+  }
+  // For float/move/resize, throttle to ~60fps
   clearTimeout(spGrabTimer);
   spGrabTimer = setTimeout(()=>{
     let msg;
-    if(grabMode==='rect'){
-      msg={type:'grab-state', mode:'rect', x1:Math.min(startX,lastX),y1:Math.min(startY,lastY),x2:Math.max(startX,lastX),y2:Math.max(startY,lastY)};
-    } else if(sel.active && (grabMode==='move'||grabMode==='resize'||grabMode==='rotate')){
+    if(sel.active && (grabMode==='move'||grabMode==='resize'||grabMode==='rotate')){
       // Encode the float image as a data URL for remote preview
       let imgDataUrl=null;
       try{
